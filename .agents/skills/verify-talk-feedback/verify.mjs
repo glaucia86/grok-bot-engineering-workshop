@@ -45,7 +45,10 @@ const checks = [
 try {
   const extra = await import("./checks.extra.mjs");
   checks.push(...extra.default);
-} catch {}
+} catch (error) {
+  stop();
+  throw error;
+}
 
 let failed = 0;
 console.log(`# Verification evidence: Talk Feedback API\n\nServer: ${base} (started ${new Date().toISOString()})\n`);
