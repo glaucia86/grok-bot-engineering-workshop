@@ -3,6 +3,3 @@ dist/
 coverage/
 .env
 *.log
-
-# Local workshop specifications
-/doc-specs/
