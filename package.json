@@ -1,0 +1,26 @@
+{
+  "name": "talk-feedback",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Tiny Talk Feedback API for the Packt workshop 'Build Your First Engineering Bot with Grok Bot'",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "start": "tsx src/server.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "fastify": "^5.12.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.4"
+  }
+}
