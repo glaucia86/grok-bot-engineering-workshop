@@ -19,6 +19,53 @@ Como usar: deixe este guia aberto numa tela e compartilhe a outra. Leia em voz a
 
 ---
 
+## Como usar o deck
+
+O deck fica em `docs/speaker/slides/index.html`. Ele funciona offline: o reveal.js, o rough.js (desenhos estilo Excalidraw) e a fonte Virgil estão dentro da pasta `docs/speaker/slides/vendor/`.
+
+1. **Abrir.** Dê dois cliques em `docs/speaker/slides/index.html` (abre no Chrome ou Edge). Se o navegador bloquear algo em `file://`, rode na pasta `docs/speaker/slides` o comando `npx serve .` e abra o endereço que aparecer. Conferir no ensaio qual dos dois jeitos funciona na sua máquina.
+2. **Speaker view na tela de leitura.** Com o deck em foco, aperte **S**. Abre uma janela nova com o slide atual, o próximo, as notas em português e um cronômetro. Arraste essa janela para a tela que **não** é compartilhada. Se o navegador bloquear a janela, libere pop-ups para esse arquivo e aperte S de novo.
+3. **Tela cheia na tela compartilhada.** Volte à janela principal (a do slide) e aperte **F**. Para sair da tela cheia, **Esc**.
+4. **Compartilhar.** Na plataforma da Packt, compartilhe só a janela do deck (ou a tela onde ela está). Nunca a tela da speaker view.
+5. **Navegar.** Seta para a direita, espaço ou Page Down = próximo slide. Seta para a esquerda ou Page Up = anterior. **Esc** (fora da tela cheia) ou **O** mostra a visão geral de todos os slides; clique em um para pular. **B** ou **.** escurece a tela (bom para uma pausa). O endereço muda para `#/N`, então dá para pular direto para um slide pela barra de endereço.
+6. **Cronômetro.** A speaker view tem um relógio e um tempo decorrido. Clique no tempo decorrido às 11:00 para zerar. O **horário planejado** de cada slide aparece pequeno no canto inferior direito do slide (Brasília · ET) e nas notas, no topo: compare com o relógio real. Se estiver mais de 2 minutos atrasada, use o "✂️ Se atrasar, corte isto" daquele slide.
+7. **Demonstração ao vivo.** Nos slides marcados "Live", troque de janela com Alt+Tab (Cmd+Tab no Mac) para o Grok Bot ou o GitHub e volte para o deck no fim. As notas dizem o que mostrar.
+8. **Prints.** As caixas tracejadas "screenshot da sua conta no ensaio" são lugares para prints **da sua conta**, tirados no ensaio, sem tokens nem dados pessoais. Para trocar: salve o print em `docs/speaker/slides/assets/shots/` e troque a `<div class="ph">` correspondente por `<img src="assets/shots/nome.png" alt="">`. Os chats desenhados no deck são **mock** (HTML/CSS), não prints reais; os resultados de QA neles são exemplos.
+
+---
+
+## Run sheet minuto a minuto
+
+| Brasília | ET | Slide | O que acontece | Tela compartilhada | Se atrasar |
+|---|---|---|---|---|---|
+| 10:45 | 8:45 | 1 | Abrir deck (F), speaker view (S), abas prontas: GitHub, Grok Bot, instruções do QA/DevOps, preview | Slide 1 | — |
+| 11:00 | 9:00 | 1 | Boas-vindas | Deck | Não se apresente longamente |
+| 11:01 | 9:01 | 2 | Agenda em 8 passos | Deck | Pule o slide |
+| 11:02 | 9:02 | 3 | Tour do repo: README → `mvp/` → `docs/inception.md` | GitHub | Só a pasta `mvp/` |
+| 11:03 | 9:03 | 4 | Arquitetura do MVP | Deck | Só a linha de cima |
+| 11:04 | 9:04 | 5 | A regra: quem constrói não julga, nenhum bot faz merge | Deck | — |
+| 11:05 | 9:05 | 6 | Fluxo do time | Deck | 20 s |
+| 11:06 | 9:06 | 7 | Charter: owns · good output · stops | Deck | Só a frase amarela |
+| 11:07 | 9:07 | 8 | **Ao vivo:** criar FDE TypeScript, depois QA e DevOps, skills, grupo | Grok Bot | Não crie o DevOps ao vivo |
+| 11:12 | 9:12 | 9 | **Ao vivo:** prompt de design para o FDE | Grok Bot | Só arquivos e testes |
+| 11:20 | 9:20 | 10 | Aprovar design (prompt FDE); "Green CI is not acceptance" | Grok Bot → Deck | — |
+| 11:23 | 9:23 | 11 | Loop PR → verify → approve | Deck | 30 s |
+| 11:25 | 9:25 | 12 | **Ao vivo:** prompt do QA, mostrar PASS/FAIL/BLOCKED | Grok Bot | 2 ou 3 critérios |
+| 11:40 | 9:40 | 13 | **Ao vivo:** prompt do DevOps, status do CI e preview | Grok Bot / GitHub | Preview direto pelo PR |
+| 11:47 | 9:47 | 14 | **Ao vivo:** enviar feedback, ver a barra no dashboard | Preview | Só um feedback |
+| 11:55 | 9:55 | 15 | Quem decide sou eu: desfaz em 1 min × humano decide | Deck | — |
+| 11:58 | 9:58 | 16 | **Ao vivo:** ler o PR (mudou, QA, CI) e fazer o merge | GitHub | FAIL vira exemplo |
+| 12:10 | 10:10 | 17 | **Ao vivo:** rotina nativa de triagem diária | Grok Bot | Só mostrar a tela e ler o prompt |
+| 12:22 | 10:22 | 18 | Recap: três frases | Deck | — |
+| 12:24 | 10:24 | 19 | Economizar uso | Deck | Pule o slide |
+| 12:25 | 10:25 | 20 | Perguntas | Deck | — |
+| 12:29 | 10:29 | 20 | Frase de encerramento | Deck | Encerrar mesmo com perguntas |
+| 12:30 | 10:30 | — | Fim | — | — |
+
+> Nota de fuso: em 17/11 o ET já está no horário de inverno (UTC-5) e Brasília é UTC-3, então ET = Brasília − 2 h.
+
+---
+
 ## Frases de emergência
 
 > "Let's give it a few seconds."
@@ -89,6 +136,13 @@ Skills, no máximo 3 por bot:
 **O que fazer**
 Mostre o repositório nesta ordem: `README.md`, depois a pasta `mvp/` e por fim o `docs/inception.md`. Diga que a base já está pronta (banco, API, schema e testes). Ao vivo, a turma constrói só o formulário e o dashboard.
 
+**Passo a passo** (slides 1 a 5)
+1. 10:45: abra o deck, aperte **F** na tela compartilhada e **S** na tela de leitura. Zere o cronômetro da speaker view às 11:00.
+2. Deixe abertas, nesta ordem, as abas: GitHub do repositório, Grok Bot, instruções do QA e do DevOps (seção 4 do `docs/inception.md`), e uma aba vazia para a preview.
+3. 11:00 (slide 1): boas-vindas. 11:01 (slide 2): agenda.
+4. 11:02 (slide 3): Alt+Tab para o GitHub. Mostre `README.md`, depois a pasta `mvp/` na branch `checkpoint/mvp-base`, depois role o `docs/inception.md` até a seção 5. Volte ao deck.
+5. 11:03 (slide 4): arquitetura. 11:04 (slide 5): a regra principal, devagar.
+
 **Por que isso importa**
 Infraestrutura ao vivo quebra fácil e consome o tempo da aula. Com a base pronta, o palco fica para o que importa: bots dividindo o trabalho e você no controle.
 
@@ -113,6 +167,14 @@ Infraestrutura ao vivo quebra fácil e consome o tempo da aula. Com a base pront
 
 **O que fazer**
 Crie o **FDE do zero**: use o botão de criar bot (caminho exato: conferir no ensaio) e cole o prompt abaixo. Depois crie o **QA** e o **DevOps** colando as instruções da seção 4 do `docs/inception.md`. Adicione as skills, no máximo 3 por bot. Por fim, coloque os três num grupo com você.
+
+**Passo a passo** (slides 6 a 8)
+1. 11:05 (slide 6): mostre o fluxo do time com o cursor.
+2. 11:06 (slide 7): leia só "owns, good output, stops" e a frase amarela.
+3. 11:07 (slide 8): Alt+Tab para o Grok Bot. Clique no botão de criar bot (caminho: conferir no ensaio). Nome: **FDE TypeScript**. Cole o prompt do FDE.
+4. Adicione as 3 skills do FDE (shadcn, vercel-react-best-practices, neon-drizzle). Onde ficam as skills no app: conferir no ensaio.
+5. Crie o **QA bot** e o **DevOps** colando as instruções da seção 4 do inception. Skills de cada um conforme a tabela acima.
+6. Crie o grupo com você e os três bots (como criar grupo: conferir no ensaio). Volte ao deck por volta de 11:11.
 
 **Por que isso importa**
 Um bot é um papel bem escrito, não mágica. O FDE, criado do zero, mostra como se escreve esse papel. O QA e o DevOps mostram que as instruções podem ser reaproveitadas, como código. Poucas skills mantêm o contexto pequeno, e com contexto pequeno o bot erra menos.
@@ -148,6 +210,12 @@ If you can't show where a number came from, leave it out. Use the GitHub connect
 **O que fazer**
 Abra um chat novo com o FDE e cole o prompt. Quando a resposta chegar, mostre três partes: as decisões, os arquivos e os testes. Se ficar alguma dúvida em aberto, decida você e escreva a decisão no chat.
 
+**Passo a passo** (slide 9)
+1. Abra um **chat novo** com o FDE TypeScript.
+2. Cole o prompt de design. Enquanto ele trabalha, volte ao deck e leia a lista do slide 9.
+3. Quando a resposta chegar, mostre: decisões → arquivos → testes.
+4. Se houver dúvida aberta, escreva sua decisão no chat em uma frase.
+
 **Por que isso importa**
 Corrigir um mal-entendido no design custa pouco. Corrigir no código custa caro. O design também vira a régua que o QA vai usar para julgar o PR.
 
@@ -177,6 +245,14 @@ List anything you assumed separately. Stop and wait for my approval.
 
 **O que fazer**
 Cole o prompt do FDE para aprovar o design. Em seguida, cole o prompt do QA. Mostre que o QA julga pelos critérios do inception, não pelo relatório do FDE. No fim, mostre o resultado PASS, FAIL ou BLOCKED de cada critério.
+
+**Passo a passo** (slides 10 a 12)
+1. 11:20 (slide 10): cole no chat do FDE o prompt "Design approved…". Volte ao deck.
+2. 11:23 (slide 11): explique o loop PR → verify → approve.
+3. 11:25 (slide 12): abra o chat do QA bot (ou o grupo) e cole o prompt do QA.
+4. Mostre que o QA monta o checklist a partir do inception, sem ler a descrição do PR.
+5. Quando o PR estiver pronto, mostre o commit testado e PASS/FAIL/BLOCKED por critério.
+6. Às 11:38, se ainda estiver rodando, mostre o que já saiu e siga.
 
 **Por que isso importa**
 Quem fez o trabalho tende a achar que está certo. Um bot separado, olhando só a especificação, dá uma opinião honesta. CI verde não quer dizer aceite.
@@ -215,6 +291,13 @@ If you can't show where a number came from, leave it out. Never merge.
 **O que fazer**
 Mostre que o trabalho roda na nuvem, não no seu computador. Cole o prompt do DevOps para pegar o status do CI e a preview URL. Abra a preview, envie um feedback pelo formulário e mostre a barra mudando no dashboard.
 
+**Passo a passo** (slides 13 e 14)
+1. 11:40 (slide 13): diga que roda na nuvem. Cole o prompt do DevOps no chat dele.
+2. Mostre a resposta: link do CI, preview URL, segredos "present (redacted)". Nenhum valor de segredo na tela.
+3. 11:47 (slide 14): abra a preview. Mostre o dashboard vazio.
+4. Envie um feedback pelo formulário. Volte ao dashboard e mostre a barra.
+5. Se der tempo, peça uma nota no chat e envie mais um.
+
 **Por que isso importa**
 O time só vale a pena se você não precisar ficar vigiando. O PR é o ponto de encontro: lá ficam o código, os testes, o CI e a preview.
 
@@ -246,6 +329,13 @@ Verify DATABASE_URL and the protection bypass secret by presence only, values re
 **O que fazer**
 Abra o PR e leia três partes: o que mudou, o relatório do QA e o status do CI. Se estiver tudo em PASS, aprove e faça **você** o merge, na tela. Se vier FAIL, cole o prompt abaixo.
 
+**Passo a passo** (slides 15 e 16)
+1. 11:55 (slide 15): os dois cards (desfaz em 1 minuto × humano decide).
+2. 11:58 (slide 16): abra o PR no GitHub. Leia: o que mudou → relatório do QA → status do CI.
+3. Tudo PASS: aprove e clique você mesma no merge, devagar, na tela.
+4. FAIL: cole o prompt de correção para o FDE (ou mostre o FAIL como exemplo, se estiver atrasada).
+5. BLOCKED: explique que falta acesso ou infraestrutura, e que isso é honesto.
+
 **Por que isso importa**
 O merge mexe no mundo real, então quem decide é uma pessoa. O bot faz sozinho só o que se desfaz em um minuto.
 
@@ -275,6 +365,12 @@ QA reported FAIL on criterion <N>: <paste QA evidence>. Fix only that, push to t
 
 **O que fazer**
 Crie uma rotina com o recurso de **rotinas nativo** do Grok Bot, não com o automate-me (a tela fica para conferir no ensaio). Cole o prompt abaixo, que é baseado no `docs/routines/daily-triage.md`. Depois mostre a opção de gatilho.
+
+**Passo a passo** (slide 17)
+1. Abra as rotinas nativas do Grok Bot (tela: conferir no ensaio).
+2. Escolha o bot que recebe a rotina (decidir no ensaio).
+3. Cole o prompt da rotina e mostre a opção de gatilho (agenda; gatilho por issue do Linear: conferir no ensaio).
+4. Salve a rotina ou, se atrasada, só leia o prompt.
 
 **Por que isso importa**
 Um bot que você precisa chamar é uma ferramenta. Um bot com rotina faz parte do time. Rodar poucas vezes e ficar quieto quando não há nada mantém o custo baixo.
@@ -306,6 +402,12 @@ Don't comment or change anything; report to me. If there is nothing new, answer 
 
 **O que fazer**
 Leia as três frases de resumo e abra para perguntas. Se uma pergunta for difícil de entender, use "I'll read the question in the chat". Às 12:29, leia a frase de encerramento.
+
+**Passo a passo** (slides 18 a 20)
+1. 12:22 (slide 18): leia as três frases do recap.
+2. 12:24 (slide 19): uma frase sobre economia de uso (ou pule).
+3. 12:25 (slide 20): abra para perguntas. Leia cada pergunta do chat em voz alta antes de responder.
+4. 12:29: frase de encerramento. 12:30: fim.
 
 **Por que isso importa**
 As pessoas esquecem os cliques, mas lembram da estrutura: um bot por papel, evidência para cada afirmação e um humano no merge.
