@@ -115,7 +115,7 @@ gantt
 | 20–40 | Verification skill | `create-verification-skill` | `checkpoint/03-verification` |
 | 40–55 | Background task | cloud agent | `checkpoint/04-backup-pr` |
 | 55–70 | Human approval | `interrogate` | `checkpoint/04-backup-pr` |
-| 70–82 | Daily triage routine | `automate-me` | `checkpoint/05-routine` |
+| 70–82 | Daily triage routine | built-in routines | `checkpoint/05-routine` |
 | 82–90 | Q&A | — | — |
 
 ---
@@ -317,7 +317,6 @@ Now the bot keeps working even when you are not in the chat.
 **Paste this prompt:**
 
 ```text
-Use the automate-me skill from .agents/skills/automate-me.
 Create a daily routine for this repository: every weekday at 9 AM,
 read new issues, restate each one in your own words,
 label them (bug, feature, unclear), and post a short triage summary to me.
