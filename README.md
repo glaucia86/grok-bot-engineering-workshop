@@ -9,7 +9,7 @@
 
 <p>
 <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
-<img alt="Node.js 20+" src="https://img.shields.io/badge/Node.js-20%2B-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" />
+<img alt="Node.js 24 LTS" src="https://img.shields.io/badge/Node.js-24%20LTS-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" />
 <img alt="Fastify" src="https://img.shields.io/badge/Fastify-000000?style=for-the-badge&logo=fastify&logoColor=white" />
 <img alt="Vitest" src="https://img.shields.io/badge/Vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=white" />
 <img alt="Hands-on" src="https://img.shields.io/badge/Format-Hands--on-F97316?style=for-the-badge" />
@@ -75,7 +75,7 @@ A tiny TypeScript API where event attendees submit and list feedback on talks.
 ```text
 src/app.ts        Fastify routes
 src/store.ts      In-memory store
-src/server.ts     Starts the server (PORT, default 3000)
+src/server.ts     Starts the server (PORT defaults to 3000; HOST defaults to 0.0.0.0)
 test/app.test.ts  Vitest tests
 docs/issues/      Seed issues for the workshop
 .agents/skills/   pstack skills (MIT, Lauren Tan)
@@ -115,7 +115,7 @@ gantt
 | 30–42 | Background task | cloud agent | `checkpoint/04-backup-pr` |
 | 42–55 | Human approval | `interrogate` | `checkpoint/04-backup-pr` |
 | 55–60 | Q&A | — | — |
-| *Extended (90 min)* | Daily triage routine + more Q&A | `automate-me` | `checkpoint/05-routine` |
+| *Extended (90 min)* | Daily triage routine + more Q&A | Scheduler draft | `checkpoint/05-routine` |
 
 ---
 
@@ -127,7 +127,7 @@ Do this **before** November 17. It takes about 10 minutes.
 1. Create a **Grok Bot** account and sign in.
 2. **Connect GitHub** to Grok Bot (Settings → Connections → GitHub).
 3. **Fork** this repository to your own GitHub account.
-4. Optional, to run things locally: install [Node.js 20+](https://nodejs.org/) and [Git](https://git-scm.com/).
+4. Optional, to run things locally: install [Node.js 24 LTS](https://nodejs.org/) and [Git](https://git-scm.com/).
 
 ✅ **Expected result:** you have your own fork, and Grok Bot can see it.
 
@@ -309,19 +309,20 @@ Questions! Want to keep practicing? Try the other seed issues:
 
 > 🕐 **Only in the 90-minute version.** In the 60-minute version, this is homework.
 
-**Extended block A · Routine with automate-me (about 20 min)**
+**Extended block A · Draft a scheduled triage routine (about 20 min)**
 
 **Paste this prompt:**
 
 ```text
-Use the automate-me skill from .agents/skills/automate-me.
-Create a daily routine for this repository: every weekday at 9 AM,
-read new issues, restate each one in your own words,
-label them (bug, feature, unclear), and post a short triage summary to me.
-Do not change code and do not close issues.
+Read docs/routines/daily-triage.md and draft the scheduler configuration
+for this repository: weekdays at 9 AM in America/Sao_Paulo.
+Use the execution prompt and private delivery rules from that document.
+Propose labels (bug, feature, unclear); do not apply them.
+Show the definition and a sample summary for review. Keep it disabled;
+do not create or enable a scheduled task during this exercise.
 ```
 
-✅ **Expected result:** a routine definition that you can review before turning it on. Reference version: [`docs/routines/daily-triage.md`](docs/routines/daily-triage.md) on `checkpoint/05-routine`.
+✅ **Expected result:** a disabled scheduler draft and a sample summary, using [`docs/routines/daily-triage.md`](docs/routines/daily-triage.md). After review, configure it in an agent scheduler that supports GitHub access, an IANA timezone, persistent run state, and private delivery. If your environment lacks a scheduler, keep the draft and run the prompt manually; a Markdown file alone does not schedule execution.
 
 🚩 **Checkpoint branch:** `checkpoint/05-routine`
 

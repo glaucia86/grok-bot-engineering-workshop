@@ -20,23 +20,23 @@ Open a todolist with one entry per phase before starting.
 
 ## Phase A: Ground the problem
 
-Build a real mental model of every system the new code touches. Run the **how** skill over the relevant subsystems. Naming a file isn't grounding. Produce the architectural explanation `how` prescribes. If the design redefines ownership or layering, also run the **why** skill on the existing shape so the rationale becomes a constraint, not a guess.
+Build a real mental model of every system the new code touches by inspecting its code, tests, and documentation. Explain the relevant data flow, ownership, boundaries, and invariants; naming a file isn't grounding. If the design redefines ownership or layering, explain the existing rationale using evidence from the repository.
 
 Skip Phase A only when the work is genuinely greenfield with no surrounding system to integrate.
 
 ## Phase B: Sketch
 
-Run the **arena** skill with the design-sketch task and the Phase A grounding artifacts. Pass `references/runner-prompt.md` as each runner's prompt.
+Create at least two structurally distinct candidate designs using the Phase A grounding artifacts. When independent design runners are available, give each `references/runner-prompt.md`; otherwise develop the candidates separately before comparing them.
 
-Take the runners from the `architect runners` line in the `pstack-models.mdc` rule, in place of the `arena runners` line. If the rule or that line is missing, use `claude-opus-5-5-xhigh` and `grok-4.7-xhigh-fast`. Alias and rejected entries follow the runner rules in the **arena** skill's Phase A.
+Use repository-local runner configuration when available. If none is available, use the design runners available in the environment; the workflow does not require a particular model or runner tool.
 
-Design it twice. Require at least two structurally distinct candidates before synthesis, even when the first looks sufficient. This is the **exhaust-the-design-space** principle skill made concrete. Whole-shape alternatives, not point fixes inside one shape.
+Require at least two structurally distinct candidates before synthesis, even when the first looks sufficient. Compare whole-shape alternatives, not point fixes inside one shape.
 
 Screen every candidate against [`references/design-red-flags.md`](references/design-red-flags.md) before synthesis. Assume the next contributor is an agent that sees only the files it opened, copies the nearest example, and takes the shortest path that compiles. Prefer the design where a change that looks right from one file is right for the whole repo.
 
 Compare viable candidates on interface depth. Prefer the design that hides more complexity behind a smaller, simpler public surface. A rich interface can keep call chains short by concentrating capability instead of scattering it across layers.
 
-Arena returns one synthesized design package. Its synthesis decision fills the rationale's "Synthesis decision" section.
+Synthesize the candidates into one design package. Its synthesis decision fills the rationale's "Synthesis decision" section.
 
 ## Phase C: Agree (opt-in)
 
@@ -44,7 +44,7 @@ Default: proceed directly to implementation with the synthesized design. No huma
 
 Opt in to a checkpoint when the invoker explicitly asks: "/architect with checkpoint," "stop and show me before implementing," or similar. Then surface the synthesized design and pause for sign-off.
 
-The synthesis can ship as its own commit either way, as the "scaffold first" mode of the **foundational-thinking** principle skill. Planned and scoped breakage during fill-in is fine, per the **outcome-oriented-execution** principle skill. For adversarial pressure on the design before implementing, run the **interrogate** skill on the synthesized sketch.
+The synthesized sketch can ship as its own commit before implementation. Planned, scoped breakage while filling in the sketch is acceptable when needed to implement the agreed design. For adversarial pressure before implementation, inspect the sketch against the design red flags and ask what an implementation could misunderstand or misuse.
 
 If the human pushes back on the shape (in a checkpoint or after the fact), treat that as Phase A evidence. Re-ground and re-run Phase B before writing more code.
 
@@ -54,7 +54,7 @@ Replace `not implemented` bodies with code, pseudocode with logic. The synthesiz
 
 ## Phase E: Scrap when the architecture is wrong
 
-If implementation keeps producing friction the sketch can't absorb, throw the sketch out. Don't bolt fixes onto a wrong design, per the **redesign-from-first-principles** and **fix-root-causes** principle skills.
+If implementation keeps producing friction the sketch can't absorb, throw the sketch out and address the underlying design mismatch instead of bolting on fixes.
 
 The signal is a *pattern*, not single instances. Tells:
 
@@ -69,10 +69,10 @@ Use judgment. A few edge cases don't condemn an architecture. Some problems are 
 
 When you scrap:
 
-1. Re-run the **how** skill over what's been built.
-2. Redesign as if the new constraints had been day-one assumptions, per redesign-from-first-principles.
-3. Subtract before adding, per the **subtract-before-you-add** principle skill. The new sketch should be smaller than the old one before it grows.
-4. Return to Phase B and re-run arena.
+1. Inspect the implementation, tests, and documentation to update the architectural explanation.
+2. Redesign as if the new constraints had been day-one assumptions.
+3. Simplify the sketch before adding new structure.
+4. Return to Phase B and create and compare at least two new candidates.
 
 ## Outputs
 
