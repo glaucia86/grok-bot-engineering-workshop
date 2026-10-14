@@ -9,7 +9,7 @@
 
 <p>
 <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
-<img alt="Node.js 20+" src="https://img.shields.io/badge/Node.js-20%2B-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" />
+<img alt="Node.js 24 LTS" src="https://img.shields.io/badge/Node.js-24%20LTS-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" />
 <img alt="Fastify" src="https://img.shields.io/badge/Fastify-000000?style=for-the-badge&logo=fastify&logoColor=white" />
 <img alt="Vitest" src="https://img.shields.io/badge/Vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=white" />
 <img alt="Hands-on" src="https://img.shields.io/badge/Format-Hands--on-F97316?style=for-the-badge" />
@@ -127,7 +127,7 @@ Do this **before** November 17. It takes about 10 minutes.
 1. Create a **Grok Bot** account and sign in.
 2. **Connect GitHub** to Grok Bot (Settings → Connections → GitHub).
 3. **Fork** this repository to your own GitHub account.
-4. Optional, to run things locally: install [Node.js 20+](https://nodejs.org/) and [Git](https://git-scm.com/).
+4. Optional, to run things locally: install [Node.js 24 LTS](https://nodejs.org/) and [Git](https://git-scm.com/).
 
 ✅ **Expected result:** you have your own fork, and Grok Bot can see it.
 
