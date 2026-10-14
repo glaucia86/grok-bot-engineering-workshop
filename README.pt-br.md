@@ -242,8 +242,9 @@ Agora o bot trabalha **em segundo plano** enquanto você segue em frente.
 ```text
 In the background, using a cloud agent, implement the talk rating feature
 following the design in docs/design/talk-rating.md.
-Run npm test and the verification skill in .agents/skills/verify-talk-feedback
-(npm run verify).
+First extend the verification skill in .agents/skills/verify-talk-feedback
+to cover talk rating behavior. Then run npm test and the updated verification
+skill (npm run verify).
 Open a pull request to main with: what changed, why, how to test,
 and the verification evidence. Do not merge.
 ```
