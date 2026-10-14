@@ -29,6 +29,26 @@
       if (n.textColor) t.setAttribute("fill", n.textColor);
     });
     (spec.edges || []).forEach(e => {
+      if (e.points) { // orthogonal route with rounded corners + label pill
+        const P = e.points, r = e.radius || 22, o = { stroke: e.color || "#94a3b8", strokeWidth: 3.5, roughness: e.roughness != null ? e.roughness : 0.4, bowing: 0.3, seed: seed++ };
+        let d = `M${P[0][0]},${P[0][1]}`;
+        for (let i = 1; i < P.length - 1; i++) {
+          const [px, py] = P[i - 1], [cx, cy] = P[i], [nx, ny] = P[i + 1];
+          const l1 = Math.hypot(cx - px, cy - py), l2 = Math.hypot(nx - cx, ny - cy), rr = Math.min(r, l1 / 2, l2 / 2);
+          const ax = cx - (cx - px) / l1 * rr, ay = cy - (cy - py) / l1 * rr, bx = cx + (nx - cx) / l2 * rr, by = cy + (ny - cy) / l2 * rr;
+          d += ` L${ax},${ay} Q${cx},${cy} ${bx},${by}`;
+        }
+        const end = P[P.length - 1], prev = P[P.length - 2]; d += ` L${end[0]},${end[1]}`;
+        svg.appendChild(rc.path(d, o));
+        const ang = Math.atan2(end[1] - prev[1], end[0] - prev[0]), L = 20;
+        svg.appendChild(rc.path(`M${end[0] - L * Math.cos(ang + 0.5)},${end[1] - L * Math.sin(ang + 0.5)} L${end[0]},${end[1]} L${end[0] - L * Math.cos(ang - 0.5)},${end[1] - L * Math.sin(ang - 0.5)}`, o));
+        if (e.label) {
+          const fs = e.size || 26, lx = e.lx, ly = e.ly, w = e.pillW || e.label.length * fs * 0.52 + 44, h = fs + 22;
+          el("rect", { x: lx - w / 2, y: ly - h / 2, width: w, height: h, rx: h / 2, fill: e.pillFill || "#2a1416", stroke: e.color || "#94a3b8", "stroke-width": 2.5 }, svg);
+          const t = el("text", { x: lx, y: ly + 1, "text-anchor": "middle", "dominant-baseline": "middle", "font-size": fs, fill: e.labelColor || "#fff" }, svg); t.textContent = e.label;
+        }
+        return;
+      }
       const a = byId[e.from], b = byId[e.to];
       const ac = [a.x + a.w / 2, a.y + a.h / 2], bc = [b.x + b.w / 2, b.y + b.h / 2];
       let mid = e.via;

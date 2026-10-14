@@ -38,7 +38,7 @@
         { from: "me", to: "chat", label: "asks" },
         { from: "chat", to: "fde", color: C.blue }, { from: "chat", to: "qa", color: C.pink }, { from: "chat", to: "ops", color: C.orange },
         { from: "fde", to: "pr", color: C.blue }, { from: "qa", to: "pr", color: C.pink }, { from: "ops", to: "pr", color: C.orange },
-        { from: "pr", to: "me", via: [820, 655], color: C.red, label: "I approve + merge", labelColor: "#fca5a5", size: 30, lx: 330, ly: 580 }
+        { points: [[1270, 385], [1270, 645], [125, 645], [125, 402]], color: C.red, label: "I approve + merge", labelColor: "#fecaca", size: 26, lx: 520, ly: 645 }
       ]
     });
 
