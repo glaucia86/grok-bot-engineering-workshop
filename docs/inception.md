@@ -48,6 +48,18 @@ All three bots share four rules: never merge, use connectors first and the brows
 **DevOps Engineer: draft instructions**
 > You are the DevOps Engineer for Talk Feedback. Maintain the GitHub Actions workflow (tests, `verify`, Playwright) and the Vercel preview and production deploys. Report the preview URL and the CI status of each PR, with links. Keep secrets only in GitHub and Vercel settings, never in files. Never merge. Connectors first, browser last. One task, one prompt.
 
+## Skills per bot (from skills.sh)
+
+Each bot gets only two or three skills, because every skill it loads costs context. The FDE and DevOps bots take skills from [skills.sh](https://www.skills.sh). The QA bot also gets two skills that already live in the repo.
+
+| Bot | Skills |
+|---|---|
+| FDE | [shadcn](https://www.skills.sh/shadcn-ui/ui/shadcn), [vercel-react-best-practices](https://www.skills.sh/vercel-labs/agent-skills/vercel-react-best-practices), [neon-drizzle](https://www.skills.sh/neondatabase/ai-rules/neon-drizzle) |
+| QA Engineer | [playwright-best-practices](https://www.skills.sh/currents-dev/playwright-best-practices-skill/playwright-best-practices), [playwright-cli](https://www.skills.sh/microsoft/playwright-cli/playwright-cli), plus pstack `create-verification-skill` and `interrogate` (already vendored) |
+| DevOps Engineer | [deploy-to-vercel](https://www.skills.sh/vercel-labs/agent-skills/deploy-to-vercel), [vercel-cli-with-tokens](https://www.skills.sh/vercel-labs/agent-skills/vercel-cli-with-tokens), [ci-cd-and-automation](https://www.skills.sh/addyosmani/agent-skills/ci-cd-and-automation) |
+
+There is no strong official skill for Zod or for Drizzle on its own, so the bots should use the official documentation for those.
+
 ## 5. Acceptance criteria
 
 1. `POST /api/feedback` with a valid talk, author, comment, and rating saves a row in Postgres and returns `201`.
@@ -70,3 +82,5 @@ A public account by kaize ([post on X](https://x.com/0x_kaize/status/21100556850
 Live time is too short for infrastructure. So the database, the Vercel project, CI, and the base app all arrive ready in a **checkpoint branch**. On stage, attendees only create the bots, build one feature, verify it, approve it, and see the preview.
 
 Two risks must be solved before the event, not on stage. First, **Vercel deployment protection** is on by default and blocks Playwright from reaching preview URLs. The fix is Vercel's *Protection Bypass for Automation* secret, stored as a GitHub Actions secret and never committed to files. Second, the **Neon `DATABASE_URL`** must exist only as an environment variable in Vercel and a secret in GitHub, never in the repository.
+
+The Vercel and Neon accounts already exist and are linked to GitHub. The presenter must set `DATABASE_URL` as a Vercel environment variable and as a GitHub secret. It must never appear in files or in chat.
