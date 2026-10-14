@@ -9,7 +9,7 @@
 
 <p>
 <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
-<img alt="Node.js 20+" src="https://img.shields.io/badge/Node.js-20%2B-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" />
+<img alt="Node.js 24 LTS" src="https://img.shields.io/badge/Node.js-24%20LTS-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" />
 <img alt="Fastify" src="https://img.shields.io/badge/Fastify-000000?style=for-the-badge&logo=fastify&logoColor=white" />
 <img alt="Vitest" src="https://img.shields.io/badge/Vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=white" />
 <img alt="Hands-on" src="https://img.shields.io/badge/Format-Hands--on-F97316?style=for-the-badge" />
@@ -77,7 +77,7 @@ Uma API pequena em TypeScript onde quem participa de um evento envia e lista fee
 ```text
 src/app.ts        Fastify routes
 src/store.ts      In-memory store
-src/server.ts     Starts the server (PORT, default 3000)
+src/server.ts     Starts the server (PORT defaults to 3000; HOST defaults to 0.0.0.0)
 test/app.test.ts  Vitest tests
 docs/issues/      Seed issues for the workshop
 .agents/skills/   pstack skills (MIT, Lauren Tan)
@@ -117,7 +117,7 @@ gantt
 | 20–40 | Skill de verificação | `create-verification-skill` | `checkpoint/03-verification` |
 | 40–55 | Tarefa em segundo plano | agente de nuvem | `checkpoint/04-backup-pr` |
 | 55–70 | Aprovação humana | `interrogate` | `checkpoint/04-backup-pr` |
-| 70–82 | Rotina diária de triagem | — | `checkpoint/05-routine` |
+| 70–82 | Rotina diária de triagem | Definição de agendamento | `checkpoint/05-routine` |
 | 82–90 | Perguntas e respostas | — | — |
 
 ---
@@ -130,7 +130,7 @@ Faça isto **antes** de 17 de novembro. Leva uns 10 minutos.
 1. Crie uma conta no **Grok Bot** e faça login.
 2. **Conecte o GitHub** ao Grok Bot: no chat, peça ao Grok Bot para conectar a sua conta do GitHub. Ele mostra um cartão de conexão no próprio chat; é só seguir.
 3. Faça um **fork** deste repositório para a sua conta do GitHub. Na página do fork, **desmarque "Copy the main branch only"** para que as branches de checkpoint venham junto.
-4. Opcional, para rodar localmente: instale o [Node.js 20+](https://nodejs.org/) e o [Git](https://git-scm.com/).
+4. Opcional, para rodar localmente: instale o [Node.js 24 LTS](https://nodejs.org/) e o [Git](https://git-scm.com/).
 
 ✅ **Resultado esperado:** você tem o seu próprio fork, e o Grok Bot consegue enxergá-lo.
 

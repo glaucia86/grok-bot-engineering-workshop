@@ -9,7 +9,7 @@
 
 <p>
 <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
-<img alt="Node.js 20+" src="https://img.shields.io/badge/Node.js-20%2B-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" />
+<img alt="Node.js 24 LTS" src="https://img.shields.io/badge/Node.js-24%20LTS-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" />
 <img alt="Fastify" src="https://img.shields.io/badge/Fastify-000000?style=for-the-badge&logo=fastify&logoColor=white" />
 <img alt="Vitest" src="https://img.shields.io/badge/Vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=white" />
 <img alt="Hands-on" src="https://img.shields.io/badge/Format-Hands--on-F97316?style=for-the-badge" />
@@ -75,7 +75,7 @@ A tiny TypeScript API where event attendees submit and list feedback on talks.
 ```text
 src/app.ts        Fastify routes
 src/store.ts      In-memory store
-src/server.ts     Starts the server (PORT, default 3000)
+src/server.ts     Starts the server (PORT defaults to 3000; HOST defaults to 0.0.0.0)
 test/app.test.ts  Vitest tests
 docs/issues/      Seed issues for the workshop
 .agents/skills/   pstack skills (MIT, Lauren Tan)
@@ -115,7 +115,7 @@ gantt
 | 20–40 | Verification skill | `create-verification-skill` | `checkpoint/03-verification` |
 | 40–55 | Background task | cloud agent | `checkpoint/04-backup-pr` |
 | 55–70 | Human approval | `interrogate` | `checkpoint/04-backup-pr` |
-| 70–82 | Daily triage routine | built-in routines | `checkpoint/05-routine` |
+| 70–82 | Daily triage routine | Scheduler draft | `checkpoint/05-routine` |
 | 82–90 | Q&A | — | — |
 
 ---
@@ -128,7 +128,7 @@ Do this **before** November 17. It takes about 10 minutes.
 1. Create a **Grok Bot** account and sign in.
 2. **Connect GitHub** to Grok Bot: in the chat, ask Grok Bot to connect your GitHub account. It shows a connect card right in the chat; follow it.
 3. **Fork** this repository to your own GitHub account. On the fork page, **uncheck "Copy the main branch only"** so the checkpoint branches come along.
-4. Optional, to run things locally: install [Node.js 20+](https://nodejs.org/) and [Git](https://git-scm.com/).
+4. Optional, to run things locally: install [Node.js 24 LTS](https://nodejs.org/) and [Git](https://git-scm.com/).
 
 ✅ **Expected result:** you have your own fork, and Grok Bot can see it.
 
