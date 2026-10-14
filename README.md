@@ -16,7 +16,7 @@
 <img alt="MIT" src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" />
 </p>
 
-English · Português (Brasil): coming soon
+English · [Português (Brasil)](README.pt-br.md)
 
 </div>
 
