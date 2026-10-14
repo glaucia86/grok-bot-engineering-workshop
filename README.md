@@ -240,8 +240,17 @@ Now the bot works **in the background** while you keep going.
 ```text
 In the background, using a cloud agent, implement the talk rating feature
 following the design in docs/design/talk-rating.md.
-Run npm test and the verification skill in .agents/skills/verify-talk-feedback
-(npm run verify).
+Extend the verification skill in .agents/skills/verify-talk-feedback before running it.
+Keep the four existing checks and add these five checks on a fresh server:
+1) POST /feedback with rating 4 returns 201 and echoes rating 4;
+2) POST /feedback for the same talk with rating 5 returns 201 and echoes rating 5;
+3) POST /feedback with rating 6 returns 400;
+4) GET /talks/:talkId/rating for that talk returns average 4.5 and count 2;
+5) GET /talks/:talkId/rating for a talk without ratings returns average null and count 0.
+Use isolated talk IDs so the existing checks do not affect these assertions.
+Commit the updated checks with the feature in the same PR.
+Run npm test and npm run verify. Require Result: 9/9 PASS from the executed checks;
+if a check fails, fix the implementation or report the failure without fabricating evidence.
 Open a pull request to main with: what changed, why, how to test,
 and the verification evidence. Do not merge.
 ```
@@ -294,7 +303,7 @@ and npm run verify, and show me each command with its full output.
 Do not approve and do not merge.
 ```
 
-✅ **Expected result:** tests are green, `npm run verify` ends with `Result: 9/9 PASS`, and you see `"average":5`.
+✅ **Expected result:** tests are green, `npm run verify` ends with `Result: 9/9 PASS`, and the rating checks show `"average":4.5` with `"count":2`. The optional manual example on a fresh server returns `"average":5`.
 
 **5.3 · Decide.** Approve and merge **yourself** on GitHub, or ask for changes. **Never auto-merge.**
 
@@ -312,18 +321,20 @@ flowchart LR
 <a id="step6"></a>
 ## Step 6 · A daily triage routine (70–82 min)
 
-Now the bot keeps working even when you are not in the chat.
+Prepare a scheduled triage draft for later review and activation.
 
 **Paste this prompt:**
 
 ```text
-Create a daily routine for this repository: every weekday at 9 AM,
-read new issues, restate each one in your own words,
-label them (bug, feature, unclear), and post a short triage summary to me.
-Do not change code and do not close issues.
+Read docs/routines/daily-triage.md and draft the scheduler configuration
+for this repository: weekdays at 9 AM in America/Sao_Paulo.
+Use the execution prompt and private delivery rules from that document.
+Propose labels (bug, feature, unclear); do not apply them.
+Show the definition and a sample summary for review. Keep it disabled;
+do not create or enable a scheduled task during this exercise.
 ```
 
-✅ **Expected result:** a routine definition that you can review before turning it on. Reference version: [`docs/routines/daily-triage.md`](docs/routines/daily-triage.md) on `checkpoint/05-routine`.
+✅ **Expected result:** a disabled scheduler draft and preview, following [`docs/routines/daily-triage.md`](docs/routines/daily-triage.md). The document lists scheduler requirements and a manual fallback; no routine is activated during this exercise.
 
 🚩 **Checkpoint branch:** `checkpoint/05-routine`
 
