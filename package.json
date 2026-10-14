@@ -12,7 +12,8 @@
     "dev": "tsx watch src/server.ts",
     "start": "tsx src/server.ts",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "verify": "node .agents/skills/verify-talk-feedback/verify.mjs"
   },
   "dependencies": {
     "fastify": "^5.12.7"
