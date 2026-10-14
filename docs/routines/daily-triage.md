@@ -1,4 +1,4 @@
-# Daily triage routine (Extended, 90 min)
+# Daily triage routine (Step 6, 90-minute workshop)
 
 This is a scheduler draft, disabled by default. Preparing this file does not
 schedule a task. The `automate-me` skill concerns personal working preferences

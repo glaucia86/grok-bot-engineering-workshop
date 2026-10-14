@@ -5,7 +5,7 @@
 
 # Build Your First Engineering Bot with Grok Bot
 
-**A hands-on Packt workshop · November 17, 2026 · 9–10 AM ET (11h–12h Brasília)**
+**A hands-on Packt workshop · November 17, 2026 · 9:00–10:30 AM ET (11h–12h30 Brasília) · 90 minutes**
 
 <p>
 <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
@@ -31,12 +31,12 @@ English · [Português (Brasil)](README.pt-br.md)
 - [Agenda](#agenda)
 - [Before the event (prerequisites)](#prereqs)
 - [Step 1 · Setup check (0–5 min)](#step1)
-- [Step 2 · Understand and design (5–15 min)](#step2)
-- [Step 3 · Build the verification skill (15–30 min)](#step3)
-- [Step 4 · Background task: the cloud agent opens a PR (30–42 min)](#step4)
-- [Step 5 · Human approval (42–55 min)](#step5)
-- [Step 6 · Q&A (55–60 min)](#step6)
-- [Extended (90 min) · A daily triage routine](#extended)
+- [Step 2 · Understand and design (5–20 min)](#step2)
+- [Step 3 · Build the verification skill (20–40 min)](#step3)
+- [Step 4 · Background task: the cloud agent opens a PR (40–55 min)](#step4)
+- [Step 5 · Human approval (55–70 min)](#step5)
+- [Step 6 · A daily triage routine (70–82 min)](#step6)
+- [Step 7 · Q&A (82–90 min)](#step7)
 - [Checkpoint branches](#checkpoints)
 - [Credits and further reading](#credits)
 - [About the presenter](#creator)
@@ -94,28 +94,29 @@ npm start
 
 ```mermaid
 gantt
-    title 60-minute base agenda
+    title 90-minute agenda
     dateFormat mm
     axisFormat %M min
     section Hands-on
     Setup check            :a1, 00, 5m
-    Understand + design    :a2, after a1, 10m
-    Verification skill     :a3, after a2, 15m
-    Background task (PR)   :a4, after a3, 12m
-    Human approval         :a5, after a4, 13m
-    Q&A                    :a6, after a5, 5m
+    Understand + design    :a2, after a1, 15m
+    Verification skill     :a3, after a2, 20m
+    Background task (PR)   :a4, after a3, 15m
+    Human approval         :a5, after a4, 15m
+    Daily triage routine   :a6, after a5, 12m
+    Q&A                    :a7, after a6, 8m
 ```
 
 | Time | Block | Skill | Checkpoint branch |
 | :--- | :--- | :--- | :--- |
 | Before | Prerequisites | — | `main` |
 | 0–5 | Setup check | — | `checkpoint/01-setup` |
-| 5–15 | Understand + design | `in-your-own-words`, `architect` | `checkpoint/02-design` |
-| 15–30 | Verification skill | `create-verification-skill` | `checkpoint/03-verification` |
-| 30–42 | Background task | cloud agent | `checkpoint/04-backup-pr` |
-| 42–55 | Human approval | `interrogate` | `checkpoint/04-backup-pr` |
-| 55–60 | Q&A | — | — |
-| *Extended (90 min)* | Daily triage routine + more Q&A | Scheduler draft | `checkpoint/05-routine` |
+| 5–20 | Understand + design | `in-your-own-words`, `architect` | `checkpoint/02-design` |
+| 20–40 | Verification skill | `create-verification-skill` | `checkpoint/03-verification` |
+| 40–55 | Background task | cloud agent | `checkpoint/04-backup-pr` |
+| 55–70 | Human approval | `interrogate` | `checkpoint/04-backup-pr` |
+| 70–82 | Daily triage routine | Scheduler draft | `checkpoint/05-routine` |
+| 82–90 | Q&A | — | — |
 
 ---
 
@@ -125,8 +126,8 @@ gantt
 Do this **before** November 17. It takes about 10 minutes.
 
 1. Create a **Grok Bot** account and sign in.
-2. **Connect GitHub** to Grok Bot (Settings → Connections → GitHub).
-3. **Fork** this repository to your own GitHub account.
+2. **Connect GitHub** to Grok Bot: in the chat, ask Grok Bot to connect your GitHub account. It shows a connect card right in the chat; follow it.
+3. **Fork** this repository to your own GitHub account. On the fork page, **uncheck "Copy the main branch only"** so the checkpoint branches come along.
 4. Optional, to run things locally: install [Node.js 24 LTS](https://nodejs.org/) and [Git](https://git-scm.com/).
 
 ✅ **Expected result:** you have your own fork, and Grok Bot can see it.
@@ -152,7 +153,7 @@ Do not change anything.
 ---
 
 <a id="step2"></a>
-## Step 2 · Understand and design (5–15 min)
+## Step 2 · Understand and design (5–20 min)
 
 We start from a **deliberately vague** issue: [`docs/issues/01-add-talk-rating.md`](docs/issues/01-add-talk-rating.md) — *"add talk rating"*. Real issues look like this.
 
@@ -181,16 +182,18 @@ Use the architect skill from .agents/skills/architect.
 Design the smallest change for the clarified rating feature.
 Show the files you will change, the API contract, and the tests.
 Do not write code yet.
+Save the design to docs/design/talk-rating.md and commit it to my fork,
+so a cloud agent can read it later.
 ```
 
-✅ **Expected result:** a short design: `src/store.ts`, `src/app.ts`, `test/app.test.ts`, the request/response shapes, and the test cases.
+✅ **Expected result:** a short design: `src/store.ts`, `src/app.ts`, `test/app.test.ts`, the request/response shapes, and the test cases, saved and committed as `docs/design/talk-rating.md` in your fork.
 
 🚩 **Checkpoint branch:** `checkpoint/02-design` (contains `docs/design/talk-rating.md`)
 
 ---
 
 <a id="step3"></a>
-## Step 3 · Build the verification skill (15–30 min)
+## Step 3 · Build the verification skill (20–40 min)
 
 > **Build the lever.** Instead of checking the bot's work by hand every time, build a tool once that proves the work is correct. This idea comes from Lauren Tan ([@poteto](https://x.com/poteto)) and her [pstack](https://github.com/cursor/plugins/tree/main/pstack) principles.
 
@@ -218,16 +221,17 @@ It must: 1) boot the API with npm start on a free port,
 3) stop the server, 4) print the evidence: each command, its output, and PASS or FAIL.
 Add an npm script "verify" that runs it.
 Then run it once and show me the evidence.
+Finally, commit the new verification skill and the verify script to my fork.
 ```
 
-✅ **Expected result:** a new folder `.agents/skills/verify-talk-feedback/` with a `SKILL.md` and a script, a new `npm run verify` command, and evidence ending with `Result: 4/4 PASS`.
+✅ **Expected result:** a new folder `.agents/skills/verify-talk-feedback/` with a `SKILL.md` and a script, a new `npm run verify` command, evidence ending with `Result: 4/4 PASS`, and a commit in your fork.
 
 🚩 **Checkpoint branch:** `checkpoint/03-verification`
 
 ---
 
 <a id="step4"></a>
-## Step 4 · Background task: the cloud agent opens a PR (30–42 min)
+## Step 4 · Background task: the cloud agent opens a PR (40–55 min)
 
 Now the bot works **in the background** while you keep going.
 
@@ -235,8 +239,18 @@ Now the bot works **in the background** while you keep going.
 
 ```text
 In the background, using a cloud agent, implement the talk rating feature
-following the design from Step 2.
-Run npm test and the verify-talk-feedback skill.
+following the design in docs/design/talk-rating.md.
+Extend the verification skill in .agents/skills/verify-talk-feedback before running it.
+Keep the four existing checks and add these five checks on a fresh server:
+1) POST /feedback with rating 4 returns 201 and echoes rating 4;
+2) POST /feedback for the same talk with rating 5 returns 201 and echoes rating 5;
+3) POST /feedback with rating 6 returns 400;
+4) GET /talks/:talkId/rating for that talk returns average 4.5 and count 2;
+5) GET /talks/:talkId/rating for a talk without ratings returns average null and count 0.
+Use isolated talk IDs so the existing checks do not affect these assertions.
+Commit the updated checks with the feature in the same PR.
+Run npm test and npm run verify. Require Result: 9/9 PASS from the executed checks;
+if a check fails, fix the implementation or report the failure without fabricating evidence.
 Open a pull request to main with: what changed, why, how to test,
 and the verification evidence. Do not merge.
 ```
@@ -250,7 +264,7 @@ and the verification evidence. Do not merge.
 ---
 
 <a id="step5"></a>
-## Step 5 · Human approval (42–55 min)
+## Step 5 · Human approval (55–70 min)
 
 The bot can review. **Only a human approves.**
 
@@ -281,7 +295,15 @@ curl -s -X POST localhost:3000/feedback -H 'content-type: application/json' \
 curl -s localhost:3000/talks/keynote/rating
 ```
 
-✅ **Expected result:** tests are green, `npm run verify` ends with `Result: 9/9 PASS`, and you see `"average":5`.
+**No Node.js or local clone?** Ask Grok Bot to do it for you and show the evidence:
+
+```text
+Check out the branch of pull request <PR link>, run npm install, npm test
+and npm run verify, and show me each command with its full output.
+Do not approve and do not merge.
+```
+
+✅ **Expected result:** tests are green, `npm run verify` ends with `Result: 9/9 PASS`, and the rating checks show `"average":4.5` with `"count":2`. The optional manual example on a fresh server returns `"average":5`.
 
 **5.3 · Decide.** Approve and merge **yourself** on GitHub, or ask for changes. **Never auto-merge.**
 
@@ -297,19 +319,9 @@ flowchart LR
 ---
 
 <a id="step6"></a>
-## Step 6 · Q&A (55–60 min)
+## Step 6 · A daily triage routine (70–82 min)
 
-Questions! Want to keep practicing? Try the other seed issues:
-[`02-delete-feedback.md`](docs/issues/02-delete-feedback.md) and [`03-feedback-summary.md`](docs/issues/03-feedback-summary.md).
-
----
-
-<a id="extended"></a>
-## Extended (90 min) · A daily triage routine
-
-> 🕐 **Only in the 90-minute version.** In the 60-minute version, this is homework.
-
-**Extended block A · Draft a scheduled triage routine (about 20 min)**
+Prepare a scheduled triage draft for later review and activation.
 
 **Paste this prompt:**
 
@@ -322,11 +334,17 @@ Show the definition and a sample summary for review. Keep it disabled;
 do not create or enable a scheduled task during this exercise.
 ```
 
-✅ **Expected result:** a disabled scheduler draft and a sample summary, using [`docs/routines/daily-triage.md`](docs/routines/daily-triage.md). After review, configure it in an agent scheduler that supports GitHub access, an IANA timezone, persistent run state, and private delivery. If your environment lacks a scheduler, keep the draft and run the prompt manually; a Markdown file alone does not schedule execution.
+✅ **Expected result:** a disabled scheduler draft and preview, following [`docs/routines/daily-triage.md`](docs/routines/daily-triage.md). The document lists scheduler requirements and a manual fallback; no routine is activated during this exercise.
 
 🚩 **Checkpoint branch:** `checkpoint/05-routine`
 
-**Extended block B · More Q&A (about 10 min)**
+---
+
+<a id="step7"></a>
+## Step 7 · Q&A (82–90 min)
+
+Questions! Want to keep practicing? Try the other seed issues:
+[`02-delete-feedback.md`](docs/issues/02-delete-feedback.md) and [`03-feedback-summary.md`](docs/issues/03-feedback-summary.md).
 
 ---
 
@@ -344,7 +362,7 @@ git checkout checkpoint/02-design   # replace with the branch you need
 | `checkpoint/02-design` | + design doc `docs/design/talk-rating.md` |
 | `checkpoint/03-verification` | + `verify-talk-feedback` skill and `npm run verify` |
 | `checkpoint/04-backup-pr` | + talk rating implemented with tests (backup PR) |
-| `checkpoint/05-routine` | + daily triage routine `docs/routines/daily-triage.md` (extended) |
+| `checkpoint/05-routine` | + daily triage routine `docs/routines/daily-triage.md` |
 
 ---
 
