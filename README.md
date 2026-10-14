@@ -216,10 +216,11 @@ Create a verification skill for this API in .agents/skills/verify-talk-feedback.
 It must: 1) boot the API with npm start on a free port,
 2) call GET /health, POST /feedback and GET /feedback with curl,
 3) stop the server, 4) print the evidence: each command, its output, and PASS or FAIL.
+Add an npm script "verify" that runs it.
 Then run it once and show me the evidence.
 ```
 
-✅ **Expected result:** a new folder `.agents/skills/verify-talk-feedback/` with a `SKILL.md` (and a script), plus evidence where every check says **PASS**.
+✅ **Expected result:** a new folder `.agents/skills/verify-talk-feedback/` with a `SKILL.md` and a script, a new `npm run verify` command, and evidence ending with `Result: 4/4 PASS`.
 
 🚩 **Checkpoint branch:** `checkpoint/03-verification`
 
@@ -271,6 +272,8 @@ git fetch origin
 git checkout <pr-branch>
 npm install
 npm test
+npm run verify      # boots the API, calls every endpoint, prints PASS/FAIL
+# optional, by hand:
 npm start
 # in another terminal:
 curl -s -X POST localhost:3000/feedback -H 'content-type: application/json' \
@@ -278,7 +281,7 @@ curl -s -X POST localhost:3000/feedback -H 'content-type: application/json' \
 curl -s localhost:3000/talks/keynote/rating
 ```
 
-✅ **Expected result:** tests are green and you see `"average":5`.
+✅ **Expected result:** tests are green, `npm run verify` ends with `Result: 9/9 PASS`, and you see `"average":5`.
 
 **5.3 · Decide.** Approve and merge **yourself** on GitHub, or ask for changes. **Never auto-merge.**
 
@@ -318,7 +321,7 @@ label them (bug, feature, unclear), and post a short triage summary to me.
 Do not change code and do not close issues.
 ```
 
-✅ **Expected result:** a routine definition that you can review before turning it on.
+✅ **Expected result:** a routine definition that you can review before turning it on. Reference version: [`docs/routines/daily-triage.md`](docs/routines/daily-triage.md) on `checkpoint/05-routine`.
 
 🚩 **Checkpoint branch:** `checkpoint/05-routine`
 
@@ -337,10 +340,10 @@ git checkout checkpoint/02-design   # replace with the branch you need
 | Branch | State |
 | :--- | :--- |
 | `checkpoint/01-setup` | Starting point: API, tests, skills, seed issues |
-| `checkpoint/02-design` | + clarified issue and design doc |
-| `checkpoint/03-verification` | + `verify-talk-feedback` skill |
-| `checkpoint/04-backup-pr` | + talk rating implemented (backup PR) |
-| `checkpoint/05-routine` | + daily triage routine (extended) |
+| `checkpoint/02-design` | + design doc `docs/design/talk-rating.md` |
+| `checkpoint/03-verification` | + `verify-talk-feedback` skill and `npm run verify` |
+| `checkpoint/04-backup-pr` | + talk rating implemented with tests (backup PR) |
+| `checkpoint/05-routine` | + daily triage routine `docs/routines/daily-triage.md` (extended) |
 
 ---
 
