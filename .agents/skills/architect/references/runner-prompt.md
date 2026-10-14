@@ -17,4 +17,4 @@ Apply the following discipline. The orchestrator compares candidates on these ax
 - Idempotent state transitions where applicable. Ask what happens if the operation runs twice or crashes halfway.
 - Keep call chains short and traceable; avoid unnecessary layers that increase reader effort.
 
-You are one of the parallel runners, each on a different model. Produce the best design your model can make. Don't hedge against the others. Differences between candidates are the signal used to pick a base and graft. Converging on a safe-looking middle defeats the exploration.
+Produce one independent candidate, whether working inline or as a parallel runner. Don't hedge against the others. Differences between candidates are the signal used to pick a base and graft. Converging on a safe-looking middle defeats the exploration.
