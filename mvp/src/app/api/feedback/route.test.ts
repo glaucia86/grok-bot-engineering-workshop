@@ -47,6 +47,14 @@ describe("actual handlers with mocked database boundary", () => {
     boundary.getDb.mockReturnValue({ select: () => ({ from: async () => [] }) });
     expect(await (await GET()).json()).toEqual([]);
   });
+  it("combines case variants through public GET", async () => {
+    boundary.getDb.mockReturnValue({ select: () => ({ from: async () => [
+      { talkId: "Talk A", rating: 5 }, { talkId: "talk a", rating: 3 },
+    ] }) });
+    const response = await GET();
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual([{ talkId: "Talk A", average: 4, count: 2 }]);
+  });
   it("returns one-decimal averages and counts per talk", async () => {
     boundary.getDb.mockReturnValue({ select: () => ({ from: async () => [
       { talkId: "a", rating: 5 }, { talkId: "a", rating: 4 },
