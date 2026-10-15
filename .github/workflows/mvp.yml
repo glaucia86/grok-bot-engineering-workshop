@@ -43,3 +43,15 @@ jobs:
       - run: npm run build
       - run: npm run typecheck
       - run: npm run verify:http
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test --config=playwright.config.ts
+      - name: Retain local browser evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: mvp-local-browser-evidence
+          path: |
+            mvp/playwright-report/
+            mvp/test-results/
+          if-no-files-found: ignore
+          retention-days: 7

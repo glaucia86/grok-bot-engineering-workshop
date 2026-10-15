@@ -18,6 +18,11 @@ describe("feedbackSchema", () => {
     expect(feedbackSchema.safeParse({ ...valid, comment: "x".repeat(1001) }).success).toBe(false);
     expect(feedbackSchema.safeParse({ ...valid, comment: "x".repeat(1000) }).success).toBe(true);
   });
+  it.each([1, 1000, 1001])("validates comment boundary %s after trimming", (length) => {
+    const result = feedbackSchema.safeParse({ ...valid, comment: `  ${"x".repeat(length)}  ` });
+    expect(result.success).toBe(length <= 1000);
+    if (result.success) expect(result.data.comment.length).toBe(length);
+  });
   it.each([[undefined], [0], [6], [2.5], ["5"]])("rejects rating %s", (rating) => {
     expect(feedbackSchema.safeParse({ ...valid, rating }).success).toBe(false);
   });
@@ -27,6 +32,9 @@ describe("feedbackSchema", () => {
 });
 
 describe("summarize", () => {
+  it("rounds the exact 4.25 half boundary up to 4.3", () => {
+    expect(summarize([5, 4, 4, 4].map((rating) => ({ talkId: "Talk", rating })))).toEqual([{ talkId: "Talk", average: 4.3, count: 4 }]);
+  });
   it("groups case variants while preserving the first spelling and input rows", () => {
     const rows = [
       { talkId: "Talk A", rating: 5 },
