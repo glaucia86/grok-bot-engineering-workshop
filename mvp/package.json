@@ -11,7 +11,9 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "typecheck": "next typegen && tsc --noEmit",
-    "verify:http": "node scripts/verify-http.mjs"
+    "verify:http": "node scripts/verify-http.mjs",
+    "test:e2e": "playwright test --config=playwright.config.ts",
+    "test:e2e:preview": "playwright test --config=playwright.preview.config.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
@@ -30,14 +32,19 @@
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.10",
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/turbopack": "^4",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
     "@types/node": "^24.19.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "drizzle-kit": "^0.31.11",
     "eslint": "^9",
     "eslint-config-next": "16.4.1",
+    "happy-dom": "^21.0.1",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5",
     "vitest": "^5.0.4"
   }

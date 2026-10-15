@@ -1,0 +1,85 @@
+"use client";
+
+import { useRef, useState, type FormEvent } from "react";
+import { ArrowUpRight, Check } from "lucide-react";
+import { feedbackSchema, fieldErrors } from "@/lib/feedback-schema";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Textarea } from "./ui/textarea";
+
+const initial = { talkId: "", author: "", comment: "", rating: "" };
+
+export function FeedbackForm({ onSaved }: { onSaved: () => void }) {
+  const [values, setValues] = useState(initial);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [status, setStatus] = useState<"idle" | "saving" | "saved">("idle");
+  const [failure, setFailure] = useState("");
+  const pending = useRef(false);
+  const form = useRef<HTMLFormElement>(null);
+
+  function focusError(next: Record<string, string>) {
+    const name = ["talkId", "author", "comment", "rating"].find((key) => next[key]);
+    requestAnimationFrame(() => form.current?.querySelector<HTMLElement>(`[name="${name}"]`)?.focus());
+  }
+
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (pending.current) return;
+    setFailure(""); setStatus("idle");
+    const parsed = feedbackSchema.safeParse({ ...values, rating: values.rating === "" ? undefined : Number(values.rating) });
+    if (!parsed.success) {
+      const next = fieldErrors(parsed.error);
+      setErrors(next); focusError(next); return;
+    }
+    setErrors({}); setStatus("saving"); pending.current = true;
+    try {
+      const response = await fetch("/api/feedback", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(parsed.data),
+      });
+      const body = await response.json().catch(() => null);
+      if (response.status === 400 && body?.errors && typeof body.errors === "object") {
+        const next = Object.fromEntries(Object.entries(body.errors).filter((entry): entry is [string, string] => typeof entry[1] === "string"));
+        setErrors(next); focusError(next); setStatus("idle");
+        if (next.body || Object.keys(next).length === 0) setFailure("We could not save your feedback. Please try again.");
+        return;
+      }
+      if (response.status !== 201 || !body || !Number.isInteger(body.id) || !feedbackSchema.safeParse(body).success || typeof body.createdAt !== "string") {
+        throw new Error("Unexpected creation response");
+      }
+      setValues(initial); setStatus("saved"); onSaved();
+    } catch {
+      setFailure("We could not save your feedback. Your entries are still here. Please try again."); setStatus("idle");
+    } finally { pending.current = false; }
+  }
+
+  const update = (key: keyof typeof initial, value: string) => {
+    setValues((previous) => ({ ...previous, [key]: value }));
+    if (status === "saved") setStatus("idle");
+  };
+
+  return (
+    <section id="feedback" className="feedback-panel" aria-labelledby="feedback-title">
+      <header className="panel-heading"><span className="section-number" aria-hidden="true">01 / CONTRIBUTE</span><h2 id="feedback-title">How was the talk?</h2><p>A useful detail makes the next session better.</p></header>
+      <form ref={form} onSubmit={submit} noValidate aria-busy={status === "saving"}>
+        <p className="form-note">All fields are required.</p>
+        {([ ["talkId", "Talk", "The talk you attended"], ["author", "Your name", "How should we call you?"] ] as const).map(([key, label, placeholder]) => (
+          <div className="form-field" key={key}>
+            <Label htmlFor={key}>{label}</Label>
+            <Input id={key} name={key} value={values[key]} placeholder={placeholder} required disabled={status === "saving"} aria-invalid={!!errors[key]} aria-describedby={errors[key] ? `${key}-error` : undefined} onChange={(event) => update(key, event.target.value)} />
+            {errors[key] && <p id={`${key}-error`} className="field-error">{errors[key]}</p>}
+          </div>
+        ))}
+        <fieldset className="rating-field" aria-describedby={`rating-hint${errors.rating ? " rating-error" : ""}`} aria-invalid={!!errors.rating} disabled={status === "saving"}>
+          <legend>Rating</legend><p id="rating-hint">1 = needs work · 5 = excellent</p>
+          <div className="rating-options">{[1, 2, 3, 4, 5].map((rating) => <label className="rating-option" key={rating}><input type="radio" name="rating" value={rating} checked={values.rating === String(rating)} required onChange={(event) => update("rating", event.target.value)} /><span>{rating}</span></label>)}</div>
+          {errors.rating && <p id="rating-error" className="field-error">{errors.rating}</p>}
+        </fieldset>
+        <div className="form-field"><Label htmlFor="comment">Comment</Label><Textarea id="comment" name="comment" rows={4} value={values.comment} placeholder="What clicked? What could be clearer?" required disabled={status === "saving"} aria-invalid={!!errors.comment} aria-describedby={`comment-hint${errors.comment ? " comment-error" : ""}`} onChange={(event) => update("comment", event.target.value)} /><p id="comment-hint" className="field-hint">{values.comment.trim().length} / 1000 characters after trimming</p>{errors.comment && <p id="comment-error" className="field-error">{errors.comment}</p>}</div>
+        {failure && <p role="alert" className="save-error">{failure}</p>}
+        <Button type="submit" className="submit-button" disabled={status === "saving"}>{status === "saving" ? "Saving…" : "Send feedback"}<ArrowUpRight aria-hidden="true" /></Button>
+        <div aria-live="polite" aria-atomic="true">{status === "saved" && <p className="save-success"><Check aria-hidden="true" size={18} />Feedback saved. Thank you for helping the next talk.</p>}</div>
+      </form>
+    </section>
+  );
+}
