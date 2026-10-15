@@ -19,6 +19,19 @@ Como usar: deixe este guia aberto numa tela e compartilhe a outra. Leia em voz a
 
 ---
 
+
+## Trilha e estado da preparação
+
+A trilha principal é o MVP Next.js em `mvp/`; a API Fastify da raiz e os três exercícios antigos são prática extra. Fontes: [spec](../../spec.md), [inception](../inception.md) e [índice de issues/exercícios](../issues/README.md).
+
+Ponto de partida inspecionado: main `78783663fe2cdc345ca885cebb9f3778341254bc` (15/10/2026), com API/schema/migration/testes e página inicial padrão; sem formulário/dashboard. A spec já entrou no PR #11. PRs [#9](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/9) e [#10](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/10) continuam pendentes nesta revisão: revalidar antes do evento. Não usar `checkpoint/mvp-base` como garantia de conter critérios/correções posteriores.
+
+Preparação: [#16](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/16) comprova infraestrutura/API na preview isolada; [#17](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/17) alinha material. Referência completa na main e exercícios correspondentes: [#18](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/18) formulário e [#19](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/19) dashboard, podendo compartilhar um único PR de funcionalidade. A aplicação de referência completa deve ser construída e validada antes do evento na main, por PRs e merges humanos. A turma usa checkpoint/mvp-base separado e congelado com lacunas intencionais; não mover essa ref para a referência completa.
+
+Comentário obrigatório após trim (1–1000), nota inteira 1–5, média com uma casa (`4.25` → `4.3`) e agrupamento `Talk A`/`talk a` seguem a spec. QA usa três skills fixas. WARN vale só para lacunas de cobertura AC9; falhas continuam FAIL, falta de acesso/isolamento/evidência continua BLOCKED. Os critérios 11–12 (reload e ausência de segredos) dependem da incorporação do PR #9; não dizer que já estão no inception de main.
+
+Este ajuste revisa texto e prompts. O deck visual e seus prompts antigos de critérios precisam de atualização na [issue #20](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/20) e da conferência final prevista em #17; números de slides e aparência não foram revalidados aqui.
+
 ## Como usar o deck
 
 O deck fica em `docs/speaker/slides/index.html`. Ele funciona offline: o reveal.js, o rough.js (desenhos estilo Excalidraw) e a fonte Virgil estão dentro da pasta `docs/speaker/slides/vendor/`.
@@ -50,7 +63,7 @@ O deck fica em `docs/speaker/slides/index.html`. Ele funciona offline: o reveal.
 | 11:12 | 9:12 | 9 | **Ao vivo:** prompt de design para o FDE | Grok Bot | Só arquivos e testes |
 | 11:20 | 9:20 | 10 | Aprovar design (prompt FDE); "Green CI is not acceptance" | Grok Bot → Deck | — |
 | 11:23 | 9:23 | 11 | Loop PR → verify → approve | Deck | 30 s |
-| 11:25 | 9:25 | 12 | **Ao vivo:** prompt do QA, mostrar PASS/FAIL/BLOCKED | Grok Bot | 2 ou 3 critérios |
+| 11:25 | 9:25 | 12 | **Ao vivo:** prompt do QA, mostrar PASS/FAIL/WARN/BLOCKED | Grok Bot | 2 ou 3 critérios |
 | 11:40 | 9:40 | 13 | **Ao vivo:** prompt do DevOps, status do CI e preview | Grok Bot / GitHub | Preview direto pelo PR |
 | 11:47 | 9:47 | 14 | **Ao vivo:** enviar feedback, ver a barra no dashboard | Preview | Só um feedback |
 | 11:55 | 9:55 | 15 | Quem decide sou eu: desfaz em 1 min × humano decide | Deck | — |
@@ -80,8 +93,10 @@ O deck fica em `docs/speaker/slides/index.html`. Ele funciona offline: o reveal.
 > "This is live, so things can be slow."
 > *É ao vivo, então pode demorar.*
 
-> "Let me show you the recording instead."
-> *Vou mostrar a gravação no lugar.*
+> "This exercise is blocked. Let me show the verified reference app."
+> *Este exercício está bloqueado. Vou mostrar a aplicação de referência verificada.*
+
+Use a referência aceita da main somente se estiver acessível. Se ela também estiver indisponível, explique a limitação e mostre o código/evidência já retida, sem afirmar sucesso do exercício. Uma gravação é opcional, apenas se existir e for identificada como pré-gravada; este guia não exige nem afirma que ela existe.
 
 > "I'll read the question in the chat."
 > *Vou ler a pergunta no chat.*
@@ -96,21 +111,34 @@ O deck fica em `docs/speaker/slides/index.html`. Ele funciona offline: o reveal.
 
 ## Checklist antes do evento
 
+### Fork e checkpoint antes do exercício
+
+Ao criar o fork autorizado, **desmarque “Copy the DEFAULT branch only”**: o GitHub só copia todas as branches quando essa opção fica desmarcada ([documentação oficial](https://docs.github.com/en/pull-requests/how-tos/work-with-forks/fork-a-repo?tool=webui)). Antes de começar, siga a [verificação e recuperação do checkpoint no README PT-BR](../../README.pt-br.md#verifique-o-checkpoint-do-exercício) ([English](../../README.md#verify-the-exercise-checkpoint)). No clone, confira que `origin` é o fork de exercícios autorizado e execute:
+
+```sh
+git ls-remote --exit-code --heads origin refs/heads/checkpoint/mvp-base
+```
+
+O resultado deve ter exatamente o SHA congelado aprovado na issue #21 e a ref `refs/heads/checkpoint/mvp-base`. Ref ausente, erro de acesso ou SHA divergente mantém **BLOCKED**; não usar `main` como alternativa. Se o fork veio só com a branch padrão, a recuperação documentada cria apenas a branch ausente a partir do upstream autorizado, com permissão e conferência do SHA, sem sobrescrever branches ou copiar credenciais. Só então criar a branch de exercício a partir do SHA verificado.
+
+**Fala em inglês:** “When you fork, uncheck ‘Copy the DEFAULT branch only’ so the exercise checkpoint comes with it. Before we start, verify the exact remote branch and compare its commit with the instructor-approved frozen base. If it is missing or different, stop and ask for help. Do not start from main.”
+
+
 - [x] Projeto **`grok-bot-workshop-mvp`** criado na Vercel, com Root Directory `mvp`.
 - [x] `DATABASE_URL` configurada na Vercel.
 - [x] Tabela `feedback` criada no Neon.
-- [ ] **Apagar a linha do smoke test** da tabela `feedback` no Neon antes do ensaio. Você mesma faz isso no console do Neon. Confira depois que a tabela está vazia, porque o dashboard precisa abrir no estado vazio.
+- [ ] Confirmar dataset de teste isolado para o estado vazio. Nunca esvaziar banco compartilhado; nome único não isola o banco. Não apagar o smoke test pré-existente sem autorização específica. Limpar somente dados da execução autorizada.
 - [ ] Colocar a `DATABASE_URL` também como **secret no GitHub Actions**. Ela nunca vai em arquivo nem em chat.
 - [ ] Gerar o **Protection Bypass for Automation** da Vercel e salvar como secret no GitHub Actions, para o Playwright conseguir abrir a preview. Conferir no ensaio.
-- [ ] No checkpoint `checkpoint/mvp-base`, preparar e verificar **antes do evento** o workflow de GitHub Actions, o harness com URL explícita da preview e a configuração do Playwright. Secrets configuradas e uma URL disponível, sozinhas, não comprovam esse fluxo.
-- [ ] Abrir um PR de ensaio a partir desse checkpoint e guardar o SHA testado, os links do CI e da preview e os artefatos. Comprovar na **preview real** os critérios do inception: formulário → dashboard, entradas inválidas, estado vazio em dataset isolado e persistência após uma nova instância contra o mesmo banco de teste. Executar Vitest no CI e limpar apenas os dados/processos criados pelo ensaio, preservando a evidência.
-- [ ] Só considerar a infraestrutura pronta após esse ensaio passar. Se faltar CI, harness, isolamento ou acesso à preview, registrar **BLOCKED**, preparar a correção antes do evento ou usar a gravação; o verificador Fastify local não substitui a validação da preview.
+- [ ] No commit de base revisado e registrado, preparar e verificar **antes do evento** o workflow de GitHub Actions, o harness com URL explícita da preview e a configuração do Playwright. Secrets configuradas e uma URL disponível, sozinhas, não comprovam esse fluxo.
+- [ ] Antes do evento, comprovar a **infraestrutura/API** da issue #16: preview real, POST válido/inválido, GET público, dados isolados e persistência após nova instância, com SHA, CI e artefatos. A página inicial ainda pode ser a padrão. Depois da implementação de #18/#19, ensaiar a aplicação de referência completa na main e guardar sua evidência. Separadamente, verificar a base e as lacunas do checkpoint/mvp-base usado pela turma. A UI completa da referência é uma entrega explícita, não deve ser copiada para preencher as lacunas do exercício.
+- [ ] Só considerar a infraestrutura pronta após esse ensaio passar. Se faltar CI, harness, isolamento ou acesso à preview, registrar **BLOCKED**, preparar a correção antes do evento; no palco, explicar o bloqueio e mostrar a referência aceita se disponível; o verificador Fastify local não substitui a validação da preview.
 - [ ] Decidir a **visibilidade do repositório** (público ou privado). Antes, confira o histórico em busca de segredos.
 - [ ] Atualizar o **Luma/Eventbrite** para 90 minutos.
-- [ ] **Ensaio completo** com cronômetro, prints da **sua** conta e gravação de cada bloco como plano B.
+- [ ] **Ensaio completo** com cronômetro, prints da **sua** conta e demonstração da referência aceita como alternativa, sem confundi-la com o resultado do exercício.
 - [ ] QA e DevOps **ainda não criados**. As instruções deles ficam abertas numa aba, prontas para colar.
 - [ ] Notificações desligadas e nenhum token visível na tela.
-- [ ] Depois do ensaio, apagar os dados de teste de novo.
+- [ ] Depois do ensaio, limpar somente os dados/processos identificados como pertencentes à execução autorizada, preservando a evidência.
 
 ---
 
@@ -121,12 +149,12 @@ Todo bot tem um charter de três partes. A primeira diz **do que ele é dono**. 
 | Bot | É dono de | Boa entrega | Onde para |
 |---|---|---|---|
 | FDE | Implementação e PR | PR com o que mudou, por que e como testar, mais os testes e a preview | Sem push na main, sem merge, sem force-push |
-| QA | Julgar o PR pela seção 5 do inception | PASS, FAIL ou BLOCKED por critério, com evidência | Sem merge, e só apaga o que ele mesmo criou |
+| QA | Julgar o PR pela seção 5 do inception | PASS, FAIL, WARN (só cobertura AC9) ou BLOCKED por critério, com evidência | Sem merge, e só apaga o que ele mesmo criou |
 | DevOps | CI e Vercel | Link do CI e preview URL, com os segredos conferidos só pela presença | Não mostra nem pede segredo, sem merge |
 
 Skills, no máximo 3 por bot:
 - **FDE:** shadcn, vercel-react-best-practices, neon-drizzle.
-- **QA:** playwright-best-practices, playwright-cli e a skill de verificação do pstack (`create-verification-skill`). O `interrogate` do pstack entra no lugar de uma delas, se precisar. Decidir no ensaio.
+- **QA:** playwright-best-practices, playwright-cli e a skill de verificação do pstack (`create-verification-skill`). Não carregar `interrogate` neste papel.
 - **DevOps:** deploy-to-vercel, ci-cd-and-automation.
 
 ---
@@ -136,13 +164,13 @@ Skills, no máximo 3 por bot:
 ✂️ **Se atrasar, corte isto:** pule o README e mostre só a pasta `mvp/`.
 
 **O que fazer**
-Mostre o repositório nesta ordem: `README.md`, depois a pasta `mvp/` e por fim o `docs/inception.md`. Diga que a base já está pronta (banco, API, schema e testes). Ao vivo, a turma constrói só o formulário e o dashboard.
+Mostre o repositório nesta ordem: `README.md`, depois a pasta `mvp/` e por fim o `docs/inception.md`. Diga o que existe no commit: API, schema, migration e testes. Só declare a infraestrutura pronta após a evidência da issue #16. Mostre a referência completa na main quando aceita; ao vivo, a turma constrói o formulário/dashboard a partir do checkpoint/mvp-base separado, mantendo a referência intacta.
 
 **Passo a passo** (slides 1 a 5)
 1. 10:45: abra o deck, aperte **F** na tela compartilhada e **S** na tela de leitura. Zere o cronômetro da speaker view às 11:00.
 2. Deixe abertas, nesta ordem, as abas: GitHub do repositório, Grok Bot, instruções do QA e do DevOps (seção 4 do `docs/inception.md`), e uma aba vazia para a preview.
 3. 11:00 (slide 1): boas-vindas. 11:01 (slide 2): agenda.
-4. 11:02 (slide 3): Alt+Tab para o GitHub. Mostre `README.md`, depois a pasta `mvp/` na branch `checkpoint/mvp-base`, depois role o `docs/inception.md` até a seção 5. Volte ao deck.
+4. 11:02 (slide 3): Alt+Tab para o GitHub. Mostre `README.md`, depois a pasta `mvp/` no checkpoint/mvp-base congelado para o exercício, compare com a referência main, depois role o `docs/inception.md` até a seção 5. Volte ao deck.
 5. 11:03 (slide 4): arquitetura. 11:04 (slide 5): a regra principal, devagar.
 
 **Por que isso importa**
@@ -168,14 +196,14 @@ Infraestrutura ao vivo quebra fácil e consome o tempo da aula. Com a base pront
 ✂️ **Se atrasar, corte isto:** não crie o DevOps ao vivo. Mostre só as instruções dele.
 
 **O que fazer**
-Crie o **FDE do zero**: use o botão de criar bot (caminho exato: conferir no ensaio) e cole o prompt abaixo. Depois crie o **QA** e o **DevOps** colando as instruções da seção 4 do `docs/inception.md`. Adicione as skills, no máximo 3 por bot. Por fim, coloque os três num grupo com você.
+Crie o **FDE do zero**: use o botão de criar bot (caminho exato: conferir no ensaio) e cole o prompt abaixo. Depois crie o **QA** e o **DevOps** usando as instruções da seção 4 do `docs/inception.md` após conferir a incorporação do PR #9. Enquanto ele estiver pendente, aplicar explicitamente o conjunto fixo de três skills e a regra WARN deste guia; não copiar a lista antiga de quatro skills. Adicione as skills, no máximo 3 por bot. Por fim, coloque os três num grupo com você.
 
 **Passo a passo** (slides 6 a 8)
 1. 11:05 (slide 6): mostre o fluxo do time com o cursor.
 2. 11:06 (slide 7): leia só "owns, good output, stops" e a frase amarela.
 3. 11:07 (slide 8): Alt+Tab para o Grok Bot. Clique no botão de criar bot (caminho: conferir no ensaio). Nome: **FDE TypeScript**. Cole o prompt do FDE.
 4. Adicione as 3 skills do FDE (shadcn, vercel-react-best-practices, neon-drizzle). Onde ficam as skills no app: conferir no ensaio.
-5. Crie o **QA bot** e o **DevOps** colando as instruções da seção 4 do inception. Skills de cada um conforme a tabela acima.
+5. Crie o **QA bot** e o **DevOps** com as instruções da seção 4 do inception conferidas contra este guia: três skills fixas e WARN apenas para cobertura; não carregar a quarta skill do texto antigo enquanto #9 estiver pendente. Skills de cada um conforme a tabela acima.
 6. Crie o grupo com você e os três bots (como criar grupo: conferir no ensaio). Volte ao deck por volta de 11:11.
 
 **Por que isso importa**
@@ -230,9 +258,9 @@ Corrigir um mal-entendido no design custa pouco. Corrigir no código custa caro.
 
 **Prompt:**
 ```
-Read docs/inception.md (section 5, Future Next.js MVP contract) and the mvp/ folder on branch checkpoint/mvp-base.
+Read spec.md, docs/inception.md section 5, the selected form/dashboard issue (#18/#19), and mvp/ at the agreed reviewed base commit. Check PR #9/#10 prerequisites; do not assume they are merged.
 Write a short design, no code yet, for two features: the public feedback form and the talk dashboard with a shadcn bar chart.
-Include: clarified decisions, files to change, the shared Zod schema usage, the empty state, and the Vitest and Playwright tests mapped to acceptance criteria 4 to 10.
+Include: clarified decisions, files to change, the shared Zod schema usage, the empty state, and the Vitest and Playwright tests mapped to applicable merged acceptance criteria, including reload and secret checks from PR #9 once merged. Keep comment required (trimmed 1–1000), integer rating 1–5, identical API/form errors and one-decimal means (4.25 → 4.3).
 List anything you assumed separately. Stop and wait for my approval.
 ```
 
@@ -246,14 +274,14 @@ List anything you assumed separately. Stop and wait for my approval.
 ✂️ **Se atrasar, corte isto:** não espere o QA terminar todos os critérios. Mostre os resultados de 2 ou 3 e siga.
 
 **O que fazer**
-Cole o prompt do FDE para aprovar o design. Em seguida, cole o prompt do QA. Mostre que o QA julga pelos critérios do inception, não pelo relatório do FDE. No fim, mostre o resultado PASS, FAIL ou BLOCKED de cada critério.
+Cole o prompt do FDE para aprovar o design. Em seguida, cole o prompt do QA. Mostre que o QA julga pelos critérios do inception, não pelo relatório do FDE. No fim, mostre o resultado PASS, FAIL, WARN (só cobertura AC9) ou BLOCKED de cada critério.
 
 **Passo a passo** (slides 10 a 12)
 1. 11:20 (slide 10): cole no chat do FDE o prompt "Design approved…". Volte ao deck.
 2. 11:23 (slide 11): explique o loop PR → verify → approve.
 3. 11:25 (slide 12): abra o chat do QA bot (ou o grupo) e cole o prompt do QA.
 4. Mostre que o QA monta o checklist a partir do inception, sem ler a descrição do PR.
-5. Quando o PR estiver pronto, mostre o commit testado e PASS/FAIL/BLOCKED por critério.
+5. Quando o PR estiver pronto, mostre o commit testado e PASS/FAIL/WARN/BLOCKED por critério.
 6. Às 11:38, se ainda estiver rodando, mostre o que já saiu e siga.
 
 **Por que isso importa**
@@ -271,13 +299,14 @@ Quem fez o trabalho tende a achar que está certo. Um bot separado, olhando só 
 
 **Prompt (FDE):**
 ```
-Design approved. Implement it on a new branch from checkpoint/mvp-base and open a PR. Run the Vitest suite and paste the output. Do not merge.
+Design approved for this workshop exercise. Implement it on a new branch from the frozen reviewed checkpoint/mvp-base commit, keeping the complete reference main separate, and open or update one exercise PR only after identifying the instructor-approved exercise repository and target branch. Never target the canonical reference main or move checkpoint/mvp-base; stop if the exercise target is unspecified. The form and dashboard may share this PR. Run the Vitest suite and paste the output. Do not merge.
 ```
 
 **Prompt (QA):**
 ```
-Using the pstack verification skill, build a checklist from docs/inception.md section 5, criteria 1 to 10, without reading the author's PR description.
-When the PR is ready, identify the tested commit, run the checks, and report PASS, FAIL, or BLOCKED per criterion with commands, target URL, outputs, and artifacts.
+Using create-verification-skill, build a checklist from spec.md and the merged inception criteria, without using the author's PR description as the acceptance source. Keep acceptance BLOCKED until PR #9 is merged. Include all applicable criteria, including 11–12 after that merge.
+When the PR is ready, identify the tested commit, run the checks, and report PASS, FAIL, WARN (AC9 coverage gaps only), or BLOCKED per criterion with commands, target URL, outputs, and artifacts.
+Use the verified #16 preview path and isolated data. Observe saved contributions through public GET/dashboard, not direct remote database inspection. Check reload and separately fresh-instance persistence. Missing access/isolation/evidence is BLOCKED; failed tests remain failures.
 If you can't show where a number came from, leave it out. Never merge.
 ```
 
@@ -296,7 +325,7 @@ Mostre que o trabalho roda na nuvem, não no seu computador. Cole o prompt do De
 **Passo a passo** (slides 13 e 14)
 1. 11:40 (slide 13): diga que roda na nuvem. Cole o prompt do DevOps no chat dele.
 2. Mostre a resposta: link do CI, preview URL, segredos "present (redacted)". Nenhum valor de segredo na tela.
-3. 11:47 (slide 14): abra a preview. Mostre o dashboard vazio.
+3. 11:47 (slide 14): abra a preview do commit testado, após a UI existir. Mostre estado vazio apenas no dataset isolado; nunca limpe banco compartilhado para isso.
 4. Envie um feedback pelo formulário. Volte ao dashboard e mostre a barra.
 5. Se der tempo, peça uma nota no chat e envie mais um.
 
@@ -329,12 +358,12 @@ Verify DATABASE_URL and the protection bypass secret by presence only, values re
 ✂️ **Se atrasar, corte isto:** se vier FAIL, não corrija ao vivo. Mostre o FAIL como exemplo e diga que a correção fica para depois.
 
 **O que fazer**
-Abra o PR e leia três partes: o que mudou, o relatório do QA e o status do CI. Se estiver tudo em PASS, aprove e faça **você** o merge, na tela. Se vier FAIL, cole o prompt abaixo.
+Abra o PR e leia três partes: o que mudou, o relatório do QA e o status do CI. Confirme primeiro o repositório e a branch de destino do exercício, separados da main de referência e do checkpoint congelado. Se os critérios obrigatórios passarem e os WARN de cobertura forem avaliados, aprove e faça **você** o merge nesse destino de exercício, na tela. Se vier FAIL, cole o prompt abaixo.
 
 **Passo a passo** (slides 15 e 16)
 1. 11:55 (slide 15): os dois cards (desfaz em 1 minuto × humano decide).
 2. 11:58 (slide 16): abra o PR no GitHub. Leia: o que mudou → relatório do QA → status do CI.
-3. Tudo PASS: aprove e clique você mesma no merge, devagar, na tela.
+3. Critérios obrigatórios aprovados e WARN de cobertura avaliados: decida e faça você mesma o merge no destino de exercício previamente conferido, nunca na main de referência nem no checkpoint congelado. Com FAIL/BLOCKED, não apresente o MVP como aceito.
 4. FAIL: cole o prompt de correção para o FDE (ou mostre o FAIL como exemplo, se estiver atrasada).
 5. BLOCKED: explique que falta acesso ou infraestrutura, e que isso é honesto.
 

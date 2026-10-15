@@ -4,7 +4,7 @@
 
 This document frames the work for the live Packt workshop **"Build Your First Engineering Bot with Grok Bot"** (November 17, 9:00–10:30 AM ET). We will turn Talk Feedback into a small but real MVP. Ninety minutes is not much time, and the audience needs to *see* something happen, so every decision below favors a visible result: a form you can submit, a chart that moves, and a preview URL that appears on the pull request.
 
-This is a plan for the future Next.js MVP, not a description of the existing Fastify API. The acceptance criteria in section 5 apply to that migration; the current workshop exercise keeps its existing contract until the migration is implemented and verified. The 90-minute schedule agrees with both READMEs on main after PR #4.
+This defines the Next.js MVP reference application and its separate workshop exercise checkpoint, not the existing Fastify API. The acceptance criteria in section 5 apply to that migration; the current workshop exercise keeps its existing contract until the migration is implemented and verified. The 90-minute schedule agrees with both READMEs on main after PR #4.
 
 ## 2. MVP scope
 
@@ -73,9 +73,9 @@ Baseline: main at `e27be476632f14dd7296b21c0c209e064df49b9a` (PRs #2 and #4 merg
 - Storage is in memory. The rating endpoint counts rated submissions and returns a two-decimal average (or `null` with count 0 when there are no ratings).
 - `npm run verify` launches and tests its own localhost API. It does not accept a preview base URL. There is no Next.js form, Postgres persistence, or Playwright preview proof in this baseline.
 
-### Future Next.js MVP contract
+### Next.js MVP target contract
 
-The following are implementation requirements, not claims that the current API already passes. The migration must update routes, workshop prompts, API tests, and verification together. Keep `/feedback` as the existing exercise route until that coordinated change lands; introduce `/api/feedback` only as part of the Next.js migration, documenting the compatibility or retirement plan for the old route.
+The following are implementation requirements, not claims that the current API already passes. The migration must update routes, workshop prompts, API tests, and verification together. The two applications now coexist: root Fastify keeps `/feedback`, while the Next.js base in `mvp/` serves `/api/feedback`. This does not retire the legacy route or make it an alias in Next.js.
 
 1. `POST /api/feedback` accepts JSON with `talkId`, `author`, `comment`, and `rating`. Trim the three text fields; each is required and must remain non-empty after trimming. The trimmed comment must be at most 1000 characters. Save the normalized values in Postgres and return `201`.
 2. A missing rating, a non-number, a non-integer, or a number below 1 or above 5 returns `400` with a field-specific validation message. Do not coerce API strings into numbers.
@@ -96,7 +96,9 @@ A public account by kaize ([post on X](https://x.com/0x_kaize/status/21100556850
 
 ## 7. Stage rule and known risks
 
-Live time is too short for infrastructure. Before the event, the planned database, Vercel project, CI, and base app must be prepared and verified in a **checkpoint branch**; this document does not provision them or claim they are ready. On stage, attendees only create the bots, build one feature, verify it, approve it, and see the preview.
+The presenter’s October 15 decision supersedes the earlier restriction against implementing the full UI before the event. [spec.md](../spec.md) records the contract; [the issue index](issues/README.md) links the preparation, reference-app, slides and checkpoint deliveries. The acceptance refinements in [PR #9](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/9) remain a separate pending patch; this update does not duplicate them or declare them merged.
+
+Live time is too short for infrastructure. The approved delivery has two separate states: **a complete reference application on main**, including the form and dashboard, and **a frozen checkpoint/mvp-base for exercises**, retaining the deliberate feature gaps. Prepare, review and verify the reference before the event; only the human merges it. Verify the checkpoint independently and record its exact commit and gaps without moving its ref as part of documentation work. On stage, attendees create the bots and implement the exercises from that base, compare with the reference, verify their preview, and make the human approval decision. This document does not provision infrastructure or claim either state is already ready.
 
 Two risks must be solved before the event, not on stage. First, **Vercel deployment protection** is on by default and blocks Playwright from reaching preview URLs. The fix is Vercel's *Protection Bypass for Automation* secret, stored as a GitHub Actions secret and never committed to files. Second, the **Neon `DATABASE_URL`** must exist only as an environment variable in Vercel and a secret in GitHub, never in the repository.
 
