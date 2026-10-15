@@ -109,6 +109,11 @@ body-level error.
 
 `GET /api/feedback` returns an array of `{ talkId, average, count }`, with each
 average rounded to one decimal and an empty array when there is no feedback.
+Talk IDs are grouped case-insensitively (`Talk A` and `talk a` are one talk).
+The summary retains the spelling of the first row encountered for each group;
+the database query does not promise a particular row order. Stored feedback and
+POST responses keep the original trimmed spelling. Only the grouping key is
+lowercased; accents, punctuation and internal whitespace remain significant.
 A JSON number such as `3` can be displayed as `3.0` by the future dashboard.
 
 ## Vercel preview and remaining acceptance work
