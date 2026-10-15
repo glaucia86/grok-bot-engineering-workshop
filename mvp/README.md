@@ -110,6 +110,10 @@ body-level error.
 `GET /api/feedback` returns an array of `{ talkId, average, count }`, with each
 average rounded to one decimal and an empty array when there is no feedback.
 A JSON number such as `3` can be displayed as `3.0` by the future dashboard.
+Talk names are grouped case-insensitively after the shared schema trims submitted
+text: `Talk A` and `talk a` contribute to one average and count. The existing
+reference aggregation is reused; stored spelling is unchanged. The form and
+dashboard remain intentionally absent from this exercise starter.
 
 ## Vercel preview and remaining acceptance work
 

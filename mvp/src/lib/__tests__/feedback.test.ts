@@ -27,6 +27,28 @@ describe("feedbackSchema", () => {
 });
 
 describe("summarize", () => {
+  it("groups case variants without changing input spellings", () => {
+    const rows = [
+      { talkId: "Talk A", rating: 5 },
+      { talkId: "talk a", rating: 4 },
+      { talkId: "TALK A", rating: 4 },
+      { talkId: "Talk B", rating: 2 },
+    ];
+    const original = structuredClone(rows);
+    expect(summarize(rows)).toEqual([
+      { talkId: "Talk A", average: 4.3, count: 3 },
+      { talkId: "Talk B", average: 2, count: 1 },
+    ]);
+    expect(rows).toEqual(original);
+  });
+  it("rounds a grouped 4.25 average up to 4.3", () => {
+    expect(summarize([
+      { talkId: "Talk", rating: 5 },
+      { talkId: "talk", rating: 4 },
+      { talkId: "TALK", rating: 4 },
+      { talkId: "Talk", rating: 4 },
+    ])).toEqual([{ talkId: "Talk", average: 4.3, count: 4 }]);
+  });
   it("returns empty for no rows", () => expect(summarize([])).toEqual([]));
   it("averages per talk with one decimal", () => {
     expect(

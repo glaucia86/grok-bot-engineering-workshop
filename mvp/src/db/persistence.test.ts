@@ -67,4 +67,16 @@ describe("durable isolated PostgreSQL adapter integration", () => {
       { talkId: "b", average: 1, count: 1 }, { talkId: "t1", average: 4.3, count: 3 },
     ]);
   });
+  it("groups trimmed case variants after reopen while preserving stored spelling", async () => {
+    for (const [talkId, rating] of [[" Talk A ", 5], [" talk a ", 4], [" TALK A ", 4], ["Talk A", 4]] as const) {
+      const response = await post({ ...valid, talkId, rating });
+      expect(response.status).toBe(201);
+      expect((await response.json()).talkId).toBe(talkId.trim());
+    }
+    await client!.close(); client = undefined;
+    await open();
+    const stored = await client!.query("SELECT talk_id FROM feedback ORDER BY id");
+    expect(stored.rows).toEqual([{ talk_id: "Talk A" }, { talk_id: "talk a" }, { talk_id: "TALK A" }, { talk_id: "Talk A" }]);
+    expect(await (await GET()).json()).toEqual([{ talkId: "Talk A", average: 4.3, count: 4 }]);
+  });
 });
