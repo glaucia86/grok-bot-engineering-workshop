@@ -98,3 +98,8 @@ svg.sketch text { font-family: var(--hand); fill: var(--text); }
 .recap .card { min-height: 470px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
 .recap .av { width: 110px; height: 110px; }
 .recap .big-quote { color: var(--text); }
+
+/* Accessible navigation and coverage-only status. */
+.reveal { --r-link-color: #f59e0b; }
+.reveal .controls { color: #f59e0b; }
+.warn { background: rgba(59,130,246,.16); color: #93c5fd; border: 2px solid #3b82f6; }
