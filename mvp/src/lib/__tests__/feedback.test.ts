@@ -27,6 +27,20 @@ describe("feedbackSchema", () => {
 });
 
 describe("summarize", () => {
+  it("groups case variants while preserving the first spelling and input rows", () => {
+    const rows = [
+      { talkId: "Talk A", rating: 5 },
+      { talkId: "talk a", rating: 4 },
+      { talkId: "TALK A", rating: 4 },
+      { talkId: "Talk B", rating: 2 },
+    ];
+    const original = structuredClone(rows);
+    expect(summarize(rows)).toEqual([
+      { talkId: "Talk A", average: 4.3, count: 3 },
+      { talkId: "Talk B", average: 2, count: 1 },
+    ]);
+    expect(rows).toEqual(original);
+  });
   it("returns empty for no rows", () => expect(summarize([])).toEqual([]));
   it("averages per talk with one decimal", () => {
     expect(
