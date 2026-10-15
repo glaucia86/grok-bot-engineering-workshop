@@ -15,22 +15,9 @@ CI runs local browser checks after build and does not receive database secrets.
 
 ## Actual preview (issue #16)
 
-Do not run remote write checks against the currently shared preview/production
-database. First obtain an isolated preview dataset and explicit authorization for
-the test writes and their lifecycle. Configure the preview's secure protection
-access separately; do not print bypass tokens or include them in a target URL.
-
-The separate `playwright.preview.config.ts` refuses to run unless all three are set:
-
-- `MVP_PREVIEW_URL`: actual HTTPS PR preview origin, no embedded credentials.
-- `MVP_PREVIEW_COMMIT`: exact 40-character tested commit SHA.
-- `MVP_PREVIEW_ISOLATED_AUTHORIZED=true`: attestation that isolation and write
-  authorization have been established, not an instruction to create credentials.
-
-Then run `npx playwright test --config=playwright.preview.config.ts`. It uses the
-real public form/API, unique talk names, and verifies the new contribution after
-reload. It retains the created talk identifier for authorized environment cleanup;
-it never deletes unrelated feedback. The isolated environment owner must retire
-the dataset after retaining evidence. This harness alone does not provision that
-environment or prove empty-state isolation/fresh-instance persistence. AC10 remains
-BLOCKED until those preview-specific checks and lifecycle evidence are completed.
+See [the opt-in preview run contract](../PREVIEW_QA.md) for all required
+non-secret variables, target policy, write limits, evidence and remaining blocks.
+Never run against the shared preview/production database. The remote configuration
+is not executed automatically by CI and does not prove isolation or fresh-instance
+persistence. The local transport regression uses two run-owned loopback servers;
+it proves HTTP/redirect/popup/WebSocket containment, not remote acceptance.
