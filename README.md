@@ -3,7 +3,7 @@
 
 <img src="assets/banner.webp" alt="Build Your First Engineering Bot with Grok Bot — Packt workshop banner" width="100%" />
 
-# Build Your First Engineering Bot with Grok Bot
+# Build Your First Engineering Bot Team with Grok Bot
 
 **A hands-on Packt workshop · November 17, 2026 · 9:00–10:30 AM ET (11h–12h30 Brasília) · 90 minutes**
 
