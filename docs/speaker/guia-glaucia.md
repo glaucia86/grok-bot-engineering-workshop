@@ -111,6 +111,19 @@ Use a referência aceita da main somente se estiver acessível. Se ela também e
 
 ## Checklist antes do evento
 
+### Fork e checkpoint antes do exercício
+
+Ao criar o fork autorizado, **desmarque “Copy the DEFAULT branch only”**: o GitHub só copia todas as branches quando essa opção fica desmarcada ([documentação oficial](https://docs.github.com/en/pull-requests/how-tos/work-with-forks/fork-a-repo?tool=webui)). Antes de começar, siga a [verificação e recuperação do checkpoint no README PT-BR](../../README.pt-br.md#verifique-o-checkpoint-do-exercício) ([English](../../README.md#verify-the-exercise-checkpoint)). No clone, confira que `origin` é o fork de exercícios autorizado e execute:
+
+```sh
+git ls-remote --exit-code --heads origin refs/heads/checkpoint/mvp-base
+```
+
+O resultado deve ter exatamente o SHA congelado aprovado na issue #21 e a ref `refs/heads/checkpoint/mvp-base`. Ref ausente, erro de acesso ou SHA divergente mantém **BLOCKED**; não usar `main` como alternativa. Se o fork veio só com a branch padrão, a recuperação documentada cria apenas a branch ausente a partir do upstream autorizado, com permissão e conferência do SHA, sem sobrescrever branches ou copiar credenciais. Só então criar a branch de exercício a partir do SHA verificado.
+
+**Fala em inglês:** “When you fork, uncheck ‘Copy the DEFAULT branch only’ so the exercise checkpoint comes with it. Before we start, verify the exact remote branch and compare its commit with the instructor-approved frozen base. If it is missing or different, stop and ask for help. Do not start from main.”
+
+
 - [x] Projeto **`grok-bot-workshop-mvp`** criado na Vercel, com Root Directory `mvp`.
 - [x] `DATABASE_URL` configurada na Vercel.
 - [x] Tabela `feedback` criada no Neon.

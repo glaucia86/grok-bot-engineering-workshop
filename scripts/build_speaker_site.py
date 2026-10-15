@@ -47,7 +47,12 @@ def render_guide(text):
     body = re.sub(r'href="([^"]+)"', lambda m: 'href="'+source_url(m[1])+'"', body)
     # English quotes are spoken aloud; Portuguese directions/translations stay visible.
     body = re.sub(r'<p>(["“].*?["”])(.*?)</p>', r'<p><span lang="en" class="spoken">\1</span>\2</p>', body, flags=re.S)
-    body = re.sub(r'<pre><code(?: class="[^"]*")?>', '<div class="prompt"><button type="button" class="copy-prompt">Copiar prompt</button><pre><code lang="en">', body)
+    def copy_block(match):
+        command = 'language-sh' in match[0]
+        kind, label = ('command', 'comando') if command else ('prompt', 'prompt')
+        wrapper = 'prompt command' if command else 'prompt'
+        return f'<div class="{wrapper}"><button type="button" class="copy-{kind}">Copiar {label}</button><pre><code lang="en">'
+    body = re.sub(r'<pre><code(?: class="[^"]*")?>', copy_block, body)
     body = body.replace('</code></pre>', '</code></pre></div>')
     # Link each run-sheet slide number (human 1-based, Reveal hash 0-based).
     def table_links(match):

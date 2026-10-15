@@ -44,10 +44,14 @@ try:
         page.wait_for_load_state('networkidle')
         assert page.url == base+'guide/'
         assert page.locator('.copy-prompt').count() == 7
+        assert page.locator('.copy-command').count() == 1
+        page.locator('.copy-command').click()
+        page.wait_for_function("document.querySelector('.copy-status').textContent === 'Comando copiado.'")
+        assert page.evaluate('navigator.clipboard.readText()') == 'git ls-remote --exit-code --heads origin refs/heads/checkpoint/mvp-base'
         page.locator('.copy-prompt').first.click()
         page.wait_for_function("document.querySelector('.copy-status').textContent === 'Prompt copiado.'")
         copied = page.evaluate('navigator.clipboard.readText()')
-        assert copied == page.locator('.prompt code').first.text_content().rstrip('\n')
+        assert copied == page.locator('.prompt:not(.command) code').first.text_content().rstrip('\n')
         page.screenshot(animations='disabled', path=str(OUT/'guide-prompt-desktop.png'))
         page.evaluate('window.scrollTo(0,0)')
         page.screenshot(animations='disabled', path=str(OUT/'guide-desktop.png'))
@@ -61,15 +65,15 @@ try:
         page.evaluate("Object.defineProperty(navigator.clipboard, 'writeText', {configurable:true,value:()=>Promise.reject(new Error('test rejection'))})")
         page.locator('.copy-prompt').first.click()
         page.wait_for_function("document.querySelector('.copy-status').textContent.startsWith('Cópia bloqueada.')")
-        assert page.evaluate('getSelection().getRangeAt(0).cloneContents().textContent') == page.locator('.prompt code').first.text_content()
-        assert page.evaluate('getSelection().toString()').rstrip('\n') == page.locator('.prompt code').first.text_content().rstrip('\n')
+        assert page.evaluate('getSelection().getRangeAt(0).cloneContents().textContent') == page.locator('.prompt:not(.command) code').first.text_content()
+        assert page.evaluate('getSelection().toString()').rstrip('\n') == page.locator('.prompt:not(.command) code').first.text_content().rstrip('\n')
         page.evaluate("delete navigator.clipboard.writeText; document.querySelector('.copy-status').textContent=''; getSelection().removeAllRanges(); window.scrollTo(0,0)")
         results.append('guide: clipboard success, simulated rejection selection fallback, local anchors and project-base slide links PASS')
         for width in (390, 768):
             page.set_viewport_size({'width':width,'height':844})
             page.screenshot(animations='disabled', path=str(OUT/f'guide-{width}.png'))
             assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), f'guide overflow at {width}'
-            page.locator('.prompt').first.scroll_into_view_if_needed()
+            page.locator('.prompt:not(.command)').first.scroll_into_view_if_needed()
             page.screenshot(animations='disabled', path=str(OUT/f'guide-prompt-{width}.png'))
             page.evaluate('window.scrollTo(0,0)')
         results.append('guide: 390px/768px document overflow PASS')

@@ -44,6 +44,10 @@ class SpeakerSite(unittest.TestCase):
             output = (pathlib.Path(tmp)/'site/guide/index.html').read_text()
             copied = [unescape(x).rstrip() for x in re.findall(r'<pre><code[^>]*>(.*?)</code></pre>',output,re.S)]
             self.assertEqual([x.rstrip() for x in prompts],copied)
+            self.assertEqual(output.count('class="copy-prompt"'),7)
+            self.assertEqual(output.count('class="copy-command"'),1)
+            self.assertIn('Copiar comando',output)
+            self.assertIn('git ls-remote --exit-code --heads origin refs/heads/checkpoint/mvp-base',output)
     def test_all_relative_resources_and_anchors_resolve(self):
         from html.parser import HTMLParser
         from urllib.parse import urlsplit, unquote
@@ -102,7 +106,7 @@ class SpeakerSite(unittest.TestCase):
         from html import unescape
         guide=(ROOT/'docs/speaker/guia-glaucia.md').read_text()
         deck=(ROOT/'docs/speaker/slides/index.html').read_text()
-        expected=re.findall(r'```\w*\n(.*?)\n```',guide,re.S)
+        expected=[body for language,body in re.findall(r'```(\w*)\n(.*?)\n```',guide,re.S) if not language]
         actual=[unescape(x) for x in re.findall(r'<pre>(.*?)</pre>',deck,re.S)]
         self.assertEqual(expected,actual)
     def test_assets_have_no_external_runtime_dependencies(self):

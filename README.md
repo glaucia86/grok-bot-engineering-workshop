@@ -49,12 +49,24 @@ The [presenter guide](docs/speaker/guia-glaucia.md) gives the corresponding 11:0
 
 ## Before the event
 
-1. Prepare GitHub access and an authorized workshop repository/fork. Check visibility and access before sharing a private repository.
+1. Prepare GitHub access and an authorized workshop repository/fork. Check visibility and access before sharing a private repository. When creating the fork, **uncheck “Copy the DEFAULT branch only”** to include all branches, including `checkpoint/mvp-base` ([GitHub instructions](https://docs.github.com/en/pull-requests/how-tos/work-with-forks/fork-a-repo?tool=webui)).
 2. Use Node.js 24 and npm for local checks. Follow [MVP setup and migrations](mvp/README.md); run MVP commands from `mvp/`, not the repository root.
 3. Prepare the intended database, migration, Vercel root `mvp`, secure preview access, test-data isolation and preview harness. A configured secret or Ready deployment alone is not evidence that the journey works.
 4. Use the reviewed complete main application as the reference and freeze a separately verified `checkpoint/mvp-base` revision for exercises. Do not move that checkpoint to the complete app or assume it contains later fixes. The numbered `checkpoint/01`–`05` branches belong to the Fastify extra exercise.
 5. Rehearse with a dedicated test dataset. Give every run a unique talk identifier; this does not make a shared Neon database isolated. Never empty shared storage to demonstrate an empty dashboard. Clean up only records/processes created by the authorized run. Missing access or isolation is BLOCKED.
 6. Keep credentials in secure settings; never paste values in chat, source, logs or evidence. No account/secret configuration is authorized merely by reading this guide.
+
+### Verify the exercise checkpoint
+
+In a clone of the authorized exercise fork, confirm that `origin` points to that fork (not the upstream reference repository), then run this read-only check before starting the exercise:
+
+```sh
+git ls-remote --exit-code --heads origin refs/heads/checkpoint/mvp-base
+```
+
+Expect exactly one line: the instructor-approved frozen commit SHA followed by `refs/heads/checkpoint/mvp-base`. Record and compare that SHA with the approved base from issue #21. Missing ref, access failure or a different SHA means **BLOCKED**; do not substitute `main` or a numbered Fastify checkpoint.
+
+Already forked only the default branch? With permission to create the missing branch in that fork, use GitHub’s **Branches → New branch**, choose the authorized upstream repository and its `checkpoint/mvp-base` as the source, and create only `checkpoint/mvp-base`. Verify the source SHA against the approved frozen base first; if the branch exists or differs, stop and ask the instructor. Do not overwrite any branch, force-push, change `main`, or copy credentials. Repeat the remote check above before creating an exercise branch from that verified SHA. If private-fork access or branch creation is unavailable, ask the instructor to prepare the authorized exercise repository.
 
 Local base checks (no database credentials required):
 

@@ -49,12 +49,24 @@ O [guia da apresentadora](docs/speaker/guia-glaucia.md) traz o roteiro correspon
 
 ## Antes do evento
 
-1. Prepare acesso GitHub e um repositório/fork autorizado. Confira visibilidade e acesso antes de compartilhar um repositório privado.
+1. Prepare acesso GitHub e um repositório/fork autorizado. Confira visibilidade e acesso antes de compartilhar um repositório privado. Ao criar o fork, **desmarque “Copy the DEFAULT branch only”** para incluir todas as branches, inclusive `checkpoint/mvp-base` ([instruções do GitHub](https://docs.github.com/en/pull-requests/how-tos/work-with-forks/fork-a-repo?tool=webui)).
 2. Use Node.js 24 e npm para os checks locais. Siga o [setup e migrations](mvp/README.md); execute os comandos MVP em `mvp/`, não na raiz.
 3. Prepare banco, migration, root Vercel `mvp`, acesso seguro à preview, isolamento dos dados e harness. Secret configurada ou deployment Ready não comprovam o fluxo.
 4. Use a aplicação completa revisada da main como referência e congele uma revisão verificada de `checkpoint/mvp-base` para os exercícios. Não mova esse checkpoint para o app completo nem presuma que contém ajustes posteriores. As branches numeradas `checkpoint/01`–`05` pertencem ao exercício extra Fastify.
 5. Ensaie com dataset dedicado. Cada execução usa nome de palestra único; isso não isola um banco Neon compartilhado. Nunca esvazie dados compartilhados para demonstrar dashboard vazio. Limpe apenas dados/processos criados pela execução autorizada. Sem acesso ou isolamento, registre BLOCKED.
 6. Mantenha credenciais nas configurações seguras; nunca cole valores em chat, código, logs ou evidência. Este guia não autoriza configuração de contas ou segredos.
+
+### Verifique o checkpoint do exercício
+
+No clone do fork autorizado para os exercícios, confirme que `origin` aponta para esse fork (não para o repositório upstream de referência); antes de começar, execute esta verificação somente de leitura:
+
+```sh
+git ls-remote --exit-code --heads origin refs/heads/checkpoint/mvp-base
+```
+
+Espere exatamente uma linha: o SHA congelado aprovado pela instrutora seguido de `refs/heads/checkpoint/mvp-base`. Registre e compare esse SHA com a base aprovada na issue #21. Ref ausente, falha de acesso ou SHA diferente significa **BLOCKED**; não substitua por `main` nem por um checkpoint Fastify numerado.
+
+Já criou o fork só com a branch padrão? Com permissão para criar a branch ausente nesse fork, use **Branches → New branch** no GitHub, escolha o repositório upstream autorizado e sua `checkpoint/mvp-base` como origem e crie somente `checkpoint/mvp-base`. Confira primeiro o SHA de origem contra a base congelada aprovada; se a branch já existir ou divergir, pare e consulte a instrutora. Não sobrescreva branches, não faça force-push, não altere `main` nem copie credenciais. Repita a verificação remota acima antes de criar uma branch de exercício a partir desse SHA verificado. Se o acesso ao fork privado ou a criação da branch não estiver disponível, peça à instrutora para preparar o repositório autorizado de exercícios.
 
 Checks locais da base, sem credenciais de banco:
 
