@@ -61,7 +61,8 @@ try:
         page.evaluate("Object.defineProperty(navigator.clipboard, 'writeText', {configurable:true,value:()=>Promise.reject(new Error('test rejection'))})")
         page.locator('.copy-prompt').first.click()
         page.wait_for_function("document.querySelector('.copy-status').textContent.startsWith('Cópia bloqueada.')")
-        assert page.evaluate('getSelection().toString()') == page.locator('.prompt code').first.text_content()
+        assert page.evaluate('getSelection().getRangeAt(0).cloneContents().textContent') == page.locator('.prompt code').first.text_content()
+        assert page.evaluate('getSelection().toString()').rstrip('\n') == page.locator('.prompt code').first.text_content().rstrip('\n')
         page.evaluate("delete navigator.clipboard.writeText; document.querySelector('.copy-status').textContent=''; getSelection().removeAllRanges(); window.scrollTo(0,0)")
         results.append('guide: clipboard success, simulated rejection selection fallback, local anchors and project-base slide links PASS')
         for width in (390, 768):
