@@ -1,0 +1,133 @@
+# Talk Feedback MVP — technical specification
+
+Scope source: [inception](docs/inception.md). Snapshot: main at [`b34cb56`](https://github.com/glaucia86/grok-bot-engineering-workshop/commit/b34cb56c7f094da6474456825940bef889deabae), October 15, 2026. Approved acceptance refinements are recorded in [PR #9](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/9), pending human merge at this snapshot. This specification supplements the inception; it neither replaces it nor certifies acceptance.
+
+## Problem Statement
+
+Workshop attendees need to see an engineering bot team deliver a small, observable feature in 90 minutes: submit feedback, see a talk's rating change, inspect evidence on a PR, and retain human control over approval and merge. Provisioning infrastructure during the session would consume the time needed to demonstrate that loop.
+
+## Solution
+
+Prepare the application base and infrastructure before the workshop. During the live feature, build the public feedback form and talk dashboard on that base, verify the real preview journey, and let the human tech lead approve and merge.
+
+The repository contains two independent applications. The root Fastify exercise remains an in-memory teaching example. The Next.js MVP is a separate application with persistent feedback. Its base API, validation, database migration, and UI primitives already exist; the form and dashboard do not. Do not present the starter homepage or a successful deployment as the finished MVP.
+
+## User Stories
+
+1. As an attendee, I want to identify a talk and myself when leaving feedback, so that my submission has useful context.
+2. As an attendee, I want to submit a required comment and an integer rating from 1 to 5, so that feedback includes both explanation and score.
+3. As an attendee, I want surrounding whitespace removed, so that accidental spaces do not create empty values or separate talks.
+4. As an attendee, I want the same field errors in the form and API, so that invalid input is explained consistently.
+5. As an attendee, I want a confirmation and a reset form after success, so that I know the submission was accepted.
+6. As an attendee, I want rejected submissions to retain my input, so that I can correct it without retyping everything.
+7. As a viewer, I want each talk's average and submission count, so that I can interpret its feedback.
+8. As a viewer, I want differently capitalized versions of the same talk grouped together, so that its rating is not split across bars.
+9. As a viewer, I want readable chart values and one-decimal averages, so that the graph communicates the same values as the dashboard.
+10. As a viewer, I want an empty state when there is no feedback, so that an empty dataset is not mistaken for an error.
+11. As an attendee, I want my feedback to remain after page reload and application restart, so that a successful submission is durable.
+12. As the QA engineer, I want to verify creation through public responses and the dashboard, so that acceptance does not require direct access to the production database.
+13. As the QA engineer, I want isolated, identifiable test data, so that verification does not corrupt another run or real feedback.
+14. As the presenter, I want prepared infrastructure and a working checkpoint before the event, so that live time is spent on the feature.
+15. As the human tech lead, I want commit-specific verification evidence and independent review, so that I can decide whether to approve and merge.
+16. As the repository owner, I want credentials kept in approved secure settings, so that source, logs, and demonstrations do not expose secrets.
+
+## Implementation Decisions
+
+### Application boundaries and current architecture
+
+- The root application uses Fastify and an in-memory store. It retains `POST /feedback`, `GET /feedback`, and `GET /talks/:talkId/rating`. Rating remains optional there; its rating summary counts rated submissions and uses two-decimal averages. The MVP does not silently change that exercise.
+- The MVP uses Next.js App Router with TypeScript and React. Route handlers are the application API/BFF; shared Zod validation precedes database access. Drizzle connects to Neon over its HTTP adapter. Node.js 24 and npm are the documented execution baseline.
+- Tailwind CSS 4, shadcn/ui primitives, lucide-react, and shadcn/Recharts chart primitives are available for the live UI. Their presence does not mean the form or dashboard is implemented.
+- The Vercel application root is the MVP application. Next.js does not provide `/feedback` as an alias: that route returns 404 in this app. The separate Fastify application still serves its existing route.
+- No new service, authentication system, repository layer, or database abstraction is required by this specification. Use existing validation, route-handler, statistics, and database seams.
+
+### Observable MVP API contract
+
+**POST `/api/feedback`**
+
+- Accept JSON fields `talkId`, `author`, `comment`, and `rating`. The three text fields must be strings, are trimmed, and must remain nonempty. The trimmed comment is required and limited to 1–1000 characters. No additional maximum for talk or author text has been agreed.
+- Rating is required, numeric, and an integer from 1 to 5. API strings such as `"5"` are rejected rather than coerced. The form converts its rating control to a number before invoking the same schema.
+- A valid request inserts the normalized input and returns 201 with the stored record: `id`, `talkId`, `author`, `comment`, `rating`, and `createdAt`. Current Zod parsing discards unknown object properties; they are not inserted.
+- Invalid input returns 400 with an `errors` map. Each field has its first validation message; malformed JSON produces a body-level error. Validation rejection occurs before database access and must not insert a record.
+- Current field messages include `talkId must be text` / `talkId is required` (and the corresponding author/comment messages), `comment must be at most 1000 characters`, `rating must be a number`, `rating must be a whole number`, and `rating must be between 1 and 5`. The form must show the exact shared message for the same invalid value, not a separate paraphrase.
+- A missing database configuration or failed database operation must not be reported as successful creation. Current handlers propagate such failures; a new stable server-error response format has not been specified.
+
+**GET `/api/feedback`**
+
+- Return an array of talk summaries with `talkId`, `average`, and `count`; return an empty array when there are no records. This endpoint exposes aggregates, not the authors and comments of individual submissions.
+- Every MVP submission has a rating. Count all submissions in the talk's group and round the arithmetic mean to one decimal, half up (`4.25` → `4.3`). JSON numeric `3` remains a number; the dashboard renders it as `3.0` when displaying one decimal.
+- Approved target: trimmed talk names are compared case-insensitively. `Talk A` and `talk a` contribute to one average and count. At the inspected main commit, the statistics function still groups exact strings; case-insensitive grouping is implemented in [PR #10](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/10), pending human merge. That patch uses a lowercase grouping key, retains the first encountered spelling for display, and leaves input records unchanged; these are the patch’s implementation choices, not new display-casing requirements. No locale-specific collation, accent folding, slug system, or preferred display casing is agreed here.
+- Ordering, pagination, and talk lookup endpoints are not part of the agreed contract. The current GET reads the stored talk/rating rows and aggregates them in application memory; this is a workshop-scale design, not a scaling claim.
+
+### Form and dashboard: live feature, not completed base
+
+- The public form submits the shared contract. On success, show confirmation and reset. On rejection, preserve the entered values and show field errors. No login or administrative flow is introduced.
+- The dashboard lists every talk with feedback, its one-decimal average, and count. Render one bar per grouped talk, with height equal to the displayed average and a readable value label or tooltip.
+- When there is no data, show the empty state. After a valid submission, the new talk/result must be visible through the dashboard or public GET, and must remain visible after reload. API aggregation alone cannot verify the original comment/author; the POST response covers those fields, while GET/dashboard proves the created contribution.
+- No specific UI URL, page arrangement, polling frequency, or optimistic-update strategy has been decided. Do not turn those implementation choices into acceptance requirements without a decision.
+
+### Persistence and environment lifecycle
+
+- The committed migration creates a `feedback` table with generated serial primary key, required talk identifier, author and comment text, required integer rating, and a creation timestamp defaulting to the database's current time.
+- Validation rules are currently enforced by Zod; the migration has NOT NULL constraints but no rating-range or trimmed-text CHECK constraints. Do not claim that bypassing the API has equivalent validation.
+- The Neon adapter reads `DATABASE_URL` at runtime. The migration command reads the process environment directly. Builds do not apply migrations automatically. Provision and apply migrations to the intended environment before testing valid POST/GET calls.
+- Development/test isolation is the documented target. The reported current risk is that Playwright would write to the same Neon database used by previews and production. Until that is separated or safely scoped, every test must use a unique talk name with a run-specific identifier; clean up only its own records.
+- A unique talk name isolates assertions, not the whole database. Never empty shared storage for an empty-state test. Empty-state checks need an isolated dataset/environment; missing isolation is BLOCKED. No public cleanup endpoint exists in the current MVP, so the authorized setup/cleanup mechanism remains to be implemented and proven.
+- Reload persistence and fresh-instance persistence are separate checks. Reopening an isolated local database proves local durability; it does not prove Neon transport, remote schema configuration, or deployed persistence.
+
+### Safety and ownership
+
+- Credentials belong only in approved provider/CI secret settings or authorized local secret handling. No real values in tracked files, terminal output, evidence, PR comments, or chat. Verify configuration without exposing values.
+- Preview protection must be handled through an authorized secure automation bypass, not by exposing its value or disabling protection. Missing preview access is a blocker, not permission to substitute local evidence.
+- FDE implements and opens a PR; QA independently judges the acceptance criteria; DevOps maintains checks and previews. The human tech lead approves and merges. Bots do not merge.
+- Approved QA skill set: `playwright-best-practices`, `playwright-cli`, and vendored `create-verification-skill`; remove `interrogate` from that role's loaded skills. This does not delete the legacy skill or rewrite the older Fastify workshop.
+
+## Testing Decisions
+
+### Acceptance seam
+
+Use the already agreed public journey as the highest acceptance seam: submit the real form on the actual PR preview, inspect POST results/errors, open the dashboard/public GET, and reload. Check visible outcomes and API responses rather than React internals or direct remote database inspection. Capture the tested commit, target URL, commands/actions, outputs, and retained artifacts.
+
+The lower-level seams already present are supporting diagnostics, not substitutes for that preview journey:
+
+- Shared schema/statistics unit tests exercise invalid types, missing/empty/blank text, trim behavior, comment boundaries, rating boundaries and fractions, aggregation, and rounding. Extend existing cases for case-insensitive grouping and the explicit 4.25 boundary.
+- Actual route-handler tests substitute the existing database boundary and check status/payload, normalized insert values, no database access on rejection, empty summaries, and failure propagation.
+- Persistence tests invoke those same handlers with Drizzle against an isolated on-disk PGlite database, apply the committed migration, and reopen the database. Direct local test-database queries are test fixtures/assertions, not a requirement for QA to inspect remote production data.
+- The existing production-server HTTP smoke verifier owns its localhost process, blanks `DATABASE_URL`, and checks the homepage, Next.js `/feedback` 404, and invalid feedback 400. It neither sends valid feedback nor targets a preview.
+- The root Fastify verifier starts its own localhost application. Its pass cannot establish any MVP, Neon, or preview behavior.
+
+### Required final evidence
+
+1. Valid creation and public observation; reject invalid cases without adding a contribution. Cover comment length after trimming (including 1, 1000, and 1001), missing/blank/wrong-type fields, ratings omitted, 0, 1, 5, 6, fractional, and string-valued.
+2. Identical field error text in API and form; successful confirmation/reset and rejected-input retention.
+3. Grouped talk count and one-decimal mean, including `Talk A`/`talk a` and a mean of 4.25; graph value and label/tooltip agree.
+4. Empty state in isolated data; reload shows the new contribution; a fresh application instance connected to the same test database still observes it.
+5. No committed secrets, with all finding values redacted. Do not treat an ignored environment file or a build pass as a secret audit.
+
+The existing MVP CI workflow runs clean install, Vitest, lint, build, typecheck, and HTTP smoke checks for MVP/workflow changes. It has read-only repository permission and no application secrets. Its path filter does not run for documentation-only changes. The inspected tree has no Playwright dependency/configuration/tests or preview acceptance workflow; these remain required work.
+
+Keep overall MVP acceptance BLOCKED until PR #9 is merged and the implementation is assessed against those merged criteria. AC9 coverage gaps are WARN, not BLOCKED; keep its required cases and CI checks. Failing tests or failed CI remain failures. Missing access, isolation, or evidence remains BLOCKED. A Vercel success status or green local CI is not acceptance.
+
+## Out of Scope
+
+- Login/authentication, an admin area, and email notifications.
+- Replacing the legacy Fastify exercise or silently changing its optional-rating contract.
+- Editing/deleting feedback as a user feature, one-vote-per-author enforcement, or a new talk catalog.
+- New production database provisioning, credential changes, production migrations, or deployment authorization from this document alone.
+- Enterprise scaling, pagination, abuse-prevention guarantees, or an invented realtime-refresh contract.
+- Building the complete form/dashboard before the live feature, or spending the live 90 minutes provisioning infrastructure.
+- Automatic approval/merge or converting this specification into an issue instead of the requested repository file.
+
+## Further Notes
+
+This is a synthesis using [to-spec](https://github.com/mattpocock/skills/blob/main/skills/engineering/to-spec/SKILL.md) and its [official guidance](https://github.com/mattpocock/skills/blob/main/docs/engineering/to-spec.md), with the user's explicit `spec.md` destination replacing the skill's default issue-tracker destination. It records decisions and verified source structure; it is not a test-run report.
+
+Source map for reinspection:
+
+- [Inception and acceptance criteria](docs/inception.md), [approved refinements PR #9](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/9), [MVP setup and known limitations](mvp/README.md).
+- [MVP route handlers](mvp/src/app/api/feedback/route.ts), [shared schema](mvp/src/lib/feedback-schema.ts), [statistics](mvp/src/lib/stats.ts), [starter page](mvp/src/app/page.tsx).
+- [Database schema](mvp/src/db/schema.ts), [Neon adapter](mvp/src/db/index.ts), [migration](mvp/drizzle/0000_stormy_jack_murdock.sql).
+- [Schema/statistics tests](mvp/src/lib/__tests__/feedback.test.ts), [handler tests](mvp/src/app/api/feedback/route.test.ts), [local persistence tests](mvp/src/db/persistence.test.ts), [HTTP smoke verifier](mvp/scripts/verify-http.mjs), [CI workflow](.github/workflows/mvp.yml).
+- [Legacy Fastify implementation](src/app.ts) and [legacy rating design](docs/design/talk-rating.md). The legacy design's no-coercion example is not the MVP contract and is not evidence that Fastify disables its default coercion.
+
+The root READMEs still describe the older Fastify workshop flow. Aligning those teaching prompts and checkpoint materials with the MVP remains coordination work; this specification does not claim that it has happened. No standalone glossary or ADR collection was found in the inspected repository tree.
