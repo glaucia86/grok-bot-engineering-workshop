@@ -2,8 +2,8 @@
 
 The static site reuses the Reveal.js deck and generates the reading guide from
 `guia-glaucia.md`. Do not maintain a second copy of the talk track. The guide has
-the run sheet, English speech, Portuguese translation/instructions, all seven
-copyable prompts, and links to all 20 slides. Six rehearsal screenshot slots
+the run sheet, English speech, Portuguese translation/instructions, all ten
+copyable prompts, and links to all 22 slides. Six rehearsal screenshot slots
 remain placeholders; illustrative chat results remain labeled mocks.
 
 ## Preview and checks
@@ -35,7 +35,7 @@ may require the user's action. Keep the guide/notes screen out of screen sharing
 
 CI runs `scripts/check_speaker_browser.py` with pinned Playwright 1.55.0 and its
 Chromium build. It serves the site under the GitHub project prefix and checks
-all slide hashes, 20 real slide renders, guide widths 390/768, clipboard success
+all slide hashes, 22 real slide renders, guide widths 390/768, clipboard success
 and simulated-rejection selection fallback, F fullscreen, S speaker connection
 with real notes, and loaded-deck navigation with the network disabled. External
 resource requests and JavaScript/HTTP errors fail the check. This is not a promise

@@ -84,10 +84,12 @@ Esses checks comprovam apenas seu escopo local. `verify:http` rejeita entrada in
 
 ## Time e prompts do workshop
 
-No máximo três skills por bot:
+No máximo três skills por bot (o QA é a única exceção, veja abaixo). Todo bot também aplica o princípio `principle-prove-it-works` do pstack como definição de pronto: nenhum bot declara uma tarefa pronta sem prova do artefato real.
+
+Skills:
 
 - FDE: `shadcn`, `vercel-react-best-practices`, `neon-drizzle`
-- QA: `playwright-best-practices`, `playwright-cli`, `create-verification-skill`
+- QA: `playwright-best-practices`, `playwright-cli`, `create-verification-skill`, `interrogate` (pstack; a única exceção ao limite de três skills)
 - DevOps: `deploy-to-vercel`, `ci-cd-and-automation`
 
 FDE constrói; QA julga independentemente pelos critérios; DevOps informa checks e preview. Nenhum bot aprova ou faz merge. Uma tarefa por prompt, com evidência vinculada ao commit. Os prompts em inglês abaixo são idênticos aos da versão inglesa.

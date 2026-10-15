@@ -4,7 +4,7 @@ import http.server
 import json
 from pathlib import Path
 import threading
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
 
 ROOT = Path('_site').resolve()
 OUT = Path('speaker-browser-evidence')
@@ -43,7 +43,7 @@ try:
         page.get_by_role('link', name='Guia da apresentadora').click()
         page.wait_for_load_state('networkidle')
         assert page.url == base+'guide/'
-        assert page.locator('.copy-prompt').count() == 7
+        assert page.locator('.copy-prompt').count() == 10
         assert page.locator('.copy-command').count() == 1
         page.locator('.copy-command').click()
         page.wait_for_function("document.querySelector('.copy-status').textContent === 'Comando copiado.'")
@@ -80,15 +80,43 @@ try:
         page.set_viewport_size({'width':1440,'height':900})
         page.goto(base+'slides/', wait_until='networkidle')
         page.wait_for_function('window.Reveal && Reveal.isReady()')
-        assert page.evaluate('Reveal.getTotalSlides()') == 20
-        for number in range(20):
-            page.evaluate('(i)=>Reveal.slide(i)', number)
+        assert page.evaluate('Reveal.getTotalSlides()') == 22
+        stepped = 0
+        for number in range(22):
+            page.evaluate('(i)=>Reveal.slide(i,0,-1)', number)  # -1 = before the first fragment
             page.wait_for_timeout(400)
             assert page.evaluate('Reveal.getIndices().h') == number
             page.screenshot(animations='disabled', path=str(OUT/f'slide-{number+1:02}.png'))
+            # Capture every click stage after its transition, plus the completed state below.
+            steps = 0
+            while page.evaluate('Reveal.nextFragment()'):
+                steps += 1
+                page.wait_for_timeout(700)  # screenshots disable animations, not fragment CSS transitions
+                page.screenshot(animations='disabled', path=str(OUT/f'slide-{number+1:02}-step-{steps:02}.png'))
+            expected = page.evaluate("(i)=>new Set([...Reveal.getSlides()[i].querySelectorAll('.fragment')].map(f=>f.dataset.fragmentIndex)).size", number)
+            assert steps == expected, (number+1, steps, expected)
+            if steps:
+                page.wait_for_timeout(700)  # let the last fragment transition finish (screenshots disable animations only)
+                hidden = page.evaluate("(i)=>Reveal.getSlides()[i].querySelectorAll('.fragment:not(.visible)').length", number)
+                assert hidden == 0, (number+1, hidden)
+                page.screenshot(animations='disabled', path=str(OUT/f'slide-{number+1:02}-final.png'))
+                stepped += steps
+        assert (OUT/'slide-04-final.png').exists() and (OUT/'slide-06-final.png').exists() and (OUT/'slide-11-final.png').exists()
+        results.append(f'Reveal: every fragment step and final state captured ({stepped} steps, architecture, team flow and loop included) PASS')
         for link in slide_links:
             page.goto(link, wait_until='networkidle')
             page.wait_for_function('(i)=>Reveal.getIndices().h === i', arg=int(link.rsplit('/',1)[1]))
+        page.evaluate('Reveal.slide(0)')
+        # Notes header click count must equal the number of fragment steps on each slide.
+        mismatches = page.evaluate("""()=>Reveal.getSlides().map((s,i)=>{const n=new Set([...s.querySelectorAll('.fragment')].map(f=>f.dataset.fragmentIndex)).size;const m=/(\\d+) click/.exec(s.querySelector('aside.notes').textContent);return (m?+m[1]:0)===n?null:`slide ${i+1}: notes ${m?m[1]:0} vs ${n}`}).filter(Boolean)""")
+        assert not mismatches, mismatches
+        # HUD advances with elapsed time on the last slide and the Q&A bar is full by 12:29.
+        page.evaluate('Reveal.slide(21)')
+        qa_bar = "document.querySelectorAll('#hud-segs .seg i')[7].style.width"
+        start = page.evaluate(qa_bar)
+        assert start != '100%', start
+        page.evaluate("()=>{const t=Date.now;Date.now=()=>t()+3.5*60000;renderHud();Date.now=t}")
+        assert page.evaluate(qa_bar) == '100%'
         page.evaluate('Reveal.slide(0)')
         page.keyboard.press('f')
         page.wait_for_function('!!document.fullscreenElement')
@@ -100,9 +128,18 @@ try:
         notes.locator('#connection-status').wait_for(state='hidden')
         notes.wait_for_function("document.querySelector('.speaker-controls-notes .value').textContent.trim().length > 20")
         notes.wait_for_function("document.querySelector('#current-slide iframe').contentWindow.Reveal.isReady()")
-        notes.screenshot(animations='disabled', path=str(OUT/'speaker-notes.png'))
+        # Screenshot is evidence only; the assertions above are the test. Headless popups on CI runners can hang on
+        # "waiting for fonts to load", so bring the popup to front, bound the fonts wait, and degrade to a warning.
+        notes.bring_to_front()
+        notes.evaluate("Promise.race([document.fonts.ready, new Promise(r=>setTimeout(r,5000))])")
+        try:
+            notes.screenshot(animations='disabled', path=str(OUT/'speaker-notes.png'), timeout=10000)
+        except PlaywrightTimeoutError as error:
+            print('WARNING: speaker-notes screenshot skipped:', str(error).splitlines()[0])
+            page.bring_to_front()
+            page.screenshot(animations='disabled', path=str(OUT/'speaker-notes-fallback.png'))
         notes.close()
-        results.append('Reveal: 20 slide renders, hash links, F fullscreen and S notes popup PASS')
+        results.append('Reveal: 22 slide renders, hash links, F fullscreen and S notes popup PASS')
         # Offline is tested with network disabled after all local assets are loaded.
         context.set_offline(True)
         page.keyboard.press('ArrowRight')
