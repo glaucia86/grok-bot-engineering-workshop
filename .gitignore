@@ -5,3 +5,9 @@ coverage/
 *.log
 
 /doc-specs/
+
+# Generated speaker website (publish only through allowlisted builder).
+_site/
+__pycache__/
+
+.venv-speaker/
