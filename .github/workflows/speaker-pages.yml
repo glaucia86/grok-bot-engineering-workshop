@@ -22,7 +22,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -33,6 +33,20 @@ jobs:
       - run: python -m pip install --require-hashes -r scripts/speaker-site-requirements.txt
       - run: python -m unittest discover -s tests -p test_speaker_site.py
       - run: python scripts/build_speaker_site.py --output _site
+      - name: Install pinned browser test runner
+        run: python -m pip install playwright==1.55.0
+      - name: Install Chromium for real rendering
+        run: python -m playwright install --with-deps chromium
+      - name: Verify desktop, mobile, notes, fullscreen and clipboard
+        run: python scripts/check_speaker_browser.py
+      - name: Save real site QA screenshots (not rehearsal evidence)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: speaker-browser-evidence
+          path: speaker-browser-evidence/
+          retention-days: 7
+          if-no-files-found: warn
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         with:
