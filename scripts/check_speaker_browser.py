@@ -57,7 +57,13 @@ try:
             assert page.locator('[id="'+anchor[1:]+'"]').count() == 1, anchor
         slide_links = page.locator('a[href^="../slides/#/"]').evaluate_all('(xs)=>xs.map(x=>x.href)')
         assert len(slide_links) >= 20
-        results.append('guide: clipboard, local anchors and project-base slide links PASS')
+        # Deterministic rejection exercises fallback without changing browser security settings.
+        page.evaluate("Object.defineProperty(navigator.clipboard, 'writeText', {configurable:true,value:()=>Promise.reject(new Error('test rejection'))})")
+        page.locator('.copy-prompt').first.click()
+        page.wait_for_function("document.querySelector('.copy-status').textContent.startsWith('Cópia bloqueada.')")
+        assert page.evaluate('getSelection().toString()') == page.locator('.prompt code').first.text_content()
+        page.evaluate("delete navigator.clipboard.writeText; document.querySelector('.copy-status').textContent=''; getSelection().removeAllRanges(); window.scrollTo(0,0)")
+        results.append('guide: clipboard success, simulated rejection selection fallback, local anchors and project-base slide links PASS')
         for width in (390, 768):
             page.set_viewport_size({'width':width,'height':844})
             page.screenshot(animations='disabled', path=str(OUT/f'guide-{width}.png'))

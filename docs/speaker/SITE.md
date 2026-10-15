@@ -31,6 +31,21 @@ recommended for the Reveal speaker window. Press F for fullscreen, S for
 speaker view, arrows for navigation. Browser pop-up/fullscreen restrictions
 may require the user's action. Keep the guide/notes screen out of screen sharing.
 
+## Browser verification
+
+CI runs `scripts/check_speaker_browser.py` with pinned Playwright 1.55.0 and its
+Chromium build. It serves the site under the GitHub project prefix and checks
+all slide hashes, 20 real slide renders, guide widths 390/768, clipboard success
+and simulated-rejection selection fallback, F fullscreen, S speaker connection
+with real notes, and loaded-deck navigation with the network disabled. External
+resource requests and JavaScript/HTTP errors fail the check. This is not a promise
+that a hosted URL can reload offline without a local copy.
+
+The `speaker-browser-evidence` Actions artifact retains actual screenshots and a
+JSON result for seven days. These are UI verification, never workshop rehearsal
+or application acceptance evidence. A human should inspect them after layout
+changes and rehearse on the actual presentation device.
+
 ## Publication boundary
 
 The source repository remains private. The published slides, embedded Reveal
@@ -62,8 +77,9 @@ usage within the owner's quota; no paid plan upgrade is authorized here.
 - Confirm the actual merged acceptance baseline (#9/#10) and current preparation
   evidence before rehearsal; the canonical guide contains dated preparation status.
 - Confirm no sensitive information is in guide, notes, source links, or screenshots.
-- Perform visual QA at desktop and phone widths, all slides, S/F, copy success and
-  denied-clipboard fallback, all run-sheet links, and local/offline operation.
+- Inspect the latest real browser artifact and rehearse S/F, copy, and offline
+  operation on the actual presentation device. CI covers the generated site,
+  not the live workshop flow or genuine rehearsal screenshots.
 - Glaucia merges. Verify the exact deployed commit and successful Pages workflow
   before treating the site URL as live. Never report a successful rehearsal or UI
   acceptance from static tests alone.
