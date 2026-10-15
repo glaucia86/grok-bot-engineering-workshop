@@ -7,8 +7,8 @@ test("authorized preview: public form creates feedback visible after reload", as
   await page.goto("/");
   await page.getByLabel("Talk", { exact: true }).fill(talk);
   await page.getByLabel("Your name", { exact: true }).fill("Preview QA");
-  await page.getByLabel("Comment", { exact: true }).fill("Authorized isolated preview verification");
-  await page.getByRole("radio", { name: "5", exact: true }).check();
+  await page.getByLabel("Comment (optional)", { exact: true }).fill("Authorized isolated preview verification");
+  await page.getByRole("radio", { name: "5 stars", exact: true }).check();
   const response = page.waitForResponse((result) => result.url().endsWith("/api/feedback") && result.request().method() === "POST");
   await page.getByRole("button", { name: "Send feedback", exact: true }).click();
   expect((await response).status()).toBe(201);
