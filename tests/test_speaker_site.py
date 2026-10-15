@@ -21,7 +21,7 @@ class SpeakerSite(unittest.TestCase):
             self.assertFalse((out/'package.json').exists())
             guide = (out/'guide/index.html').read_text()
             self.assertIn('../slides/#/0', guide)
-            self.assertIn('../slides/#/19', guide)
+            self.assertIn('../slides/#/21', guide)
             self.assertIn('Copiar prompt', guide)
             self.assertIn('lang="en"', guide)
             self.assertIn('11:00', guide)
@@ -44,7 +44,7 @@ class SpeakerSite(unittest.TestCase):
             output = (pathlib.Path(tmp)/'site/guide/index.html').read_text()
             copied = [unescape(x).rstrip() for x in re.findall(r'<pre><code[^>]*>(.*?)</code></pre>',output,re.S)]
             self.assertEqual([x.rstrip() for x in prompts],copied)
-            self.assertEqual(output.count('class="copy-prompt"'),7)
+            self.assertEqual(output.count('class="copy-prompt"'),10)
             self.assertEqual(output.count('class="copy-command"'),1)
             self.assertIn('Copiar comando',output)
             self.assertIn('git ls-remote --exit-code --heads origin refs/heads/checkpoint/mvp-base',output)

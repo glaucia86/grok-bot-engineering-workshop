@@ -43,7 +43,7 @@ try:
         page.get_by_role('link', name='Guia da apresentadora').click()
         page.wait_for_load_state('networkidle')
         assert page.url == base+'guide/'
-        assert page.locator('.copy-prompt').count() == 7
+        assert page.locator('.copy-prompt').count() == 10
         assert page.locator('.copy-command').count() == 1
         page.locator('.copy-command').click()
         page.wait_for_function("document.querySelector('.copy-status').textContent === 'Comando copiado.'")
@@ -80,8 +80,8 @@ try:
         page.set_viewport_size({'width':1440,'height':900})
         page.goto(base+'slides/', wait_until='networkidle')
         page.wait_for_function('window.Reveal && Reveal.isReady()')
-        assert page.evaluate('Reveal.getTotalSlides()') == 20
-        for number in range(20):
+        assert page.evaluate('Reveal.getTotalSlides()') == 22
+        for number in range(22):
             page.evaluate('(i)=>Reveal.slide(i)', number)
             page.wait_for_timeout(400)
             assert page.evaluate('Reveal.getIndices().h') == number
@@ -102,7 +102,7 @@ try:
         notes.wait_for_function("document.querySelector('#current-slide iframe').contentWindow.Reveal.isReady()")
         notes.screenshot(animations='disabled', path=str(OUT/'speaker-notes.png'))
         notes.close()
-        results.append('Reveal: 20 slide renders, hash links, F fullscreen and S notes popup PASS')
+        results.append('Reveal: 22 slide renders, hash links, F fullscreen and S notes popup PASS')
         # Offline is tested with network disabled after all local assets are loaded.
         context.set_offline(True)
         page.keyboard.press('ArrowRight')

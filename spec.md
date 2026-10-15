@@ -80,7 +80,7 @@ The repository contains two independent applications. The root Fastify exercise 
 - Credentials belong only in approved provider/CI secret settings or authorized local secret handling. No real values in tracked files, terminal output, evidence, PR comments, or chat. Verify configuration without exposing values.
 - Preview protection must be handled through an authorized secure automation bypass, not by exposing its value or disabling protection. Missing preview access is a blocker, not permission to substitute local evidence.
 - FDE implements and opens a PR; QA independently judges the acceptance criteria; DevOps maintains checks and previews. The human tech lead approves and merges. Bots do not merge.
-- Approved QA skill set: `playwright-best-practices`, `playwright-cli`, and vendored `create-verification-skill`; remove `interrogate` from that role's loaded skills. This does not delete the legacy skill or rewrite the older Fastify workshop.
+- Approved QA skill set: `playwright-best-practices`, `playwright-cli`, vendored `create-verification-skill`, and pstack `interrogate` (decided by the presenter: the one exception to the three-skill limit, because `interrogate` is part of pstack). All three bots apply the vendored `principle-prove-it-works` as the done-definition: no bot declares done without proof from the real artifact.
 
 ## Testing Decisions
 
