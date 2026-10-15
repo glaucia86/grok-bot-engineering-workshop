@@ -90,6 +90,17 @@ try:
             page.goto(link, wait_until='networkidle')
             page.wait_for_function('(i)=>Reveal.getIndices().h === i', arg=int(link.rsplit('/',1)[1]))
         page.evaluate('Reveal.slide(0)')
+        # Notes header click count must equal the number of fragment steps on each slide.
+        mismatches = page.evaluate("""()=>Reveal.getSlides().map((s,i)=>{const n=new Set([...s.querySelectorAll('.fragment')].map(f=>f.dataset.fragmentIndex)).size;const m=/(\\d+) click/.exec(s.querySelector('aside.notes').textContent);return (m?+m[1]:0)===n?null:`slide ${i+1}: notes ${m?m[1]:0} vs ${n}`}).filter(Boolean)""")
+        assert not mismatches, mismatches
+        # HUD advances with elapsed time on the last slide and the Q&A bar is full by 12:29.
+        page.evaluate('Reveal.slide(21)')
+        qa_bar = "document.querySelectorAll('#hud-segs .seg i')[7].style.width"
+        start = page.evaluate(qa_bar)
+        assert start != '100%', start
+        page.evaluate("()=>{const t=Date.now;Date.now=()=>t()+3.5*60000;renderHud();Date.now=t}")
+        assert page.evaluate(qa_bar) == '100%'
+        page.evaluate('Reveal.slide(0)')
         page.keyboard.press('f')
         page.wait_for_function('!!document.fullscreenElement')
         page.keyboard.press('Escape')

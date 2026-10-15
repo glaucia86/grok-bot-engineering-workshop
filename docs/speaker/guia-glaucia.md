@@ -226,7 +226,7 @@ Skills, no máximo 3 por bot:
    - ✅ **Esperado:** Todas as 8 caixas e setas estão na tela após 5 cliques.
 9. Não explique cada ferramenta. Uma frase curta por clique, cerca de 10 segundos cada.
 
-**Slide 5 · The one rule · 11:04–11:05** · 2 clique(s) no slide
+**Slide 5 · The one rule · 11:04–11:05** · 1 clique(s) no slide
 
 10. Pare. Fale devagar. Clique uma vez para mostrar a segunda linha (Nenhum bot faz merge. Eu faço).
    - ✅ **Esperado:** As duas linhas estão na tela. Espere três segundos em silêncio.

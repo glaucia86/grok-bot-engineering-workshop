@@ -130,7 +130,7 @@ slide(title="MVP architecture", t="11:03–11:04", m=1, clicks=5,
      Q("Where is the secret stored?", "Only in Vercel and in GitHub secrets. Never in a file or in the chat.", "Onde fica o segredo?", "Só na Vercel e nos secrets do GitHub. Nunca em arquivo nem no chat.")],
  nxt=("Now, the one rule you should remember.", "Agora, a regra que vocês devem lembrar."))
 
-slide(title="The one rule", t="11:04–11:05", m=1, clicks=2,
+slide(title="The one rule", t="11:04–11:05", m=1, clicks=1,
  do=[D("Stop. Speak slowly. Click once to show the second line (No bot merges. I do.).", "Pare. Fale devagar. Clique uma vez para mostrar a segunda linha (Nenhum bot faz merge. Eu faço).",
        ok=("Both lines are on screen. Wait three seconds in silence.", "As duas linhas estão na tela. Espere três segundos em silêncio."))],
  say=[S("One rule. The bot that builds does not judge.", "Uma regra. O bot que constrói não julga.", "rule → RÚUL; builds → BÍLDS; judge → DJÂDJ"),
