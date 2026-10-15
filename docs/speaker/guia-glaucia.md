@@ -89,7 +89,7 @@ O deck fica em `docs/speaker/slides/index.html`. Ele funciona offline: o reveal.
 3. **Tela cheia na tela compartilhada.** Volte à janela principal (a do slide) e aperte **F**. Para sair da tela cheia, **Esc**.
 4. **Compartilhar.** Na plataforma da Packt, compartilhe só a janela do deck (ou a tela onde ela está). Nunca a tela das notas.
 5. **Navegar e cliques.** Seta para a direita, espaço ou Page Down = próximo **clique**. Nos slides com diagrama (arquitetura, fluxo do time, loop) e nos cartões, cada clique faz **um passo aparecer**: cada notas diz quantos cliques o slide tem. Seta para a esquerda ou Page Up = voltar. **Esc** ou **O** mostra a visão geral de todos os slides. **B** ou **.** escurece a tela (bom para uma pausa). O endereço muda para `#/N`, então dá para pular direto para um slide pela barra de endereço.
-6. **Barra de tempo.** No rodapé do slide há uma barra com 8 segmentos, um por bloco, com a largura proporcional aos minutos. Ela enche conforme o horário planejado do slide e mostra "Brasília · ET". Compare com o relógio real. Se estiver mais de 2 minutos atrasada, use o "Se atrasar" daquele slide.
+6. **Barra de tempo.** No rodapé do slide há uma barra com 8 segmentos, um por bloco, com a largura proporcional aos minutos. Ela enche conforme o horário planejado do slide e mostra "Brasília · ET". Compare com o relógio real. Se estiver mais de 2 minutos atrasada, use o "Se atrasarX" daquele slide.
 7. **Demonstração ao vivo.** Nos slides marcados "Live", troque de janela com Alt+Tab (Cmd+Tab no Mac) para o Grok Bot ou o GitHub e volte para o deck no fim.
 8. **Prints.** As caixas tracejadas "Your real rehearsal screenshot" são lugares para prints **da sua conta**, tirados no ensaio, sem tokens nem dados pessoais. Para trocar: salve o print em `docs/speaker/slides/assets/shots/` e troque a `<div class="ph">` correspondente por `<img src="assets/shots/nome.png" alt="">`. Os chats desenhados no deck são **mock** (HTML/CSS), não prints reais; os resultados de QA neles são exemplos.
 9. **Notas e blocos desta página vêm da mesma fonte.** As falas, as perguntas e as transições deste guia e das notas do deck são geradas por `scripts/speaker_content.py`. Para mudar uma frase, edite lá e rode `python scripts/speaker_content.py`.
@@ -624,7 +624,7 @@ If you can't show where a number came from, leave it out. Never merge.
    **Prompt para colar:**
 
 ```
-Before you report, apply principle-prove-it-works to your own verdict. For every PASS, re-run the check against the real preview URL and quote the value you observed now, not the PR text and not a cached screenshot. If a check fails, suspect your observation method before the app.
+Before you report, apply principle-prove-it-works to your own verdict. For every PASS, re-run the check against its real target and quote the value you observed now, not the PR text and not a cached screenshot: the real preview URL for the MVP; for the legacy Fastify track, the local `npm run verify` (it starts its own localhost server and cannot target a preview). If a check fails, suspect your observation method before the app.
 Keep the scripts and their output as artifacts I can re-run. A result you cannot show is BLOCKED. Never print a secret. Never merge.
 ```
 
@@ -765,7 +765,7 @@ Cada bot terminou a entrega com prova. O QA citou o commit testado e deu PASS, F
 1. Diga que o trabalho roda na nuvem. Clique uma vez para mostrar o cartão do DevOps (mock).
 2. Cole o prompt do DevOps (abaixo) no chat do DevOps.
    - ✅ **Esperado:** O DevOps dá o link do CI, a preview URL e diz que os segredos estão presentes (redacted).
-   - ⚠️ **Se falhar:** Se algum valor de segredo aparecer na tela, troque de janela na hora. Nunca leia em voz alta.
+   - ⚠️ **Se falhar:** Se algum valor de segredo aparecer na tela: pare de compartilhar a tela e pause a demonstração. Nunca leia em voz alta. Um operador autorizado deve revogar ou rotacionar a credencial agora, antes de retomar.
 
    **Prompt para colar:**
 
@@ -822,8 +822,8 @@ Script one check (for example, a curl for the preview's HTTP status) and paste t
 
 **Perguntas prováveis**
 
-- **Q:** What if a secret leaks on screen? *(E se um segredo aparecer na tela?)*  
-  **A:** I switch windows, then we rotate the secret after the session. *(Troco de janela e depois trocamos (rotacionamos) o segredo, após a sessão.)*
+- **Q:** What if a secret or credential appears on screen? *(E se um segredo ou credencial aparecer na tela?)*  
+  **A:** I stop sharing the screen and pause the demo. An authorized operator revokes or rotates the credential immediately, in the provider's secure settings, before we resume. Switching windows does not invalidate an exposed credential, and waiting until the session ends leaves it usable. *(Paro de compartilhar a tela e pauso a demonstração. Um operador autorizado revoga ou rotaciona a credencial imediatamente, nas configurações seguras do provedor, antes de retomarmos. Trocar de janela não invalida uma credencial exposta, e esperar o fim da sessão a deixa utilizável.)*
 
 ✂️ **Se atrasar:** Skip the status request to DevOps and open the preview from the PR. *(Pule o pedido de status ao DevOps e abra a preview pelo PR.)*
 

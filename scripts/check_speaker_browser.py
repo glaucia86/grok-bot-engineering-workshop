@@ -81,11 +81,26 @@ try:
         page.goto(base+'slides/', wait_until='networkidle')
         page.wait_for_function('window.Reveal && Reveal.isReady()')
         assert page.evaluate('Reveal.getTotalSlides()') == 22
+        stepped = 0
         for number in range(22):
-            page.evaluate('(i)=>Reveal.slide(i)', number)
+            page.evaluate('(i)=>Reveal.slide(i,0,-1)', number)  # -1 = before the first fragment
             page.wait_for_timeout(400)
             assert page.evaluate('Reveal.getIndices().h') == number
             page.screenshot(animations='disabled', path=str(OUT/f'slide-{number+1:02}.png'))
+            # Advance through every fragment (build-by-click) exactly like the presenter, then capture the completed state.
+            steps = 0
+            while page.evaluate('Reveal.nextFragment()'):
+                steps += 1
+            expected = page.evaluate("(i)=>new Set([...Reveal.getSlides()[i].querySelectorAll('.fragment')].map(f=>f.dataset.fragmentIndex)).size", number)
+            assert steps == expected, (number+1, steps, expected)
+            if steps:
+                page.wait_for_timeout(700)  # let the last fragment transition finish (screenshots disable animations only)
+                hidden = page.evaluate("(i)=>Reveal.getSlides()[i].querySelectorAll('.fragment:not(.visible)').length", number)
+                assert hidden == 0, (number+1, hidden)
+                page.screenshot(animations='disabled', path=str(OUT/f'slide-{number+1:02}-final.png'))
+                stepped += steps
+        assert (OUT/'slide-04-final.png').exists() and (OUT/'slide-06-final.png').exists() and (OUT/'slide-11-final.png').exists()
+        results.append(f'Reveal: all fragments advanced and final state captured ({stepped} steps, architecture, team flow and loop included) PASS')
         for link in slide_links:
             page.goto(link, wait_until='networkidle')
             page.wait_for_function('(i)=>Reveal.getIndices().h === i', arg=int(link.rsplit('/',1)[1]))

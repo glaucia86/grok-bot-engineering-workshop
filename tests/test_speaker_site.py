@@ -48,6 +48,12 @@ class SpeakerSite(unittest.TestCase):
             self.assertEqual(output.count('class="copy-command"'),1)
             self.assertIn('Copiar comando',output)
             self.assertIn('git ls-remote --exit-code --heads origin refs/heads/checkpoint/mvp-base',output)
+    def test_generated_speaker_content_is_up_to_date(self):
+        import subprocess, sys
+        before = {p: p.read_bytes() for p in [ROOT/'docs/speaker/guia-glaucia.md', ROOT/'docs/speaker/slides/index.html']}
+        result = subprocess.run([sys.executable, str(ROOT/'scripts/speaker_content.py'), '--check'], cwd=ROOT, capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, 'Generated guide/deck notes are stale. Run: python scripts/speaker_content.py\n' + result.stdout + result.stderr)
+        self.assertEqual(before, {p: p.read_bytes() for p in before}, '--check must be read-only')
     def test_all_relative_resources_and_anchors_resolve(self):
         from html.parser import HTMLParser
         from urllib.parse import urlsplit, unquote
