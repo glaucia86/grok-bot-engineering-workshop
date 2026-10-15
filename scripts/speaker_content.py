@@ -514,7 +514,7 @@ def run_sheet():
     rows.append("| 10:45 | 8:45 | 1 | Abrir deck (F), notas (S), abas prontas: GitHub, Grok Bot, instruções QA/DevOps, preview | Slide 1 | — |")
     shared = {3:"GitHub", 8:"Grok Bot", 9:"Grok Bot", 10:"Grok Bot → Deck", 13:"Grok Bot", 14:"Grok Bot / GitHub", 15:"Preview", 17:"GitHub", 18:"Grok Bot"}
     acts = {1:"Boas-vindas", 2:"Agenda em 8 passos (1 clique)", 3:"Tour do repo: README → `mvp/` → `docs/inception.md` (3 cliques)", 4:"Arquitetura do MVP (5 cliques)",
-        5:"A regra: quem constrói não julga, nenhum bot faz merge (2 cliques)", 6:"Fluxo do time (6 cliques)", 7:"Charter: owns · good output · stops (3 cliques)",
+        5:f"A regra: quem constrói não julga, nenhum bot faz merge ({SL[4]['clicks']} {'clique' if SL[4]['clicks'] == 1 else 'cliques'})", 6:"Fluxo do time (6 cliques)", 7:"Charter: owns · good output · stops (3 cliques)",
         8:"**Ao vivo:** criar FDE TypeScript, depois QA e DevOps, skills, grupo", 9:"**Ao vivo:** prompt de design para o FDE", 10:"Aprovar design (prompt FDE) e **prova do FDE**; \"Green CI is not acceptance\"",
         11:"Loop PR → verify → approve (5 cliques)", 12:"Regra de todo bot: **prove it works** (3 cliques)", 13:"**Ao vivo:** prompt do QA, **prova do QA**, PASS/FAIL/WARN/BLOCKED", 14:"**Ao vivo:** prompt do DevOps e **prova do DevOps**, status do CI e preview",
         15:"**Ao vivo:** enviar feedback, ver a barra no dashboard", 16:"Quem decide sou eu: desfaz em 1 min × humano decide", 17:"**Ao vivo:** ler o PR (mudou, QA, CI) e fazer o merge",

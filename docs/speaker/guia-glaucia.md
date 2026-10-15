@@ -40,7 +40,7 @@ Minuto a minuto. Para cada slide: o que acontece e o que cortar se estiver atras
 | 11:01 | 9:01 | 2 | Agenda em 8 passos (1 clique) | Deck | Pule este slide. Aperte a seta para a direita. |
 | 11:02 | 9:02 | 3 | Tour do repo: README → `mvp/` → `docs/inception.md` (3 cliques) | GitHub | Pule o README. Mostre só a pasta mvp. |
 | 11:03 | 9:03 | 4 | Arquitetura do MVP (5 cliques) | Deck | Mostre só a linha de cima. Quinze segundos. |
-| 11:04 | 9:04 | 5 | A regra: quem constrói não julga, nenhum bot faz merge (2 cliques) | Deck | Este slide nunca é cortado. É o que as pessoas vão lembrar. |
+| 11:04 | 9:04 | 5 | A regra: quem constrói não julga, nenhum bot faz merge (1 clique) | Deck | Este slide nunca é cortado. É o que as pessoas vão lembrar. |
 | 11:05 | 9:05 | 6 | Fluxo do time (6 cliques) | Deck | Vinte segundos. Clique rápido e diga só a primeira e a última frase. |
 | 11:06 | 9:06 | 7 | Charter: owns · good output · stops (3 cliques) | Deck | Leia só a ideia principal: owns, good output, stops. |
 | 11:07 | 9:07 | 8 | **Ao vivo:** criar FDE TypeScript, depois QA e DevOps, skills, grupo | Grok Bot | Não crie o DevOps ao vivo. Mostre só as instruções dele. |

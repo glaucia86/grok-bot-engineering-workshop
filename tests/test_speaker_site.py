@@ -9,6 +9,21 @@ builder = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(builder)
 
 class SpeakerSite(unittest.TestCase):
+    def test_rule_run_sheet_click_count_uses_slide_source(self):
+        from unittest.mock import patch
+        content_spec = importlib.util.spec_from_file_location('speaker_content', ROOT/'scripts/speaker_content.py')
+        content = importlib.util.module_from_spec(content_spec)
+        content_spec.loader.exec_module(content)
+        def rule_row(table):
+            return next(line for line in table.splitlines() if len(line.split('|')) > 4 and line.split('|')[3].strip() == '5')
+        self.assertEqual(content.SL[4]['clicks'], 1)
+        self.assertIn('(1 clique)', rule_row(content.run_sheet()))
+        guide = (ROOT/'docs/speaker/guia-glaucia.md').read_text(encoding='utf-8')
+        self.assertIn('(1 clique)', rule_row(guide))
+        # A future fragment change must also update the table, including pluralization.
+        with patch.dict(content.SL[4], clicks=3):
+            self.assertIn('(3 cliques)', rule_row(content.run_sheet()))
+
     def test_build_is_allowlisted_and_relative(self):
         with tempfile.TemporaryDirectory() as tmp:
             out = pathlib.Path(tmp)/'site'

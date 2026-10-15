@@ -87,10 +87,12 @@ try:
             page.wait_for_timeout(400)
             assert page.evaluate('Reveal.getIndices().h') == number
             page.screenshot(animations='disabled', path=str(OUT/f'slide-{number+1:02}.png'))
-            # Advance through every fragment (build-by-click) exactly like the presenter, then capture the completed state.
+            # Capture every click stage after its transition, plus the completed state below.
             steps = 0
             while page.evaluate('Reveal.nextFragment()'):
                 steps += 1
+                page.wait_for_timeout(700)  # screenshots disable animations, not fragment CSS transitions
+                page.screenshot(animations='disabled', path=str(OUT/f'slide-{number+1:02}-step-{steps:02}.png'))
             expected = page.evaluate("(i)=>new Set([...Reveal.getSlides()[i].querySelectorAll('.fragment')].map(f=>f.dataset.fragmentIndex)).size", number)
             assert steps == expected, (number+1, steps, expected)
             if steps:
@@ -100,7 +102,7 @@ try:
                 page.screenshot(animations='disabled', path=str(OUT/f'slide-{number+1:02}-final.png'))
                 stepped += steps
         assert (OUT/'slide-04-final.png').exists() and (OUT/'slide-06-final.png').exists() and (OUT/'slide-11-final.png').exists()
-        results.append(f'Reveal: all fragments advanced and final state captured ({stepped} steps, architecture, team flow and loop included) PASS')
+        results.append(f'Reveal: every fragment step and final state captured ({stepped} steps, architecture, team flow and loop included) PASS')
         for link in slide_links:
             page.goto(link, wait_until='networkidle')
             page.wait_for_function('(i)=>Reveal.getIndices().h === i', arg=int(link.rsplit('/',1)[1]))
