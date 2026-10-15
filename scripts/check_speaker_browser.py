@@ -4,7 +4,7 @@ import http.server
 import json
 from pathlib import Path
 import threading
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
 
 ROOT = Path('_site').resolve()
 OUT = Path('speaker-browser-evidence')
@@ -111,7 +111,16 @@ try:
         notes.locator('#connection-status').wait_for(state='hidden')
         notes.wait_for_function("document.querySelector('.speaker-controls-notes .value').textContent.trim().length > 20")
         notes.wait_for_function("document.querySelector('#current-slide iframe').contentWindow.Reveal.isReady()")
-        notes.screenshot(animations='disabled', path=str(OUT/'speaker-notes.png'))
+        # Screenshot is evidence only; the assertions above are the test. Headless popups on CI runners can hang on
+        # "waiting for fonts to load", so bring the popup to front, bound the fonts wait, and degrade to a warning.
+        notes.bring_to_front()
+        notes.evaluate("Promise.race([document.fonts.ready, new Promise(r=>setTimeout(r,5000))])")
+        try:
+            notes.screenshot(animations='disabled', path=str(OUT/'speaker-notes.png'), timeout=10000)
+        except PlaywrightTimeoutError as error:
+            print('WARNING: speaker-notes screenshot skipped:', str(error).splitlines()[0])
+            page.bring_to_front()
+            page.screenshot(animations='disabled', path=str(OUT/'speaker-notes-fallback.png'))
         notes.close()
         results.append('Reveal: 22 slide renders, hash links, F fullscreen and S notes popup PASS')
         # Offline is tested with network disabled after all local assets are loaded.
