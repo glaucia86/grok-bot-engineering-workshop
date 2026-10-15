@@ -12,10 +12,13 @@ beforeEach(() => vi.resetAllMocks());
 
 describe("actual handlers with mocked database boundary", () => {
   const invalid: [string, unknown, string][] = [];
-  for (const field of ["talkId", "author", "comment"]) {
+  for (const field of ["talkId", "author"]) {
     for (const value of [undefined, null, "", "   ", 42, {}, []]) {
       invalid.push([`${field}: ${JSON.stringify(value)}`, { ...valid, [field]: value }, field]);
     }
+  }
+  for (const comment of [null, 42, true, {}, []]) {
+    invalid.push([`comment: ${JSON.stringify(comment)}`, { ...valid, comment }, "comment"]);
   }
   for (const rating of [undefined, null, 0, 6, 2.5, "5", true]) {
     invalid.push([`rating: ${rating}`, { ...valid, rating }, "rating"]);
@@ -39,6 +42,30 @@ describe("actual handlers with mocked database boundary", () => {
     const values = vi.fn(() => ({ returning: async () => [row] }));
     boundary.getDb.mockReturnValue({ insert: () => ({ values }) });
     const response = await POST(request({ ...valid, rating, extra: "discard" }));
+    expect(response.status).toBe(201);
+    expect(await response.json()).toEqual(row);
+    expect(values).toHaveBeenCalledWith(normalized);
+  });
+  it.each([
+    { talkId: " t1 ", author: " Ana ", rating: 5 },
+    { ...valid, comment: "" },
+    { ...valid, comment: " \t\n " },
+  ])("stores absent or blank comments as empty text: %j", async (body) => {
+    const normalized = { talkId: "t1", author: "Ana", comment: "", rating: 5 };
+    const row = { ...normalized, id: 8, createdAt: "2026-01-01T00:00:00.000Z" };
+    const values = vi.fn(() => ({ returning: async () => [row] }));
+    boundary.getDb.mockReturnValue({ insert: () => ({ values }) });
+    const response = await POST(request(body));
+    expect(response.status).toBe(201);
+    expect(await response.json()).toEqual(row);
+    expect(values).toHaveBeenCalledWith(normalized);
+  });
+  it("accepts 1000 comment characters after trimming", async () => {
+    const normalized = { talkId: "t1", author: "Ana", comment: "x".repeat(1000), rating: 5 };
+    const row = { ...normalized, id: 9, createdAt: "2026-01-01T00:00:00.000Z" };
+    const values = vi.fn(() => ({ returning: async () => [row] }));
+    boundary.getDb.mockReturnValue({ insert: () => ({ values }) });
+    const response = await POST(request({ ...valid, comment: ` \t${"x".repeat(1000)}\n ` }));
     expect(response.status).toBe(201);
     expect(await response.json()).toEqual(row);
     expect(values).toHaveBeenCalledWith(normalized);

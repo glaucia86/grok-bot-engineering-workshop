@@ -18,7 +18,7 @@ it("shows shared errors and preserves invalid input without sending", async () =
   fireEvent.click(screen.getByRole("button", { name: /Send feedback/ }));
   expect(await screen.findByText("talkId is required")).toBeTruthy();
   expect(screen.getByText("author is required")).toBeTruthy();
-  expect(screen.getByText("comment is required")).toBeTruthy();
+  expect(screen.queryByText("comment is required")).toBeNull();
   expect(screen.getByText("rating must be a number")).toBeTruthy();
   expect((screen.getByLabelText("Talk") as HTMLInputElement).value).toBe("  ");
   expect(fetcher).not.toHaveBeenCalled();
