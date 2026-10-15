@@ -3,7 +3,7 @@
 
 <img src="assets/banner.webp" alt="Build Your First Engineering Bot with Grok Bot — banner do workshop da Packt" width="100%" />
 
-# Crie seu primeiro bot de engenharia com o Grok Bot
+# Crie seu primeiro time de engenharia com o Grok Bot
 
 **Um workshop prático da Packt · 17 de novembro de 2026 · 9h–10h30 ET (11h–12h30 Brasília) · 90 minutos**
 
@@ -387,7 +387,7 @@ Código e texto originais do workshop: [MIT](LICENSE), © 2026 Glaucia Lemos. As
 <a href="https://github.com/glaucia86"><img src="https://avatars.githubusercontent.com/u/1631477?v=4" width="170" height="170" alt="Glaucia Lemos" /></a>
 
 <h3>Glaucia Lemos</h3>
-<p><strong>AI Transformation Lead · Autora</strong></p>
+<p><strong>Principal Software Engineer · Autora</strong></p>
 <p>Trabalho com IA e engenharia de software, criando aplicações e explorando<br>agentes de código com IA usando JavaScript e TypeScript. Compartilho conhecimento prático<br>por meio de projetos open source, palestras e conteúdo técnico.</p>
 
 <p>
