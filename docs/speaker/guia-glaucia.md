@@ -359,7 +359,7 @@ A plateia viu o repositório, a arquitetura e a regra principal. O relógio marc
 
 ### 🎯 Objetivo e janela
 
-**Janela:** 11:05–11:12 (Brasília) = 9:05–9:12 ET · slides 6–8 · **Meta:** Criar o FDE do zero, depois o QA e o DevOps, com no máximo 3 skills cada (exceção: o QA mantém a `interrogate`, do pstack), e colocar os três num grupo com você.
+**Janela:** 11:05–11:12 (Brasília) = 9:05–9:12 ET · slides 6–8 · **Meta:** Criar o FDE do zero, depois o QA e o DevOps, com no máximo 3 skills cada (o QA tem 4: playwright-best-practices, playwright-cli, create-verification-skill e `interrogate`), e colocar os três num grupo com você. Todo bot termina com a `principle-prove-it-works` (passo final, fora do limite).
 
 ✂️ **Se atrasar, corte isto:** não crie o DevOps ao vivo. Mostre só as instruções dele.
 
@@ -393,8 +393,8 @@ Where you stop: anything you can undo in under a minute you may do alone. Never 
 If you can't show where a number came from, leave it out. Use the GitHub connector, not the browser. One task, one prompt.
 ```
 
-6. Crie o QA bot e o DevOps colando as instruções da seção 4 do docs/inception.md (aberto numa aba). Confira com este guia: WARN só para cobertura. QA: playwright-best-practices, playwright-cli, create-verification-skill, mais a interrogate do pstack (a única exceção ao limite de três skills, porque a interrogate faz parte do pstack). DevOps: deploy-to-vercel, ci-cd-and-automation.
-   - ⚠️ **Se falhar:** O QA tem quatro skills de propósito: a interrogate fica. O FDE e o DevOps têm no máximo três.
+6. Crie o QA bot e o DevOps colando as instruções da seção 4 do docs/inception.md (aberto numa aba). Confira com este guia: WARN só para cobertura. QA: playwright-best-practices, playwright-cli, create-verification-skill, mais a interrogate do pstack (quatro no total; o QA é a única exceção ao limite de três skills, porque a interrogate faz parte do pstack). A principle-prove-it-works é o passo final de todo bot e não conta no limite. DevOps: deploy-to-vercel, ci-cd-and-automation.
+   - ⚠️ **Se falhar:** O QA tem quatro skills de propósito: a interrogate fica. O FDE e o DevOps têm no máximo três. A principle-prove-it-works é o passo final de todos e não conta.
 7. Crie o grupo 'Workshop - Packt Grok Bot' com você e os três bots (como criar grupo: conferir no ensaio). Volte ao deck por volta das 11:11.
    - ✅ **Esperado:** O grupo mostra 4 membros: você e 3 bots.
 
@@ -459,8 +459,8 @@ If you can't show where a number came from, leave it out. Use the GitHub connect
 > *No máximo três skills. Menos contexto, bot melhor.*  
 > 🔊 max → MÉKS; context → CÓN-tékst; better → BÉ-ter
 
-> "QA keeps one extra skill, interrogate. It is part of pstack."  
-> *O QA mantém uma skill extra, a interrogate. Ela faz parte do pstack.*  
+> "QA has four skills, including interrogate from pstack. Every bot also ends with principle-prove-it-works."  
+> *O QA tem quatro skills, incluindo a interrogate do pstack. Todo bot também termina com a principle-prove-it-works.*  
 > 🔊 interrogate → in-TÉ-ro-gueit; pstack → PÍ-stak
 
 > "While the bot works, let me explain."  
@@ -472,7 +472,7 @@ If you can't show where a number came from, leave it out. Use the GitHub connect
 - **Q:** What is a skill? *(O que é uma skill?)*  
   **A:** A skill is a small pack of know-how a bot can load. We keep it to three so the context stays small. *(Uma skill é um pacote pequeno de conhecimento que o bot pode carregar. Limitamos a três para o contexto ficar pequeno.)*
 - **Q:** Why does QA have four skills? *(Por que o QA tem quatro skills?)*  
-  **A:** It is the one exception. interrogate is part of pstack, and it helps QA challenge a result from many angles. *(É a única exceção. A interrogate faz parte do pstack e ajuda o QA a questionar um resultado de vários ângulos.)*
+  **A:** It is the one exception. interrogate is part of pstack, and it helps QA challenge a result from many angles. principle-prove-it-works is separate: the final done-step for every bot. *(É a única exceção. A interrogate faz parte do pstack e ajuda o QA a questionar um resultado de vários ângulos. A principle-prove-it-works é à parte: o passo final de todo bot.)*
 - **Q:** Can one bot do all roles? *(Um bot só não faz todos os papéis?)*  
   **A:** It can, but it is worse. One role per bot keeps the work clear and checkable. *(Faz, mas fica pior. Um papel por bot deixa o trabalho claro e fácil de conferir.)*
 
@@ -485,7 +485,7 @@ If you can't show where a number came from, leave it out. Use the GitHub connect
 
 ### ✅ Checkpoint
 
-Os três bots existem e estão num grupo com você. Cada um tem no máximo três skills; o QA também tem a interrogate.
+Os três bots existem e estão num grupo com você. FDE e DevOps têm no máximo três skills; o QA tem quatro (com a interrogate). Todo bot termina com a principle-prove-it-works.
 
 ---
 
