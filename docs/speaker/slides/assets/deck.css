@@ -3,7 +3,7 @@
 @font-face { font-family: "Inter"; src: url("../vendor/fonts/Inter-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: block; }
 :root {
   --bg: #050507; --card: #0e1015; --card2: #14171e; --line: #262a35;
-  --text: #f4f6fb; --muted: #a3acbd; --dim: #6f788b;
+  --text: #f4f6fb; --muted: #a3acbd; --dim: #8f98ab;
   --red: #ef4444; --blue: #3b82f6; --pink: #ec4899; --orange: #f97316;
   --amber: #f59e0b; --green: #22c55e; --teal: #14b8a6; --purple: #8b5cf6;
   --bc: var(--amber);
@@ -17,6 +17,10 @@ html, body, .reveal-viewport { background: var(--bg) !important; }
 .reveal .slides { text-align: left; }
 /* one spacing system: 96px sides, 64px top, 120px bottom (room for the progress bar) */
 .reveal .slides section { height: 100%; padding: 64px 96px 120px; box-sizing: border-box; }
+/* content block sits in the optical centre of the 716px content box (no empty bottom third); kicker+title+body move together */
+.reveal .slides > section.present { display: flex !important; flex-direction: column; justify-content: center; }
+.reveal .slides > section.present > .fill { height: auto; flex: 1; }
+.reveal .slides > section.present > aside.notes { display: none; }
 .reveal h1, .reveal h2, .reveal h3 { font-family: var(--sans); color: var(--text); margin: 0 0 .35em; letter-spacing: -0.025em; line-height: 1.05; text-transform: none; }
 .reveal h1 { font-size: 112px; font-weight: 850; }
 .reveal h2 { font-size: 68px; font-weight: 800; }
@@ -25,13 +29,13 @@ html, body, .reveal-viewport { background: var(--bg) !important; }
 /* hierarchy: kicker (small, colored by block) → title → one lead line → content */
 .reveal .kicker { font-family: var(--sans); font-weight: 700; text-transform: uppercase; letter-spacing: .16em; color: var(--bc); font-size: 24px; margin: 0 0 18px; display: flex; align-items: center; gap: 14px; }
 .reveal .kicker::before { content: ""; width: 34px; height: 5px; border-radius: 3px; background: var(--bc); }
-.reveal .lead { font-size: 42px; color: var(--muted); max-width: 1300px; }
+.reveal .lead { font-size: 46px; color: var(--muted); max-width: 1300px; }
 .reveal .hand { font-family: var(--hand); }
 .reveal .muted { color: var(--muted); }
 .reveal .small { font-size: 28px; }
 .reveal code, .reveal .mono { font-family: var(--mono); font-size: .82em; background: #1a1d26; padding: 2px 10px; border-radius: 8px; color: #e2e8f0; }
 .hl-red { color: var(--red); } .hl-blue { color: var(--blue); } .hl-pink { color: var(--pink); } .hl-orange { color: var(--orange); } .hl-green { color: #4ade80; } .hl-amber { color: var(--amber); }
-.mark { background: linear-gradient(transparent 62%, rgba(245,158,11,.45) 62%); padding: 0 4px; }
+.mark { color: #fbbf24; border-bottom: 5px solid rgba(245,158,11,.85); padding-bottom: 2px; }
 
 /* layout helpers */
 .row { display: flex; gap: 48px; align-items: stretch; }
@@ -40,9 +44,9 @@ html, body, .reveal-viewport { background: var(--bg) !important; }
 .center { display: flex; flex-direction: column; justify-content: center; }
 .split { height: 700px; align-items: center; }
 .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; }
-.card { background: var(--card); border: 2px solid var(--line); border-top: 8px solid var(--cc, var(--line)); border-radius: 24px; padding: 30px 34px; }
-.card h3 { font-size: 38px; margin-bottom: 14px; }
-.card p, .card li { font-size: 32px; color: #d3d9e6; }
+.card { background: var(--card); border: 2px solid var(--line); border-top: 8px solid var(--cc, var(--line)); border-radius: 24px; padding: 38px 40px; }
+.card h3 { font-size: 44px; margin-bottom: 16px; }
+.card p, .card li { font-size: 36px; color: #e2e7f1; }
 .card ul { margin: 0; padding-left: 1.05em; } .card li { margin-bottom: .4em; }
 .big-quote { font-size: 96px; font-weight: 850; line-height: 1.04; letter-spacing: -0.035em; }
 .pill { display: inline-block; padding: 8px 24px; border-radius: 999px; font-weight: 800; font-size: 30px; margin-right: 12px; }
@@ -64,32 +68,32 @@ html, body, .reveal-viewport { background: var(--bg) !important; }
 .charter .o { color: #60a5fa; } .charter .g { color: #4ade80; } .charter .s { color: #f87171; }
 
 /* agenda: 4 × 2 tiles */
-.agenda { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 8px; }
-.agenda div { background: var(--card); border-radius: 20px; padding: 22px 26px; border-top: 8px solid var(--c); }
-.agenda b { display: block; font-size: 38px; }
+.agenda { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 16px; }
+.agenda div { background: var(--card); border-radius: 20px; padding: 28px 28px; border-top: 8px solid var(--c); }
+.agenda b { display: block; font-size: 42px; line-height: 1.1; min-height: 2.2em; }
 .agenda b em { font-style: normal; color: var(--c); margin-right: 10px; }
-.agenda span { display: block; font-size: 26px; color: var(--muted); margin-top: 4px; }
-.agenda i { display: block; font-style: normal; font-weight: 700; font-size: 26px; color: var(--c); margin-top: 6px; }
+.agenda span { display: block; font-size: 30px; color: var(--muted); margin-top: 4px; }
+.agenda i { display: block; font-style: normal; font-weight: 700; font-size: 30px; color: var(--c); margin-top: 6px; }
 
 /* sketch diagrams (rough.js, Excalidraw style) */
 svg.sketch { width: 100%; height: 560px; display: block; }
 svg.sketch text { font-family: var(--hand); fill: var(--text); }
 
 /* placeholders for real screenshots from the rehearsal */
-.ph { border: 3px dashed #4a5266; border-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--muted); background: repeating-linear-gradient(45deg, rgba(255,255,255,.025) 0 18px, transparent 18px 36px); min-height: 300px; padding: 24px; box-sizing: border-box; }
+.ph { border: 3px dashed #6b7690; border-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--muted); background: repeating-linear-gradient(45deg, rgba(255,255,255,.025) 0 18px, transparent 18px 36px); min-height: 300px; padding: 24px; box-sizing: border-box; }
 .ph b { font-family: var(--hand); color: var(--amber); font-size: 38px; display: block; }
 .ph span { font-size: 26px; display: block; margin-top: 10px; max-width: 90%; }
 .ph::before { content: "📷"; font-size: 56px; margin-bottom: 6px; }
 
 /* mock chat app (HTML/CSS, not a real screenshot) */
 .app { display: flex; background: #0b0c10; border: 2px solid #262b36; border-radius: 26px; overflow: hidden; height: 640px; box-shadow: 0 30px 80px rgba(0,0,0,.6); position: relative; }
-.app .side { width: 380px; background: #101217; border-right: 2px solid #23272f; padding: 22px 0; }
-.app .side-h { font-size: 22px; color: var(--dim); text-transform: uppercase; letter-spacing: .12em; padding: 0 26px 14px; }
+.app .side { width: 430px; background: #101217; border-right: 2px solid #23272f; padding: 22px 0; }
+.app .side-h { font-size: 24px; color: var(--dim); text-transform: uppercase; letter-spacing: .12em; padding: 0 26px 14px; }
 .app .bot-row { display: flex; gap: 16px; align-items: center; padding: 14px 26px; }
 .app .bot-row.on { background: #1b1e28; }
 .app .bot-row img { width: 56px; height: 56px; }
 .app .bot-row b { display: block; font-size: 27px; }
-.app .bot-row span { display: block; font-size: 22px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px; }
+.app .bot-row span { display: block; font-size: 24px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 300px; }
 .app .chat { flex: 1; display: flex; flex-direction: column; min-width: 0; }
 .app .chat header { padding: 20px 28px; border-bottom: 2px solid #23272f; font-weight: 800; font-size: 28px; display: flex; gap: 14px; align-items: center; }
 .app .chat header small { color: var(--muted); font-weight: 500; font-size: 22px; }
@@ -100,8 +104,8 @@ svg.sketch text { font-family: var(--hand); fill: var(--text); }
 .app .bubble b { display: block; font-size: 22px; margin-bottom: 4px; }
 .app .msg.me { justify-content: flex-end; }
 .app .msg.me .bubble { background: #26325a; }
-.app .composer { margin: auto 28px 22px; background: #181b23; border-radius: 18px; padding: 14px 20px; color: var(--dim); font-size: 24px; }
-.mock-tag { position: absolute; right: 18px; bottom: 12px; font-family: var(--hand); font-size: 20px; color: var(--dim); }
+.app .composer { margin: auto 28px 56px; background: #181b23; border-radius: 18px; padding: 14px 20px; color: var(--dim); font-size: 24px; }
+.mock-tag { position: absolute; right: 22px; bottom: 14px; font-family: var(--hand); font-size: 24px; color: var(--dim); }
 
 /* progress HUD: one segment per block, width = minutes; fills as the clock advances */
 #hud { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; padding: 0 3vw 1.1vw; pointer-events: none; font-family: var(--sans); }
@@ -133,7 +137,19 @@ svg.sketch text { font-family: var(--hand); fill: var(--text); }
 .avrow .av { width: 56px; height: 56px; }
 .hdr { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px; }
 .hdr .pills { padding-bottom: 8px; }
-.hdr .pill { font-size: 22px; padding: 5px 16px; margin: 0 0 0 8px; }
+.hdr .pill { font-size: 24px; padding: 5px 16px; margin: 0 0 0 8px; }
 .mergeline { font-size: 38px; font-weight: 850; color: var(--red); margin: 8px 0 0; }
 .mergeline.big { font-size: 72px; margin-top: 30px; letter-spacing: -0.03em; }
-.grid3 > .card { min-height: 290px; }
+.grid3 > .card { min-height: 340px; }
+.hero-av .av { width: 120px; height: 120px; }
+.hero-av p { font-size: 40px !important; margin-left: 28px !important; }
+.hero-av p { white-space: nowrap; font-size: 34px !important; }
+.big-quote + .grid3 > .card { min-height: 220px; padding: 28px 34px; }
+.big-quote + .grid3 .card h3 { font-size: 40px; } .big-quote + .grid3 .card p { font-size: 33px; }
+/* split slide with 3 stacked cards + screenshot (approval): compact so kicker + content fit the 716px box */
+.split.compact { height: 640px; }
+.split.compact .card { padding: 22px 30px; }
+.split.compact .card h3 { font-size: 38px; margin-bottom: 6px; }
+.split.compact .card p { font-size: 32px; }
+.split.compact .ph { height: 620px !important; }
+.split.compact .mergeline.big { font-size: 64px; margin-top: 18px; }
