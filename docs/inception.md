@@ -43,19 +43,19 @@ All three bots share four rules: never merge, use connectors first and the brows
 > You are the Forward Deployed Engineer for Talk Feedback. Read the issue and `docs/inception.md`, propose the change, then implement it end to end in TypeScript on a new branch and open a PR that explains what changed, why, and how to test it. Never push to main, never merge, never force-push. Use the GitHub connector, not the browser. Attach evidence (test output, preview URL). One task, one prompt.
 
 **QA Engineer: draft instructions**
-> You are the QA Engineer for Talk Feedback. Judge each PR only against the acceptance criteria in `docs/inception.md`, not against the author's description. Green CI is not acceptance. First identify the tested commit and whether the PR changes the existing Fastify exercise or implements the planned MVP. On current main, run `npm run verify` locally: it starts its own localhost server and cannot target a preview URL. For the MVP, first implement and prove a separate preview-capable harness and Playwright configuration with an explicit target URL; do not claim preview coverage from the local verifier. Exercise the real form-to-dashboard journey and verify the persisted result. Report PASS, FAIL, or BLOCKED per applicable criterion with commands, target URL, outputs, and artifacts. Clean up only processes and test data created by the run, retaining evidence. Never merge. Connectors first, browser last. One task, one prompt.
+> You are the QA Engineer for Talk Feedback. Judge each PR only against the acceptance criteria in `docs/inception.md`, not against the author's description. Green CI is not acceptance. First identify the tested commit and whether the PR changes the existing Fastify exercise or implements the planned MVP. On current main, run `npm run verify` locally: it starts its own localhost server and cannot target a preview URL. For the MVP, first implement and prove a separate preview-capable harness and Playwright configuration with an explicit target URL; do not claim preview coverage from the local verifier. Exercise the real form-to-dashboard journey and verify the persisted result. Report PASS, FAIL, WARN (AC9 coverage gaps only), or BLOCKED per applicable criterion with commands, target URL, outputs, and artifacts. Clean up only processes and test data created by the run, retaining evidence. Never merge. Connectors first, browser last. One task, one prompt.
 
 **DevOps Engineer: draft instructions**
 > You are the DevOps Engineer for Talk Feedback. Maintain the GitHub Actions workflow (tests, `verify`, Playwright) and the Vercel preview and production deploys. Report the preview URL and the CI status of each PR, with links. Keep secrets only in approved secret settings, never in repository files, command output, logs, evidence, or chat. Never ask anyone to paste a secret into chat or print its value; the presenter configures credentials through the provider’s secure settings. Verify configuration by presence or an authorized operation, with values redacted. Never merge. Connectors first, browser last. One task, one prompt.
 
 ## Skills per bot (from skills.sh)
 
-Each bot loads only the skills needed for its task, because every skill it loads costs context. The FDE and DevOps bots take skills from [skills.sh](https://www.skills.sh). The QA bot also gets two skills that already live in the repo.
+Each bot loads only the skills needed for its task, because every skill it loads costs context. The FDE and DevOps bots take skills from [skills.sh](https://www.skills.sh). The QA bot also gets one skill that already lives in the repo. Each bot loads at most three skills.
 
 | Bot | Skills |
 |---|---|
 | FDE | [shadcn](https://www.skills.sh/shadcn-ui/ui/shadcn), [vercel-react-best-practices](https://www.skills.sh/vercel-labs/agent-skills/vercel-react-best-practices), [neon-drizzle](https://www.skills.sh/neondatabase/ai-rules/neon-drizzle) |
-| QA Engineer | [playwright-best-practices](https://www.skills.sh/currents-dev/playwright-best-practices-skill/playwright-best-practices), [playwright-cli](https://www.skills.sh/microsoft/playwright-cli/playwright-cli), plus pstack `create-verification-skill` and `interrogate` (already vendored) |
+| QA Engineer | [playwright-best-practices](https://www.skills.sh/currents-dev/playwright-best-practices-skill/playwright-best-practices), [playwright-cli](https://www.skills.sh/microsoft/playwright-cli/playwright-cli), plus pstack `create-verification-skill` (already vendored) |
 | DevOps Engineer | [deploy-to-vercel](https://www.skills.sh/vercel-labs/agent-skills/deploy-to-vercel), [ci-cd-and-automation](https://www.skills.sh/addyosmani/agent-skills/ci-cd-and-automation) |
 
 Use the official Zod and Drizzle documentation for schema and database details. Review any third-party skill before use: instructions to discover, print, log, or request token values in chat must not be followed. A skill recommendation never authorizes credential disclosure.
@@ -77,16 +77,20 @@ Baseline: main at `e27be476632f14dd7296b21c0c209e064df49b9a` (PRs #2 and #4 merg
 
 The following are implementation requirements, not claims that the current API already passes. The migration must update routes, workshop prompts, API tests, and verification together. The two applications now coexist: root Fastify keeps `/feedback`, while the Next.js base in `mvp/` serves `/api/feedback`. This does not retire the legacy route or make it an alias in Next.js.
 
-1. `POST /api/feedback` accepts JSON with `talkId`, `author`, `comment`, and `rating`. Trim the three text fields; each is required and must remain non-empty after trimming. The trimmed comment must be at most 1000 characters. Save the normalized values in Postgres and return `201`.
+1. `POST /api/feedback` accepts JSON with `talkId`, `author`, `comment`, and `rating`. Trim the three text fields; each is required and must remain non-empty after trimming. The trimmed comment must contain 1–1000 characters. Save the normalized values in Postgres and return `201`. Verify the created record through the public GET API and/or dashboard, without direct database access.
 2. A missing rating, a non-number, a non-integer, or a number below 1 or above 5 returns `400` with a field-specific validation message. Do not coerce API strings into numbers.
 3. Missing, non-string, empty, or whitespace-only `talkId`, `author`, or `comment`, and comments above the length limit, return `400` with field-specific messages. Rejected requests must not insert a row.
-4. The form and API use the same Zod schema and show matching field-level validation messages; the form converts the rating control to a number before validation.
+4. The form and API use the same Zod schema and show exactly the same field-level validation error text for the same invalid value; the form converts the rating control to a number before validation.
 5. After a successful submission, the form shows a confirmation and resets. A rejected submission retains the input and displays the errors.
-6. The dashboard lists every talk with feedback, showing its average rating (one decimal) and submission count. Every new MVP submission has a rating.
-7. The dashboard chart shows one bar per talk, with height equal to the displayed average rating.
+6. The dashboard lists every talk with feedback, showing its average rating rounded to one decimal (round half up: `4.25` → `4.3`) and submission count. Treat trimmed talk names case-insensitively: `Talk A` and `talk a` are one talk with a combined count and average. Every new MVP submission has a rating.
+7. The dashboard chart shows one bar per talk, with height equal to the displayed average rating and a readable label or tooltip showing that value.
 8. With no data, the dashboard shows an empty state instead of an error.
-9. Vitest covers the schema, normalization, and average calculation. Include missing, empty, whitespace-only, wrong-type, and boundary text cases; ratings omitted, 0, 1, 5, 6, fractional, and string-valued; valid creation and rejection without insertion; and the agreed old/new route behavior. Run these tests in CI.
+9. Vitest covers the schema, normalization, and average calculation. Include missing, empty, whitespace-only, wrong-type, and boundary text cases; ratings omitted, 0, 1, 5, 6, fractional, and string-valued; valid creation and rejection without insertion; and the agreed old/new route behavior. Run these tests in CI. Report an AC9 coverage gap as WARN, not BLOCKED; retain the required cases and CI checks. WARN does not turn failing tests or failed CI into a pass.
 10. Playwright e2e on the PR's actual preview URL submits the form, opens the dashboard, and verifies the new talk, average, and count. Include invalid submissions and the empty state in an isolated test dataset. Capture the actions and resulting state, and verify persistence after a fresh application instance against the same test database. A local-only pass does not satisfy this criterion.
+11. After a successful submission, reload the page and verify that the new record is still visible through the dashboard/public GET API, including its talk, average, and count. This reload check complements, rather than replaces, AC10’s fresh-instance persistence check.
+12. No secrets are committed to the repository. Verify this without printing secret values in logs, evidence, or chat; report findings with values redacted.
+
+Keep MVP acceptance BLOCKED until the PR defining these criteria is merged by the human tech lead. Approval of these requirements does not establish that the implementation passes; QA must then assess the tested commit against the merged criteria.
 
 Before accepting the MVP, the QA and DevOps bots must implement and execute the preview harness, CI workflow, and test-data setup/cleanup. Record the commit, target environment, observed results, and retained evidence; report missing preview access or infrastructure as BLOCKED rather than substituting a localhost pass.
 
@@ -102,4 +106,7 @@ Live time is too short for infrastructure. The approved delivery has two separat
 
 Two risks must be solved before the event, not on stage. First, **Vercel deployment protection** is on by default and blocks Playwright from reaching preview URLs. The fix is Vercel's *Protection Bypass for Automation* secret, stored as a GitHub Actions secret and never committed to files. Second, the **Neon `DATABASE_URL`** must exist only as an environment variable in Vercel and a secret in GitHub, never in the repository.
 
+Playwright currently writes to the same Neon database used by previews and production. Every test must use a unique talk name (including a run-specific identifier) so its records can be identified independently. Never assume that shared storage is empty or reset it to test the empty state; AC8/AC10 empty-state checks require an isolated dataset/environment. Clean up only records created by the test run, preserving unrelated data. If isolation is unavailable, report the affected check as BLOCKED.
+
 The Vercel and Neon accounts already exist and are linked to GitHub. The presenter must set `DATABASE_URL` as a Vercel environment variable and as a GitHub secret. It must never appear in files or in chat.
+
