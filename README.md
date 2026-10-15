@@ -115,7 +115,7 @@ gantt
 | 30–42 | Background task | cloud agent | `checkpoint/04-backup-pr` |
 | 42–55 | Human approval | `interrogate` | `checkpoint/04-backup-pr` |
 | 55–60 | Q&A | — | — |
-| *Extended (90 min)* | Daily triage routine + more Q&A | `automate-me` | `checkpoint/05-routine` |
+| *Extended (90 min)* | Daily triage routine + more Q&A | Grok Bot native routines | `checkpoint/05-routine` |
 
 ---
 
@@ -309,19 +309,21 @@ Questions! Want to keep practicing? Try the other seed issues:
 
 > 🕐 **Only in the 90-minute version.** In the 60-minute version, this is homework.
 
-**Extended block A · Routine with automate-me (about 20 min)**
+**Extended block A · Draft a native Grok Bot routine (about 20 min)**
 
 **Paste this prompt:**
 
 ```text
-Use the automate-me skill from .agents/skills/automate-me.
-Create a daily routine for this repository: every weekday at 9 AM,
-read new issues, restate each one in your own words,
-label them (bug, feature, unclear), and post a short triage summary to me.
-Do not change code and do not close issues.
+Using Grok Bot's native routines, draft a daily triage routine for this repository:
+weekdays at 9 AM in America/Sao_Paulo. Read new issues, restate each one
+in your own words, propose labels (bug, feature, unclear), and prepare
+a short summary for my private inbox. Do not apply labels or post comments.
+Do not change code, close issues, merge, or deploy.
+Show the definition and a sample summary for review. Keep it disabled;
+do not create or enable a scheduled task during this exercise.
 ```
 
-✅ **Expected result:** a routine definition that you can review before turning it on. Reference version: [`docs/routines/daily-triage.md`](docs/routines/daily-triage.md) on `checkpoint/05-routine`.
+✅ **Expected result:** a disabled draft for Grok Bot's native routines and a sample summary for human review; no scheduled task is created or enabled. See the [reviewed triage reference on main](https://github.com/glaucia86/grok-bot-engineering-workshop/blob/main/docs/routines/daily-triage.md) for execution windows, private delivery, and a manual fallback. A Markdown file alone does not schedule execution.
 
 🚩 **Checkpoint branch:** `checkpoint/05-routine`
 
