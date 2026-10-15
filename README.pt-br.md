@@ -20,359 +20,131 @@
 
 </div>
 
-> **Como usar este README.** Cada passo tem três partes: o **prompt para colar**, o **resultado esperado** e uma **branch de checkpoint**. Se você ficar para trás, é só fazer checkout da branch de checkpoint e continuar dali. Ninguém fica para trás.
->
-> Os prompts estão em inglês de propósito: são exatamente os mesmos que usaremos ao vivo. Cole como estão.
+## Trilha principal: Talk Feedback MVP em Next.js
 
----
+Prepare uma **aplicação de referência completa na main** antes do evento, com PRs revisados e merges humanos. No **workshop de 90 minutos**, a turma implementa os exercícios de formulário/dashboard a partir da base API/banco separada e congelada `checkpoint/mvp-base`, em `mvp/`. O aplicativo Fastify da raiz é **prática extra opcional**, não a trilha principal.
 
-## Sumário
+Comece por [spec.md](spec.md), [inception](docs/inception.md), [setup do MVP](mvp/README.md) e [índice de exercícios e issues GitHub](docs/issues/README.md). A spec define o contrato técnico; as issues GitHub acompanham a execução, sem repetir o plano em outra spec ou arquivo de slices.
 
-- [O que você vai construir](#what)
-- [O projeto: Talk Feedback API](#project)
-- [Agenda](#agenda)
-- [Antes do evento (pré-requisitos)](#prereqs)
-- [Passo 1 · Conferindo o setup (0–5 min)](#step1)
-- [Passo 2 · Entender e desenhar (5–20 min)](#step2)
-- [Passo 3 · Criando a skill de verificação (20–40 min)](#step3)
-- [Passo 4 · Tarefa em segundo plano: o agente de nuvem abre um PR (40–55 min)](#step4)
-- [Passo 5 · Aprovação humana (55–70 min)](#step5)
-- [Passo 6 · Uma rotina diária de triagem (70–82 min)](#step6)
-- [Passo 7 · Perguntas e respostas (82–90 min)](#step7)
-- [Branches de checkpoint](#checkpoints)
-- [Créditos e leituras complementares](#credits)
-- [Sobre a apresentadora](#creator)
+### Estado antes do workshop
 
----
+A API base, o schema, a migration, os testes locais e os componentes visuais estão integrados. A página inicial ainda é a página padrão; formulário/dashboard e aceite na preview real continuam pendentes. O destino é uma referência completa na main; este snapshot ainda não chegou lá. A spec integrada registra requisitos aprovados, não uma aplicação aceita.
 
-<a id="what"></a>
-## O que você vai construir
+Em 15 de outubro, [PR #9](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/9) (critérios) e [PR #10](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/10) (agrupamento sem distinção de maiúsculas) ainda aguardam merge humano. Confira o estado e o SHA testado antes do evento. O aceite permanece BLOCKED até os critérios entrarem e serem verificados.
 
-Um **bot de engenharia** que pega uma issue do GitHub, entende o pedido, desenha uma solução, implementa em segundo plano e abre um pull request **com evidências**. Você continua no controle: **o bot propõe, o humano aprova.**
+## Agenda e resultados esperados
 
-```mermaid
-flowchart LR
-    I["📝 Issue do GitHub"] --> U["🧠 Entender<br/>in-your-own-words"]
-    U --> D["📐 Desenhar<br/>architect"]
-    D --> V["🔧 Skill de verificação<br/>create-verification-skill"]
-    V --> C["☁️ Agente de nuvem<br/>implementa + roda a verificação"]
-    C --> P["🔀 Pull request<br/>com evidências"]
-    P --> R["🔍 Revisão<br/>interrogate"]
-    R --> H{"👩‍💻 Humano<br/>aprova?"}
-    H -- sim --> M["✅ Merge (feito por você)"]
-    H -- não --> C
-```
+| Minutos | Atividade | Resultado observável |
+|---|---|---|
+| 0–5 | Inspecionar a base MVP preparada | Repositório, app, commit e checks corretos |
+| 5–12 | Criar FDE, QA e DevOps | Três papéis limitados; somente humano faz merge |
+| 12–20 | Revisar design da funcionalidade ao vivo | Arquivos, contratos públicos e testes acordados |
+| 20–40 | Construir e verificar | Formulário/dashboard e evidência por critério |
+| 40–55 | Inspecionar PR e preview | Enviar feedback e conferir dashboard |
+| 55–70 | Revisão e decisão humana | Aprovar/mergear pessoalmente ou pedir ajustes |
+| 70–82 | Rascunhar triagem nativa | Definição desativada e exemplo privado |
+| 82–90 | Perguntas | Revisar aprendizados e prática extra |
 
-<a id="project"></a>
-## O projeto: Talk Feedback API
+O [guia da apresentadora](docs/speaker/guia-glaucia.md) traz o roteiro correspondente de 11h às 12h30 Brasília. A infraestrutura é preparada **antes** do evento, fora desses 90 minutos.
 
-Uma API pequena em TypeScript onde quem participa de um evento envia e lista feedbacks sobre as palestras.
+## Antes do evento
 
-| Método | Caminho | O que faz |
-| :--- | :--- | :--- |
-| `GET` | `/health` | Retorna `{ "status": "ok" }` |
-| `POST` | `/feedback` | Cria um feedback `{ talkId, author, comment }` → `201` |
-| `GET` | `/feedback?talkId=...` | Lista os feedbacks, com filtro opcional por palestra |
+1. Prepare acesso GitHub e um repositório/fork autorizado. Confira visibilidade e acesso antes de compartilhar um repositório privado.
+2. Use Node.js 24 e npm para os checks locais. Siga o [setup e migrations](mvp/README.md); execute os comandos MVP em `mvp/`, não na raiz.
+3. Prepare banco, migration, root Vercel `mvp`, acesso seguro à preview, isolamento dos dados e harness. Secret configurada ou deployment Ready não comprovam o fluxo.
+4. Use a aplicação completa revisada da main como referência e congele uma revisão verificada de `checkpoint/mvp-base` para os exercícios. Não mova esse checkpoint para o app completo nem presuma que contém ajustes posteriores. As branches numeradas `checkpoint/01`–`05` pertencem ao exercício extra Fastify.
+5. Ensaie com dataset dedicado. Cada execução usa nome de palestra único; isso não isola um banco Neon compartilhado. Nunca esvazie dados compartilhados para demonstrar dashboard vazio. Limpe apenas dados/processos criados pela execução autorizada. Sem acesso ou isolamento, registre BLOCKED.
+6. Mantenha credenciais nas configurações seguras; nunca cole valores em chat, código, logs ou evidência. Este guia não autoriza configuração de contas ou segredos.
 
-```text
-src/app.ts        Fastify routes
-src/store.ts      In-memory store
-src/server.ts     Starts the server (PORT defaults to 3000; HOST defaults to 0.0.0.0)
-test/app.test.ts  Vitest tests
-docs/issues/      Seed issues for the workshop
-.agents/skills/   pstack skills (MIT, Lauren Tan)
-```
-
-Para rodar na sua máquina:
+Checks locais da base, sem credenciais de banco:
 
 ```sh
-npm install
+cd mvp
+npm ci
 npm test
-npm start
+npm run lint
+npm run build
+npm run typecheck
+npm run verify:http
 ```
 
-<a id="agenda"></a>
-## Agenda
+Esses checks comprovam apenas seu escopo local. `verify:http` rejeita entrada inválida em seu próprio servidor localhost; não acessa a preview Vercel nem comprova escrita remota válida. `npm run verify` na raiz verifica o Fastify separado.
 
-```mermaid
-gantt
-    title Agenda de 90 minutos
-    dateFormat mm
-    axisFormat %M min
-    section Mão na massa
-    Conferir setup             :a1, 00, 5m
-    Entender + desenhar        :a2, after a1, 15m
-    Skill de verificação       :a3, after a2, 20m
-    Tarefa em segundo plano    :a4, after a3, 15m
-    Aprovação humana           :a5, after a4, 15m
-    Rotina diária de triagem   :a6, after a5, 12m
-    Perguntas                  :a7, after a6, 8m
-```
+## Time e prompts do workshop
 
-| Tempo | Bloco | Skill | Branch de checkpoint |
-| :--- | :--- | :--- | :--- |
-| Antes | Pré-requisitos | — | `main` |
-| 0–5 | Conferir setup | — | `checkpoint/01-setup` |
-| 5–20 | Entender + desenhar | `in-your-own-words`, `architect` | `checkpoint/02-design` |
-| 20–40 | Skill de verificação | `create-verification-skill` | `checkpoint/03-verification` |
-| 40–55 | Tarefa em segundo plano | agente de nuvem | `checkpoint/04-backup-pr` |
-| 55–70 | Aprovação humana | `interrogate` | `checkpoint/04-backup-pr` |
-| 70–82 | Rotina diária de triagem | Definição de agendamento | `checkpoint/05-routine` |
-| 82–90 | Perguntas e respostas | — | — |
+No máximo três skills por bot:
 
----
+- FDE: `shadcn`, `vercel-react-best-practices`, `neon-drizzle`
+- QA: `playwright-best-practices`, `playwright-cli`, `create-verification-skill`
+- DevOps: `deploy-to-vercel`, `ci-cd-and-automation`
 
-<a id="prereqs"></a>
-## Antes do evento (pré-requisitos)
+FDE constrói; QA julga independentemente pelos critérios; DevOps informa checks e preview. Nenhum bot aprova ou faz merge. Uma tarefa por prompt, com evidência vinculada ao commit. Os prompts em inglês abaixo são idênticos aos da versão inglesa.
 
-Faça isto **antes** de 17 de novembro. Leva uns 10 minutos.
-
-1. Crie uma conta no **Grok Bot** e faça login.
-2. **Conecte o GitHub** ao Grok Bot: no chat, peça ao Grok Bot para conectar a sua conta do GitHub. Ele mostra um cartão de conexão no próprio chat; é só seguir.
-3. Faça um **fork** deste repositório para a sua conta do GitHub. Na página do fork, **desmarque "Copy the main branch only"** para que as branches de checkpoint venham junto.
-4. Opcional, para rodar localmente: instale o [Node.js 24 LTS](https://nodejs.org/) e o [Git](https://git-scm.com/).
-
-✅ **Resultado esperado:** você tem o seu próprio fork, e o Grok Bot consegue enxergá-lo.
-
----
-
-<a id="step1"></a>
-## Passo 1 · Conferindo o setup (0–5 min)
-
-**Cole este prompt no Grok Bot** (troque `<your-user>` pelo seu usuário):
+### 1. Inspecionar e desenhar (0–20 min)
 
 ```text
-Read the repository <your-user>/grok-bot-engineering-workshop.
-Tell me in 5 bullet points: what the API does, its endpoints,
-how to run the tests, and which skills are in .agents/skills.
-Do not change anything.
+Read spec.md, docs/inception.md, mvp/README.md and the selected GitHub issue.
+Identify the exact base commit and distinguish the Next.js MVP from the root Fastify exercise.
+Use the complete reference app on main for comparison and the frozen checkpoint/mvp-base for exercises.
+Design the assigned form/dashboard exercise using the existing schema, API and UI primitives.
+Show files to change and observable tests. Keep comment required (trimmed 1–1000), rating integer 1–5,
+and one-decimal averages (4.25 → 4.3). Group Talk A/talk a together under the approved contract.
+List unresolved prerequisites separately. Do not change code until I approve the design. Never merge.
 ```
 
-✅ **Resultado esperado:** um resumo curto que cita os 3 endpoints, o `npm test` e as 5 skills.
-
-🚩 **Branch de checkpoint:** `checkpoint/01-setup`
-
----
-
-<a id="step2"></a>
-## Passo 2 · Entender e desenhar (5–20 min)
-
-Começamos com uma issue **propositalmente vaga**: [`docs/issues/01-add-talk-rating.md`](docs/issues/01-add-talk-rating.md) — *"add talk rating"*. Issues reais são assim mesmo.
-
-**2.1 · Cole este prompt** (entender):
+### 2. Implementar após aprovação do design (20–40 min)
 
 ```text
-Use the in-your-own-words skill from .agents/skills/in-your-own-words.
-Read docs/issues/01-add-talk-rating.md and restate the request in your own words.
-List what is ambiguous and ask me the questions you need answered.
-Do not write code.
+Implement the approved exercise design on a new branch from the frozen reviewed checkpoint commit.
+Before opening the exercise PR, identify its instructor-approved exercise repository and target branch.
+Do not target the canonical reference main or move checkpoint/mvp-base; stop if that destination is unspecified.
+Keep the complete reference main separate; do not overwrite it with an exercise checkpoint.
+Use the existing shared validation and API. Keep successful confirmation/reset and rejected-input retention.
+Show every talk's average and count, one bar per talk, a readable value label/tooltip, and the empty state.
+Run the applicable MVP tests, lint, build, typecheck and HTTP checks. Open one PR with evidence.
+Do not claim preview acceptance from local checks. Do not merge or change production settings.
 ```
 
-✅ **Resultado esperado:** o pedido reescrito com as palavras do bot, mais perguntas, por exemplo *"A nota vai de 1 a 5? Uma nota por autor? Faz parte do feedback ou é um endpoint separado?"*
-
-**2.2 · Responda às perguntas.** Respostas sugeridas:
+### 3. QA independente e preview (20–55 min)
 
 ```text
-Rating is an integer from 1 to 5, optional, part of POST /feedback.
-Add GET /talks/:talkId/rating that returns { talkId, average, count }.
+Use spec.md and the merged acceptance criteria, not the author's report, to assess this PR.
+First identify the tested SHA and actual preview URL. Check the real form → API → dashboard/GET journey.
+Compare exact API/form error messages. Verify creation through public results, reload persistence,
+and separately persistence after a fresh application instance against the same isolated test database.
+Use unique test talk names; do not reset shared Neon data. Empty-state checks require isolated data.
+Report PASS, FAIL, WARN only for AC9 coverage gaps, or BLOCKED per criterion, with commands and artifacts.
+Failing tests or CI remain failures. Missing criteria merge, preview access or isolation stays BLOCKED.
+Clean up only authorized run-owned data/processes, keeping evidence. Never merge.
 ```
 
-**2.3 · Cole este prompt** (desenhar):
+### 4. Decisão humana (55–70 min)
+
+Leia a alteração, a evidência independente e os checks do mesmo commit. CI verde não é aceite. Somente o humano aprova e faz merge. Registre avisos de cobertura sem transformar falhas ou ausência de evidência em aprovação.
+
+### 5. Rascunho de rotina nativa (70–82 min)
 
 ```text
-Use the architect skill from .agents/skills/architect.
-Design the smallest change for the clarified rating feature.
-Show the files you will change, the API contract, and the tests.
-Do not write code yet.
-Save the design to docs/design/talk-rating.md and commit it to my fork,
-so a cloud agent can read it later.
+Read docs/routines/daily-triage.md. Draft a native Grok Bot routine for weekdays at 9 AM America/Sao_Paulo.
+Use its private delivery and read-only rules. Propose labels; do not apply them.
+Show a disabled definition and sample summary. Do not create or enable a scheduled task in this exercise.
 ```
 
-✅ **Resultado esperado:** um desenho curto: `src/store.ts`, `src/app.ts`, `test/app.test.ts`, o formato de request/response e os casos de teste, salvo e commitado como `docs/design/talk-rating.md` no seu fork.
+## Prática extra opcional: Fastify legado
 
-🚩 **Branch de checkpoint:** `checkpoint/02-design` (contém `docs/design/talk-rating.md`)
+A API original em memória e seus exercícios continuam disponíveis. Eles **não** definem o contrato Next.js nem são pré-requisitos da funcionalidade visual ao vivo.
 
----
-
-<a id="step3"></a>
-## Passo 3 · Criando a skill de verificação (20–40 min)
-
-> **Construa a alavanca.** Em vez de conferir o trabalho do bot na mão toda vez, construa uma ferramenta, uma única vez, que prove que o trabalho está correto. Essa ideia é da Lauren Tan ([@poteto](https://x.com/poteto)) e dos princípios do [pstack](https://github.com/cursor/plugins/tree/main/pstack).
-
-```mermaid
-sequenceDiagram
-    participant A as Agente
-    participant V as skill verify
-    participant S as Servidor da API
-    A->>V: roda a verificação
-    V->>S: npm start (sobe)
-    V->>S: GET /health
-    V->>S: POST /feedback
-    V->>S: GET /feedback
-    S-->>V: respostas
-    V-->>A: evidências (comandos + saídas + PASS/FAIL)
-```
-
-**Cole este prompt:**
-
-```text
-Use the create-verification-skill skill from .agents/skills/create-verification-skill.
-Create a verification skill for this API in .agents/skills/verify-talk-feedback.
-It must: 1) boot the API with npm start on a free port,
-2) call GET /health, POST /feedback and GET /feedback with curl,
-3) stop the server, 4) print the evidence: each command, its output, and PASS or FAIL.
-Add an npm script "verify" that runs it.
-Then run it once and show me the evidence.
-Finally, commit the new verification skill and the verify script to my fork.
-```
-
-✅ **Resultado esperado:** uma pasta nova `.agents/skills/verify-talk-feedback/` com um `SKILL.md` e um script, um comando novo `npm run verify`, evidências terminando em `Result: 4/4 PASS`, e um commit no seu fork.
-
-🚩 **Branch de checkpoint:** `checkpoint/03-verification`
-
----
-
-<a id="step4"></a>
-## Passo 4 · Tarefa em segundo plano: o agente de nuvem abre um PR (40–55 min)
-
-Agora o bot trabalha **em segundo plano** enquanto você segue em frente.
-
-**Cole este prompt:**
-
-```text
-In the background, using a cloud agent, implement the talk rating feature
-following the design in docs/design/talk-rating.md.
-Extend the verification skill in .agents/skills/verify-talk-feedback before running it.
-Keep the four existing checks and add these five checks on a fresh server:
-1) POST /feedback with rating 4 returns 201 and echoes rating 4;
-2) POST /feedback for the same talk with rating 5 returns 201 and echoes rating 5;
-3) POST /feedback with rating 6 returns 400;
-4) GET /talks/:talkId/rating for that talk returns average 4.5 and count 2;
-5) GET /talks/:talkId/rating for a talk without ratings returns average null and count 0.
-Use isolated talk IDs so the existing checks do not affect these assertions.
-Commit the updated checks with the feature in the same PR.
-Run npm test and npm run verify. Require Result: 9/9 PASS from the executed checks;
-if a check fails, fix the implementation or report the failure without fabricating evidence.
-Open a pull request to main with: what changed, why, how to test,
-and the verification evidence. Do not merge.
-```
-
-✅ **Resultado esperado:** em poucos minutos, um link de PR. A descrição do PR traz os resultados dos testes e as evidências da verificação.
-
-> ⏱️ **Sempre existe um PR de reserva.** Agentes de nuvem podem demorar durante uma sessão ao vivo. Se o seu PR não ficar pronto, use a branch `checkpoint/04-backup-pr` e continue no Passo 5.
-
-🚩 **Branch de checkpoint:** `checkpoint/04-backup-pr`
-
----
-
-<a id="step5"></a>
-## Passo 5 · Aprovação humana (55–70 min)
-
-O bot pode revisar. **Só um humano aprova.**
-
-**5.1 · Cole este prompt** (revisão):
-
-```text
-Use the interrogate skill from .agents/skills/interrogate.
-Review the pull request <PR link>. Challenge it: what could be wrong,
-which cases are not tested, and does the evidence really prove the feature works?
-Do not approve and do not merge.
-```
-
-✅ **Resultado esperado:** uma lista de perguntas e riscos (por exemplo *"O que acontece com nota 0 ou 6?"*).
-
-**5.2 · Rode a verificação você mesma(o).** Não confie, verifique:
-
-```sh
-git fetch origin
-git checkout <pr-branch>
-npm install
-npm test
-npm run verify      # boots the API, calls every endpoint, prints PASS/FAIL
-# optional, by hand:
-npm start
-# in another terminal:
-curl -s -X POST localhost:3000/feedback -H 'content-type: application/json' \
-  -d '{"talkId":"keynote","author":"me","comment":"great","rating":5}'
-curl -s localhost:3000/talks/keynote/rating
-```
-
-**Sem Node.js ou clone local?** Peça ao Grok Bot para fazer isso por você e mostrar as evidências:
-
-```text
-Check out the branch of pull request <PR link>, run npm install, npm test
-and npm run verify, and show me each command with its full output.
-Do not approve and do not merge.
-```
-
-✅ **Resultado esperado:** testes verdes, `npm run verify` terminando em `Result: 9/9 PASS`, e os checks de notas mostram `"average":4.5` com `"count":2`. O exemplo manual opcional, em um servidor novo, retorna `"average":5`.
-
-**5.3 · Decida.** Aprove e faça o merge **você mesma(o)** no GitHub, ou peça mudanças. **Nunca use auto-merge.**
-
-```mermaid
-flowchart LR
-    PR["PR com evidências"] --> Q["Revisão com interrogate"]
-    Q --> Y["Você roda a verificação"]
-    Y --> D{"Convencida(o)?"}
-    D -- sim --> M["Você faz o merge"]
-    D -- não --> F["Pede mudanças"]
-```
-
----
-
-<a id="step6"></a>
-## Passo 6 · Uma rotina diária de triagem (70–82 min)
-
-Prepare uma definição de triagem agendada para revisão e ativação posterior.
-
-**Cole este prompt:**
-
-```text
-Read docs/routines/daily-triage.md and draft the scheduler configuration
-for this repository: weekdays at 9 AM in America/Sao_Paulo.
-Use the execution prompt and private delivery rules from that document.
-Propose labels (bug, feature, unclear); do not apply them.
-Show the definition and a sample summary for review. Keep it disabled;
-do not create or enable a scheduled task during this exercise.
-```
-
-✅ **Resultado esperado:** uma definição de agendamento desativada e uma prévia, seguindo [`docs/routines/daily-triage.md`](docs/routines/daily-triage.md). O documento descreve os requisitos do agendador e uma alternativa manual; nenhuma rotina é ativada neste exercício.
-
-🚩 **Branch de checkpoint:** `checkpoint/05-routine`
-
----
-
-<a id="step7"></a>
-## Passo 7 · Perguntas e respostas (82–90 min)
-
-Hora das perguntas! Quer continuar praticando? Experimente as outras issues de exemplo:
-[`02-delete-feedback.md`](docs/issues/02-delete-feedback.md) e [`03-feedback-summary.md`](docs/issues/03-feedback-summary.md).
-
----
-
-<a id="checkpoints"></a>
-## Branches de checkpoint
-
-```sh
-git fetch origin
-git checkout checkpoint/02-design   # replace with the branch you need
-```
-
-| Branch | Estado |
-| :--- | :--- |
-| `checkpoint/01-setup` | Ponto de partida: API, testes, skills, issues de exemplo |
-| `checkpoint/02-design` | + documento de design `docs/design/talk-rating.md` |
-| `checkpoint/03-verification` | + skill `verify-talk-feedback` e `npm run verify` |
-| `checkpoint/04-backup-pr` | + avaliação de palestras implementada com testes (PR de reserva) |
-| `checkpoint/05-routine` | + rotina diária de triagem `docs/routines/daily-triage.md` |
-
----
+- [Avaliação de palestra](docs/issues/01-add-talk-rating.md): nota opcional no exercício antigo; [design histórico](docs/design/talk-rating.md). A nota já está implementada na main atual; use o checkpoint anterior do exercício para praticar implementação.
+- [Excluir feedback](docs/issues/02-delete-feedback.md) e [resumo por palestra](docs/issues/03-feedback-summary.md): extensões opcionais Fastify, não requisitos MVP nem mecanismos de limpeza dos testes remotos.
+- Comandos na raiz: `npm ci`, `npm test`, `npm run typecheck`, `npm run verify`.
+- As branches históricas `checkpoint/01-setup`, `02-design`, `03-verification`, `04-backup-pr` e `05-routine` registram etapas desse exercício extra. Não faça merge integral delas na main nem as use como base MVP.
+- Fastify usa `/feedback`, nota opcional e memória; MVP usa `/api/feedback`, nota/comentário obrigatórios e Postgres. A evidência de um verificador não substitui a do outro.
 
 <a id="credits"></a>
 ## Créditos e leituras complementares
 
 - **pstack**, da Lauren Tan ([@poteto](https://x.com/poteto)): as skills em [`.agents/skills`](.agents/skills) foram copiadas de [cursor/plugins/pstack](https://github.com/cursor/plugins/tree/1e5c90a4b6f249917bd21fe361b3a2a7deb741b8/pstack) sob a licença MIT. Veja o [NOTICE](.agents/skills/NOTICE.md) e a [LICENSE](.agents/skills/LICENSE). A ideia de *construir a alavanca* é dela.
-- **Leitura complementar:** o [mattpocock/skills](https://github.com/mattpocock/skills) (MIT), do Matt Pocock, outra coleção de skills para agentes. Ele não é usado neste workshop.
+- **Leitura complementar:** o [mattpocock/skills](https://github.com/mattpocock/skills) (MIT), do Matt Pocock, outra coleção de skills para agentes. Seu fluxo `to-spec` orientou a [spec.md](spec.md); ele não substitui as três skills do QA.
 
 ## Licença
 

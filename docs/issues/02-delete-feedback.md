@@ -1,5 +1,7 @@
 # Allow deleting a feedback entry
 
+> Optional extra practice — legacy Fastify application at the repository root. Not part of the live Next.js MVP. See [the exercise index](README.md) for the main track.
+
 **As** an attendee, **I want** to delete a feedback I submitted by mistake.
 
 ## Acceptance criteria

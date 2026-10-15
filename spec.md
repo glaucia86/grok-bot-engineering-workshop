@@ -8,9 +8,9 @@ Workshop attendees need to see an engineering bot team deliver a small, observab
 
 ## Solution
 
-Prepare the application base and infrastructure before the workshop. During the live feature, build the public feedback form and talk dashboard on that base, verify the real preview journey, and let the human tech lead approve and merge.
+Prepare a complete reference application on main before the workshop, including the form and dashboard, through reviewed PRs and human merges. Maintain a separate frozen checkpoint/mvp-base revision with the deliberate exercise gaps. During the workshop, participants build those features from that checkpoint and compare with the complete reference, verify the real preview journey, and retain human approval/merge control.
 
-The repository contains two independent applications. The root Fastify exercise remains an in-memory teaching example. The Next.js MVP is a separate application with persistent feedback. Its base API, validation, database migration, and UI primitives already exist; the form and dashboard do not. Do not present the starter homepage or a successful deployment as the finished MVP.
+The repository contains two independent applications. The root Fastify exercise remains an in-memory teaching example. The Next.js MVP is a separate application with persistent feedback. At the inspected snapshot, its base API, validation, database migration, and UI primitives exist; the form and dashboard do not yet. The complete reference and the separate exercise checkpoint are delivery targets, not claims about this snapshot. Do not present the starter homepage or a successful deployment as the finished MVP.
 
 ## User Stories
 
@@ -59,7 +59,7 @@ The repository contains two independent applications. The root Fastify exercise 
 - Approved target: trimmed talk names are compared case-insensitively. `Talk A` and `talk a` contribute to one average and count. At the inspected main commit, the statistics function still groups exact strings; case-insensitive grouping is implemented in [PR #10](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/10), pending human merge. That patch uses a lowercase grouping key, retains the first encountered spelling for display, and leaves input records unchanged; these are the patch’s implementation choices, not new display-casing requirements. No locale-specific collation, accent folding, slug system, or preferred display casing is agreed here.
 - Ordering, pagination, and talk lookup endpoints are not part of the agreed contract. The current GET reads the stored talk/rating rows and aggregates them in application memory; this is a workshop-scale design, not a scaling claim.
 
-### Form and dashboard: live feature, not completed base
+### Form and dashboard: complete reference and checkpoint exercises
 
 - The public form submits the shared contract. On success, show confirmation and reset. On rejection, preserve the entered values and show field errors. No login or administrative flow is introduced.
 - The dashboard lists every talk with feedback, its one-decimal average, and count. Render one bar per grouped talk, with height equal to the displayed average and a readable value label or tooltip.
@@ -115,10 +115,12 @@ Keep overall MVP acceptance BLOCKED until PR #9 is merged and the implementation
 - Editing/deleting feedback as a user feature, one-vote-per-author enforcement, or a new talk catalog.
 - New production database provisioning, credential changes, production migrations, or deployment authorization from this document alone.
 - Enterprise scaling, pagination, abuse-prevention guarantees, or an invented realtime-refresh contract.
-- Building the complete form/dashboard before the live feature, or spending the live 90 minutes provisioning infrastructure.
+- Spending the live 90 minutes provisioning infrastructure, or replacing the intentionally incomplete exercise checkpoint with the complete reference application.
 - Automatic approval/merge or converting this specification into an issue instead of the requested repository file.
 
 ## Further Notes
+
+Delivery-boundary update, October 15, 2026: the presenter explicitly requested a ready application on main and a separate checkpoint for exercises. This supersedes the earlier preparation-only base / UI-only-live restriction. Reuse checkpoint/mvp-base; do not move its ref until its exact contents and gaps have been reviewed. The reference must pass full form/dashboard acceptance before event readiness is claimed. The checkpoint must separately prove its supported base behavior and document what participants implement.
 
 This is a synthesis using [to-spec](https://github.com/mattpocock/skills/blob/main/skills/engineering/to-spec/SKILL.md) and its [official guidance](https://github.com/mattpocock/skills/blob/main/docs/engineering/to-spec.md), with the user's explicit `spec.md` destination replacing the skill's default issue-tracker destination. It records decisions and verified source structure; it is not a test-run report.
 
@@ -130,4 +132,4 @@ Source map for reinspection:
 - [Schema/statistics tests](mvp/src/lib/__tests__/feedback.test.ts), [handler tests](mvp/src/app/api/feedback/route.test.ts), [local persistence tests](mvp/src/db/persistence.test.ts), [HTTP smoke verifier](mvp/scripts/verify-http.mjs), [CI workflow](.github/workflows/mvp.yml).
 - [Legacy Fastify implementation](src/app.ts) and [legacy rating design](docs/design/talk-rating.md). The legacy design's no-coercion example is not the MVP contract and is not evidence that Fastify disables its default coercion.
 
-The root READMEs still describe the older Fastify workshop flow. Aligning those teaching prompts and checkpoint materials with the MVP remains coordination work; this specification does not claim that it has happened. No standalone glossary or ADR collection was found in the inspected repository tree.
+The root READMEs now identify the Next.js MVP as the main track and Fastify as extra practice. [Issue #17](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/17) still tracks final preview-backed instructions and presenter/deck walkthrough; text alignment does not establish rehearsal readiness. The implementation work is tracked in [the issue index](docs/issues/README.md), without duplicating this specification. No standalone glossary or ADR collection was found in the inspected repository tree.
