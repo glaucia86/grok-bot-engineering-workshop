@@ -43,8 +43,29 @@ UUID talk. It checks the 201 response, confirmation, dashboard and GET after rel
 Retries are disabled to bound writes. An interrupted run may still create a row;
 retain the initial run manifest for the authorized QA lifecycle owner.
 
-Remote traces, screenshots and videos are disabled. Only synthetic run metadata
-and summarized outcomes are deliberately attached. Do not introduce credentials
+Remote traces, screenshots and videos are disabled. The list reporter is console
+output, not attachment storage. Curated files are written under
+`mvp/preview-evidence/<run UUID>/` when invoked from `mvp/`:
+
+- `manifest.json` is awaited before the journey starts. It records the UUID/talk,
+  validated target/SHA/resource ID, planned request bounds and pending cleanup.
+  If storage fails, no journey requests start.
+- `outcome.json` records success or failure, a fixed phase, attempted POST count
+  and, only after verification succeeds, the observed summary. It never records
+  raw errors, responses, headers, credentials or environment variables. An attempted
+  POST may have persisted even when its response or a later assertion fails.
+
+These files are independent of the reporter and Playwright's output directory;
+later runs create new UUID directories without deleting earlier cleanup evidence.
+Automatic Playwright per-test output (including uncurated failure context) is discarded.
+The runner may retain status-only `.last-run.json`; that is not cleanup evidence.
+Missing or invalid outcome JSON means incomplete/interrupted execution or evidence-storage failure,
+never success; the initial manifest still identifies the run for its authorized
+lifecycle owner. An abrupt process termination cannot guarantee a final outcome.
+Preserve these files securely until that owner completes authorized QA cleanup;
+this harness neither deletes records nor claims cleanup is complete.
+
+Do not introduce credentials
 into URLs, test data, reporter configuration or artifacts. Review failure output
 before sharing it; never upload provider responses or environment dumps.
 
