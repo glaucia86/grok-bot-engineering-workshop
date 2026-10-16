@@ -27,6 +27,7 @@ export function FeedbackForm({ onSaved }: { onSaved: () => void }) {
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (pending.current) return;
+    setPreviewRating(0);
     setFailure(""); setStatus("idle");
     const parsed = feedbackSchema.safeParse({ ...values, rating: values.rating === "" ? undefined : Number(values.rating) });
     if (!parsed.success) {

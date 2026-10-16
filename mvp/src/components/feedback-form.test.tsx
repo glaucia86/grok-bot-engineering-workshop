@@ -70,6 +70,33 @@ it("previews pointer stars without committing and restores the selected rating o
   expect(screen.getByText("2 of 5 stars selected")).toBeTruthy();
 });
 
+it.each([true, false])("clears a hovered star preview when submitting from another field (rating committed: %s)", async (hasRating) => {
+  const fetcher = vi.fn<typeof fetch>(() => new Promise(() => {}));
+  vi.stubGlobal("fetch", fetcher);
+  render(<FeedbackForm onSaved={() => {}} />);
+  fireEvent.change(screen.getByLabelText("Talk"), { target: { value: "Engineering bots" } });
+  const author = screen.getByLabelText("Your name");
+  fireEvent.change(author, { target: { value: "Ana" } });
+  if (hasRating) fireEvent.click(screen.getByRole("radio", { name: "2 stars" }));
+  fireEvent.pointerEnter(screen.getByRole("radio", { name: "5 stars" }).closest("label")!);
+  expect(screen.getByText("Preview: 5 of 5 stars")).toBeTruthy();
+  author.focus();
+  fireEvent.keyDown(author, { key: "Enter" });
+  fireEvent.submit(author.closest("form")!);
+  expect(screen.queryByText("Preview: 5 of 5 stars")).toBeNull();
+  expect(document.querySelectorAll('.rating-option svg[fill="currentColor"]')).toHaveLength(hasRating ? 2 : 0);
+  if (hasRating) {
+    expect(screen.getByText("2 of 5 stars selected")).toBeTruthy();
+    expect(JSON.parse(String(fetcher.mock.calls[0][1]?.body)).rating).toBe(2);
+    expect((screen.getByRole("button", { name: /Saving/ }) as HTMLButtonElement).disabled).toBe(true);
+  } else {
+    expect(screen.getByText("No rating selected")).toBeTruthy();
+    expect(screen.getByText("rating must be a number")).toBeTruthy();
+    await waitFor(() => expect(document.activeElement).toBe(screen.getByRole("radio", { name: "1 star" })));
+    expect(fetcher).not.toHaveBeenCalled();
+  }
+});
+
 it("offers retry with retained input, blocks rapid retries and keeps confirmation while editing", async () => {
   let resolveSave!: (response: Response) => void;
   const fetcher = vi.fn().mockResolvedValueOnce(new Response("Unavailable", { status: 503 }))

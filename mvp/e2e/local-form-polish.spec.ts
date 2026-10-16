@@ -1,6 +1,45 @@
 import { expect, test } from "@playwright/test";
 import { writeFile } from "node:fs/promises";
 
+for (const hasRating of [true, false]) {
+  test(`local form fixture: Enter from another field clears pointer preview (rating committed: ${hasRating})`, async ({ page }, info) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    let submitted: { rating: number } | undefined;
+    let finish: (() => void) | undefined;
+    await page.route("**/api/feedback", async (route) => {
+      if (route.request().method() === "GET") return route.fulfill({ json: [] });
+      submitted = route.request().postDataJSON();
+      await new Promise<void>((resolve) => { finish = resolve; });
+      await route.fulfill({ status: 503, body: "Local fixture unavailable" });
+    });
+    await page.goto("/");
+    await page.getByLabel("Talk", { exact: true }).fill("Keyboard preview fixture");
+    const author = page.getByLabel("Your name", { exact: true });
+    await author.fill("Fixture attendee");
+    if (hasRating) await page.getByRole("radio", { name: "2 stars", exact: true }).check();
+    await page.getByRole("radio", { name: "5 stars", exact: true }).hover();
+    await expect(page.getByText("Preview: 5 of 5 stars", { exact: true })).toBeVisible();
+    // DOM focus preserves the pointer over star five, unlike clicking the field.
+    await author.evaluate((input) => input.focus({ preventScroll: true }));
+    await expect(author).toBeFocused();
+    await expect(page.getByText("Preview: 5 of 5 stars", { exact: true })).toBeVisible();
+    await page.keyboard.press("Enter");
+    if (hasRating) {
+      await expect(page.getByRole("button", { name: /Saving/ })).toBeDisabled();
+      await expect.poll(() => submitted?.rating).toBe(2);
+    } else {
+      await expect(page.getByText("rating must be a number", { exact: true })).toBeVisible();
+      await expect(page.getByRole("radio", { name: "1 star", exact: true })).toBeFocused();
+      expect(submitted).toBeUndefined();
+    }
+    await expect(page.getByText("Preview: 5 of 5 stars", { exact: true })).toHaveCount(0);
+    await expect(page.locator('.rating-option svg[fill="currentColor"]')).toHaveCount(hasRating ? 2 : 0);
+    await expect(page.getByText(hasRating ? "2 of 5 stars selected" : "No rating selected", { exact: true })).toBeVisible();
+    await page.locator("#feedback").screenshot({ path: info.outputPath(`keyboard-submit-${hasRating ? "saving" : "invalid"}-local-fixture.png`) });
+    finish?.();
+  });
+}
+
 // Local intercepted API fixtures: visual and interaction evidence, NOT persistence.
 for (const reducedMotion of ["no-preference", "reduce"] as const) {
   test(`local form fixture: pointer, keyboard, recovery and saved states (${reducedMotion})`, async ({ page }, info) => {
