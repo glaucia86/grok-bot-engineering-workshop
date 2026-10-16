@@ -100,9 +100,11 @@ production migrations separately; do not point tests at production.
 
 ## API contract
 
-`POST /api/feedback` accepts JSON with `talkId`, `author`, `comment` and `rating`.
-The text fields are trimmed and must be nonempty. The trimmed comment is limited
-to 1000 characters. Rating must be a numeric integer from 1 to 5; strings are
+`POST /api/feedback` requires `talkId`, `author` and `rating`; `comment` is optional.
+Talk and author must remain nonempty after trimming. Omitted, empty and whitespace-only
+comments normalize to `""` in the response and storage. Supplied comments must be strings
+(including rejection of `null`) with at most 1000 characters after trimming.
+Rating must be a numeric integer from 1 to 5; strings are
 not coerced. Valid input returns 201 with the stored record. Invalid input
 returns 400 with an `errors` map and does not insert a row. Malformed JSON has a
 body-level error.
@@ -133,3 +135,43 @@ valid and invalid submissions, chart/empty states, and persistence after a fresh
 application instance, and clean up only data created by that run. Record the
 commit, target URL and observed results. Until then, report preview and remote
 persistence verification as unverified or blocked, not as a localhost pass.
+
+## Reproducible exercise entry
+
+The reviewed starting checkpoint before this optional-comment alignment is
+`4161cc77968ec5b11cf5495a47e93207efea039a`. This patch changes that base; it does
+not declare a new instructor-approved frozen revision. After human merge, record
+the resulting full checkpoint SHA in issue #21 and use that SHA, not a moving
+branch name, for the workshop:
+
+```sh
+git fetch origin
+git switch --detach <instructor-approved-full-checkpoint-SHA>
+git switch -c exercise/feedback-ui
+cd mvp
+npm ci
+npm test
+npm run lint
+npm run typecheck
+npm run build
+npm run verify:http
+```
+
+Read the requirements outside this starter at these fixed reference documents
+before following prompts that mention `spec.md` or `docs/issues/README.md`:
+
+- [Technical specification](https://github.com/glaucia86/grok-bot-engineering-workshop/blob/b4a137b82e52ef5942e3568106f7c8876ba74f26/spec.md)
+- [Inception and acceptance criteria](https://github.com/glaucia86/grok-bot-engineering-workshop/blob/b4a137b82e52ef5942e3568106f7c8876ba74f26/docs/inception.md)
+- [Issue index and issue #21](https://github.com/glaucia86/grok-bot-engineering-workshop/blob/b4a137b82e52ef5942e3568106f7c8876ba74f26/docs/issues/README.md)
+
+Those documents include historical snapshots: PRs #9, #10 and #27 are merged.
+Use their approved optional-comment and case-insensitive grouping contract.
+They describe the complete reference on main; they do not assert remote
+acceptance or add the reference implementation to this starter.
+
+Deliberate gaps: the homepage remains a starter, with no feedback form,
+five-star control, success/reset/error flow, dashboard or rating chart. Build
+those as exercises using the existing shared schema/API and UI primitives.
+Do not copy the main page, components or CSS into this checkpoint. Local checks
+above cover the supported base only; preview acceptance needs a separately
+proven isolated environment. Only Glaucia approves merges and the frozen SHA.
