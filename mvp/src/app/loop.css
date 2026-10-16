@@ -147,7 +147,7 @@
 .loop-results-frame .dashboard-root { padding: clamp(24px, 3.2vw, 44px); border-radius: 12px; background: white; border: 1px solid var(--loop-line); }
 .loop-results-frame .dashboard-root .dashboard-header { padding-bottom: 24px; border-bottom: 1px solid var(--loop-line); }
 .loop-results-frame .dashboard-root .dashboard-figure { margin-top: 32px; }
-.loop-results-frame .dashboard-root .dashboard-bars { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 48px; }
+.loop-results-frame .dashboard-root .dashboard-bars { display: grid; grid-template-columns: minmax(0, 1fr); }
 .loop-results-frame .dashboard-root .dashboard-bar-row { padding-block: 22px; }
 .loop-results-frame .dashboard-root .dashboard-bar-name { font-size: 16px; }
 .loop-results-frame .dashboard-root .dashboard-bar-track { height: 10px; }
