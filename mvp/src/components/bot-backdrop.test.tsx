@@ -72,6 +72,29 @@ it("clamps out-of-window positions and invalid depths to the motion budget", () 
   expect(transforms(container)).toEqual(["translate3d(12px, -12px, 0)", "translate3d(12px, -12px, 0)"]);
 });
 
+it("adds opt-in gentle tilt, bounds its angle, and resets it with the pointer", () => {
+  const { container } = render(<BotBackdrop><div data-bot-depth="1" data-bot-tilt="9" /><div data-bot-depth="1" data-bot-tilt="0.5" /></BotBackdrop>);
+  pointer("mouse", window.innerWidth * 8, window.innerHeight);
+  settle();
+  expect(transforms(container)).toEqual([
+    "translate3d(12px, 12px, 0) rotate(3deg)",
+    "translate3d(12px, 12px, 0) rotate(1.5deg)",
+  ]);
+  pointer("mouse", -9999, 0);
+  settle();
+  expect(transforms(container)[0]).toBe("translate3d(-12px, -12px, 0) rotate(-3deg)");
+  fireEvent(window, new Event("mouseleave"));
+  settle();
+  expect(transforms(container)).toEqual([
+    "translate3d(0px, 0px, 0) rotate(0deg)",
+    "translate3d(0px, 0px, 0) rotate(0deg)",
+  ]);
+  pointer(); tick();
+  act(() => { Object.assign(media, { matches: false }); media.dispatchEvent(new Event("change")); });
+  expect(transforms(container)).toEqual(["", ""]);
+  expect(frames.size).toBe(0);
+});
+
 it("ignores touch and pen input even on a mouse-capable device", () => {
   const { container } = fixture();
   pointer("touch"); pointer("pen");

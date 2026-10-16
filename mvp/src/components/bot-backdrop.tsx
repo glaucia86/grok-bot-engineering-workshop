@@ -4,9 +4,11 @@ import { useEffect, useRef, type ReactNode } from "react";
 
 const MOTION_QUERY = "(prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)";
 const MAX_OFFSET = 12;
+const MAX_TILT = 3;
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
 /** Decorative sprites opt into bounded pointer motion with data-bot-depth="0…1".
+ * Optional data-bot-tilt="0…1" adds up to three degrees of gentle rotation.
  * Keep positioning/cropping on nested elements: this wrapper owns their transform.
  */
 export function BotBackdrop({ children, className = "" }: { children: ReactNode; className?: string }) {
@@ -18,7 +20,12 @@ export function BotBackdrop({ children, className = "" }: { children: ReactNode;
     const media = window.matchMedia(MOTION_QUERY);
     const bots = [...root.current.querySelectorAll<HTMLElement>("[data-bot-depth]")].map((element) => {
       const depth = Number(element.dataset.botDepth);
-      return { element, depth: Number.isFinite(depth) ? clamp(depth, 0, 1) : 1 };
+      const tilt = Number(element.dataset.botTilt);
+      return {
+        element,
+        depth: Number.isFinite(depth) ? clamp(depth, 0, 1) : 1,
+        tilt: Number.isFinite(tilt) ? clamp(tilt, 0, 1) : 0,
+      };
     });
     let frame: number | null = null;
     let listening = false;
@@ -40,8 +47,9 @@ export function BotBackdrop({ children, className = "" }: { children: ReactNode;
       y += (targetY - y) * 0.14;
       const settled = Math.abs(targetX - x) < 0.01 && Math.abs(targetY - y) < 0.01;
       if (settled) { x = targetX; y = targetY; }
-      for (const { element, depth } of bots) {
-        element.style.transform = `translate3d(${x * depth}px, ${y * depth}px, 0)`;
+      for (const { element, depth, tilt } of bots) {
+        const rotation = tilt ? ` rotate(${(x / MAX_OFFSET) * MAX_TILT * tilt}deg)` : "";
+        element.style.transform = `translate3d(${x * depth}px, ${y * depth}px, 0)${rotation}`;
       }
       if (!settled) frame = window.requestAnimationFrame(animate);
     };
