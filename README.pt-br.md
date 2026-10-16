@@ -28,9 +28,9 @@ Comece por [spec.md](spec.md), [inception](docs/inception.md), [setup do MVP](mv
 
 ### Estado antes do workshop
 
-A API base, o schema, a migration, os testes locais e os componentes visuais estão integrados. A página inicial ainda é a página padrão; formulário/dashboard e aceite na preview real continuam pendentes. O destino é uma referência completa na main; este snapshot ainda não chegou lá. A spec integrada registra requisitos aprovados, não uma aplicação aceita.
+A main contém a UI completa de referência: formulário, controle acessível de cinco estrelas e dashboard, integrados no [PR #26](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/26) e refinados no [PR #27](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/27). O `checkpoint/mvp-base` separado mantém a página starter e as lacunas intencionais de formulário/dashboard. Código integrado não comprova aceite na preview nem persistência remota.
 
-Em 15 de outubro, [PR #9](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/9) (critérios) e [PR #10](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/10) (agrupamento sem distinção de maiúsculas) ainda aguardam merge humano. Confira o estado e o SHA testado antes do evento. O aceite permanece BLOCKED até os critérios entrarem e serem verificados.
+Em 16 de outubro, os PRs [#9](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/9) (critérios), [#10](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/10) (agrupamento) e [#27](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/27) (comentário opcional) estão integrados. Confira o SHA testado contra esses requisitos. O aceite na preview permanece BLOCKED até haver evidência do fluxo real isolado para o commit.
 
 ## Agenda e resultados esperados
 

@@ -1,6 +1,8 @@
 # Talk Feedback MVP — technical specification
 
-Scope source: [inception](docs/inception.md). Snapshot: main at [`b34cb56`](https://github.com/glaucia86/grok-bot-engineering-workshop/commit/b34cb56c7f094da6474456825940bef889deabae), October 15, 2026. Approved acceptance refinements are recorded in [PR #9](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/9), pending human merge at this snapshot. This specification supplements the inception; it neither replaces it nor certifies acceptance.
+Scope source: [inception](docs/inception.md). Historical snapshot: main at [`b34cb56`](https://github.com/glaucia86/grok-bot-engineering-workshop/commit/b34cb56c7f094da6474456825940bef889deabae), October 15, 2026. Approved acceptance refinements are recorded in [PR #9](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/9), pending human merge at that historical snapshot. This specification supplements the inception; it neither replaces it nor certifies acceptance.
+
+Current implementation status (October 16, 2026): PRs [#9](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/9), [#10](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/10), [#26](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/26) and [#27](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/27) are merged. Main has the reference form/dashboard, case-insensitive grouping and optional comments. The historical descriptions below explain the earlier inspected tree; they do not describe missing reference UI today. The separate checkpoint retains the intentional UI gaps. Merged code and approved criteria do not certify remote acceptance; retain BLOCKED for missing isolated preview/persistence evidence.
 
 ## Problem Statement
 
@@ -10,7 +12,7 @@ Workshop attendees need to see an engineering bot team deliver a small, observab
 
 Prepare a complete reference application on main before the workshop, including the form and dashboard, through reviewed PRs and human merges. Maintain a separate frozen checkpoint/mvp-base revision with the deliberate exercise gaps. During the workshop, participants build those features from that checkpoint and compare with the complete reference, verify the real preview journey, and retain human approval/merge control.
 
-The repository contains two independent applications. The root Fastify exercise remains an in-memory teaching example. The Next.js MVP is a separate application with persistent feedback. At the inspected snapshot, its base API, validation, database migration, and UI primitives exist; the form and dashboard do not yet. The complete reference and the separate exercise checkpoint are delivery targets, not claims about this snapshot. Do not present the starter homepage or a successful deployment as the finished MVP.
+The repository contains two independent applications. The root Fastify exercise remains an in-memory teaching example. The Next.js MVP is a separate application with persistent feedback. At the inspected snapshot, its base API, validation, database migration, and UI primitives exist; the form and dashboard do not yet. That is a historical implementation snapshot; the reference UI has since merged through #26/#27, while the exercise checkpoint remains incomplete by design. Do not present the starter homepage or a successful deployment as the finished MVP.
 
 ## User Stories
 
@@ -37,7 +39,7 @@ The repository contains two independent applications. The root Fastify exercise 
 
 - The root application uses Fastify and an in-memory store. It retains `POST /feedback`, `GET /feedback`, and `GET /talks/:talkId/rating`. Rating remains optional there; its rating summary counts rated submissions and uses two-decimal averages. The MVP does not silently change that exercise.
 - The MVP uses Next.js App Router with TypeScript and React. Route handlers are the application API/BFF; shared Zod validation precedes database access. Drizzle connects to Neon over its HTTP adapter. Node.js 24 and npm are the documented execution baseline.
-- Tailwind CSS 4, shadcn/ui primitives, lucide-react, and shadcn/Recharts chart primitives are available for the live UI. Their presence does not mean the form or dashboard is implemented.
+- Tailwind CSS 4, shadcn/ui primitives, lucide-react, and shadcn/Recharts chart primitives are available for the live UI. At the historical snapshot, their presence alone did not mean the form or dashboard was implemented; current main includes both.
 - The Vercel application root is the MVP application. Next.js does not provide `/feedback` as an alias: that route returns 404 in this app. The separate Fastify application still serves its existing route.
 - No new service, authentication system, repository layer, or database abstraction is required by this specification. Use existing validation, route-handler, statistics, and database seams.
 
@@ -56,7 +58,7 @@ The repository contains two independent applications. The root Fastify exercise 
 
 - Return an array of talk summaries with `talkId`, `average`, and `count`; return an empty array when there are no records. This endpoint exposes aggregates, not the authors and comments of individual submissions.
 - Every MVP submission has a rating. Count all submissions in the talk's group and round the arithmetic mean to one decimal, half up (`4.25` → `4.3`). JSON numeric `3` remains a number; the dashboard renders it as `3.0` when displaying one decimal.
-- Approved target: trimmed talk names are compared case-insensitively. `Talk A` and `talk a` contribute to one average and count. At the inspected main commit, the statistics function still groups exact strings; case-insensitive grouping is implemented in [PR #10](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/10), pending human merge. That patch uses a lowercase grouping key, retains the first encountered spelling for display, and leaves input records unchanged; these are the patch’s implementation choices, not new display-casing requirements. No locale-specific collation, accent folding, slug system, or preferred display casing is agreed here.
+- Approved target: trimmed talk names are compared case-insensitively. `Talk A` and `talk a` contribute to one average and count. At the historical inspected commit, the statistics function still grouped exact strings; case-insensitive grouping is implemented in [PR #10](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/10), since merged. That patch uses a lowercase grouping key, retains the first encountered spelling for display, and leaves input records unchanged; these are the patch’s implementation choices, not new display-casing requirements. No locale-specific collation, accent folding, slug system, or preferred display casing is agreed here.
 - Ordering, pagination, and talk lookup endpoints are not part of the agreed contract. The current GET reads the stored talk/rating rows and aggregates them in application memory; this is a workshop-scale design, not a scaling claim.
 
 ### Form and dashboard: complete reference and checkpoint exercises
@@ -104,9 +106,9 @@ The lower-level seams already present are supporting diagnostics, not substitute
 4. Empty state in isolated data; reload shows the new contribution; a fresh application instance connected to the same test database still observes it.
 5. No committed secrets, with all finding values redacted. Do not treat an ignored environment file or a build pass as a secret audit.
 
-The existing MVP CI workflow runs clean install, Vitest, lint, build, typecheck, and HTTP smoke checks for MVP/workflow changes. It has read-only repository permission and no application secrets. Its path filter does not run for documentation-only changes. The inspected tree has no Playwright dependency/configuration/tests or preview acceptance workflow; these remain required work.
+The existing MVP CI workflow runs clean install, Vitest, lint, build, typecheck, and HTTP smoke checks for MVP/workflow changes. It has read-only repository permission and no application secrets. Its path filter skips root documentation-only changes; changes under `mvp/`, including its README, trigger it. The historical inspected tree had no Playwright dependency/configuration/tests or preview acceptance workflow. Main now includes the guarded opt-in preview harness from #29; its presence does not establish execution or remote acceptance. Reinspect the current workflow and retained evidence for the tested commit.
 
-Keep overall MVP acceptance BLOCKED until PR #9 is merged and the implementation is assessed against those merged criteria. AC9 coverage gaps are WARN, not BLOCKED; keep its required cases and CI checks. Failing tests or failed CI remain failures. Missing access, isolation, or evidence remains BLOCKED. A Vercel success status or green local CI is not acceptance.
+PR #9 is merged. Keep overall MVP acceptance BLOCKED until the tested implementation is assessed against those merged criteria with the required isolated preview evidence. AC9 coverage gaps are WARN, not BLOCKED; keep its required cases and CI checks. Failing tests or failed CI remain failures. Missing access, isolation, or evidence remains BLOCKED. A Vercel success status or green local CI is not acceptance.
 
 ## Out of Scope
 
@@ -127,7 +129,7 @@ This is a synthesis using [to-spec](https://github.com/mattpocock/skills/blob/ma
 Source map for reinspection:
 
 - [Inception and acceptance criteria](docs/inception.md), [approved refinements PR #9](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/9), [MVP setup and known limitations](mvp/README.md).
-- [MVP route handlers](mvp/src/app/api/feedback/route.ts), [shared schema](mvp/src/lib/feedback-schema.ts), [statistics](mvp/src/lib/stats.ts), [starter page](mvp/src/app/page.tsx).
+- [MVP route handlers](mvp/src/app/api/feedback/route.ts), [shared schema](mvp/src/lib/feedback-schema.ts), [statistics](mvp/src/lib/stats.ts), [reference page on main](mvp/src/app/page.tsx).
 - [Database schema](mvp/src/db/schema.ts), [Neon adapter](mvp/src/db/index.ts), [migration](mvp/drizzle/0000_stormy_jack_murdock.sql).
 - [Schema/statistics tests](mvp/src/lib/__tests__/feedback.test.ts), [handler tests](mvp/src/app/api/feedback/route.test.ts), [local persistence tests](mvp/src/db/persistence.test.ts), [HTTP smoke verifier](mvp/scripts/verify-http.mjs), [CI workflow](.github/workflows/mvp.yml).
 - [Legacy Fastify implementation](src/app.ts) and [legacy rating design](docs/design/talk-rating.md). The legacy design's no-coercion example is not the MVP contract and is not evidence that Fastify disables its default coercion.
