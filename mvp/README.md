@@ -1,8 +1,6 @@
-# Talk Feedback MVP base
+# Talk Feedback MVP reference application
 
-This checkpoint contains the Next.js API, shared Zod schema, Drizzle migration,
-and UI primitives. The feedback form and dashboard are intentionally left for
-the live workshop feature; `/` still shows the starter page.
+Main contains the complete reference form, accessible five-star rating and talk dashboard, merged through PRs #26/#27. The separate `checkpoint/mvp-base` is the exercise starter: its homepage deliberately omits the form and dashboard. Follow the README at the instructor-approved checkpoint SHA for its supported base and pinned requirements. This reference implementation is available for comparison; remote acceptance still needs commit-specific isolated-preview evidence.
 
 ## Two independent applications
 
@@ -11,7 +9,7 @@ the live workshop feature; `/` still shows the starter page.
 - `mvp/`: Next.js application, with `POST /api/feedback` and `GET /api/feedback`.
   Run the commands below from `mvp/`. `/feedback` is not an alias in Next.js.
 
-This checkpoint does not retire or change the Fastify contract. Its root
+This application does not retire or change the Fastify contract. Its root
 `npm run verify` checks only its own localhost Fastify server, not this MVP or
 any Vercel preview.
 
@@ -117,7 +115,7 @@ The summary retains the spelling of the first row encountered for each group;
 the database query does not promise a particular row order. Stored feedback and
 POST responses keep the original trimmed spelling. Only the grouping key is
 lowercased; accents, punctuation and internal whitespace remain significant.
-A JSON number such as `3` can be displayed as `3.0` by the future dashboard.
+A JSON number such as `3` can be displayed as `3.0` by the dashboard.
 
 ## Vercel preview and remaining acceptance work
 
@@ -131,7 +129,7 @@ Preview protection may return a Vercel sign-in redirect. An authorized automatio
 bypass must be configured through secure provider/CI settings before unattended
 preview tests; do not disable protection or expose a token to work around it.
 
-Before accepting the complete MVP, implement the form and dashboard, then run
+Before accepting the complete reference MVP, run
 Playwright against the actual PR preview using an isolated test dataset. Verify
 valid and invalid submissions, chart/empty states, and persistence after a fresh
 application instance, and clean up only data created by that run. Record the

@@ -28,9 +28,9 @@ Start with [spec.md](spec.md), [inception](docs/inception.md), [MVP setup](mvp/R
 
 ### State before the workshop
 
-The base API, schema, migration, local tests and UI primitives are merged. The homepage is still a starter page; the form/dashboard and real-preview acceptance remain work to do. The target is a complete reference app on main; this snapshot is not there yet. The merged spec records approved requirements, not a passing application.
+Main contains the complete reference UI: feedback form, accessible five-star rating and talk dashboard, merged in [PR #26](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/26) and refined in [PR #27](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/27). The separate `checkpoint/mvp-base` retains the starter page and deliberate form/dashboard exercise gaps. Code delivery does not establish preview or remote persistence acceptance.
 
-As of October 15, [PR #9](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/9) (acceptance refinements) and [PR #10](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/10) (case-insensitive talk grouping) are still pending human merge. Recheck their state and the tested SHA before the event. Keep MVP acceptance BLOCKED until the criteria are merged and verified.
+As of October 16, PRs [#9](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/9) (criteria), [#10](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/10) (grouping) and [#27](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/27) (optional comments) are merged. Verify the tested SHA against those requirements. Preview-backed acceptance remains BLOCKED until commit-specific evidence proves the isolated real journey.
 
 ## Agenda and expected results
 
