@@ -49,8 +49,14 @@ for (const route of routes) {
         await expect(page.getByLabel("Talk", { exact: true })).toHaveCount(0);
         await expect(page.locator("#results").getByRole("link", { name: /Leave feedback/i })).toHaveAttribute("href", "/feedback");
       }
-      await page.keyboard.press("Tab");
       const skip = page.getByRole("link", { name: /Skip to (main )?content/i });
+      if (reload) {
+        // Reload retains the fragment and may restore the browser's focus.
+        // Test activation from the skip link, without assuming restoration order.
+        await skip.focus();
+      } else {
+        await page.keyboard.press("Tab");
+      }
       await expect(skip).toBeFocused();
       await expect(skip).toHaveAttribute("href", "#main-content");
       await page.keyboard.press("Enter");

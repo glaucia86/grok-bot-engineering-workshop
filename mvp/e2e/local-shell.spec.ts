@@ -20,7 +20,9 @@ for (const reducedMotion of ["no-preference", "reduce"] as const) {
           expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
           await page.evaluate(() => { document.documentElement.style.zoom = "1"; });
         }
-        await expect(nav.getByRole("link").first()).toHaveCSS("transition-duration", reducedMotion === "reduce" ? "0s" : "0.16s");
+        const durations = await nav.getByRole("link").first().evaluate(element => getComputedStyle(element).transitionDuration.split(",").map(value => value.trim()));
+        expect(durations.length).toBeGreaterThan(0);
+        expect(durations.every(value => value === (reducedMotion === "reduce" ? "0s" : "0.16s"))).toBe(true);
       }
     }
   });
