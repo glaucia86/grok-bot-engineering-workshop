@@ -1,0 +1,21 @@
+{
+  "captureSourceCommit": "668ab588dc241e012608c7983f4f310743cfd462",
+  "rendering": "Local Chromium production build, owned loopback server; three routes x390/768/1440",
+  "data": "Synthetic intercepted GET for results; no remote POST or Neon writes",
+  "motionEvidence": "Home pointer-left/right, reduced motion, touch, black eyes open/closed; clock paused before navigation for deterministic 140ms capture",
+  "validation": {
+    "unitApiPGlite": "157 passed",
+    "chromium": "47 passed",
+    "http": "4/4 passed",
+    "build": "passed",
+    "types": "passed",
+    "lint": "0 errors; one pre-existing aria-invalid/radio warning"
+  },
+  "review": "Independent read-only code and desktop/mobile/open/closed visual review: no blocking findings",
+  "limitations": [
+    "Original screenshots retain their background and limited avatar resolution",
+    "Only the black protagonist has measured eye masks; other eyes unchanged",
+    "Mentioned GIF not received",
+    "Source scan via Impeccable was regex-only, not a visual or accessibility certification"
+  ]
+}
