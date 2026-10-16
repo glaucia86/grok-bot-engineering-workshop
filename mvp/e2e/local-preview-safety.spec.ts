@@ -46,8 +46,14 @@ test("local preview transport: contains POST, HTTP redirects and popup navigatio
     expect(acceptedPosts).toBe(1);
     expect(await page.evaluate((url) => fetch(url, { method: "POST", body: "synthetic" })
       .then(() => false, () => true), `${outsideOrigin}/write`)).toBe(true);
-    await expect(page.goto(`${origin}/redirect`)).rejects.toThrow();
-    await page.goto(origin);
+    // An aborted navigation can still commit Chromium's error document after
+    // goto rejects. Keep that lifecycle off the page used by the later probes.
+    const redirectProbe = await page.context().newPage();
+    try {
+      await expect(redirectProbe.goto(`${origin}/redirect`)).rejects.toThrow();
+    } finally {
+      await redirectProbe.close();
+    }
     const popupPromise = page.waitForEvent("popup");
     await page.evaluate((url) => window.open(url, "_blank"), `${outsideOrigin}/popup`);
     const popup = await popupPromise;
