@@ -9,9 +9,12 @@ const requiredText = (field: string) =>
 export const feedbackSchema = z.object({
   talkId: requiredText("talkId"),
   author: requiredText("author"),
-  comment: requiredText("comment").max(1000, {
-    error: "comment must be at most 1000 characters",
-  }),
+  // Keep optional comments compatible with the existing NOT NULL text column.
+  comment: z
+    .string({ error: "comment must be text" })
+    .trim()
+    .max(1000, { error: "comment must be at most 1000 characters" })
+    .default(""),
   rating: z
     .number({ error: "rating must be a number" })
     .int({ error: "rating must be a whole number" })

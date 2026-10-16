@@ -9,10 +9,16 @@ describe("feedbackSchema", () => {
     const r = feedbackSchema.parse({ ...valid, author: "  Ana  " });
     expect(r.author).toBe("Ana");
   });
-  it.each(["talkId", "author", "comment"])("rejects missing, empty and blank %s", (f) => {
+  it.each(["talkId", "author"])("rejects missing, empty and blank %s", (f) => {
     for (const v of [undefined, "", "   ", 42]) {
       expect(feedbackSchema.safeParse({ ...valid, [f]: v }).success).toBe(false);
     }
+  });
+  it.each([undefined, "", "   ", "x", " x ", "x".repeat(1000), ` ${"x".repeat(1000)} `])("normalizes optional comment %j", (comment) => {
+    expect(feedbackSchema.parse({ ...valid, comment }).comment).toBe(comment?.trim() ?? "");
+  });
+  it.each([null, 42, true, {}, []])("rejects non-string comment %j", (comment) => {
+    expect(feedbackSchema.safeParse({ ...valid, comment }).success).toBe(false);
   });
   it("rejects comments over 1000 chars", () => {
     expect(feedbackSchema.safeParse({ ...valid, comment: "x".repeat(1001) }).success).toBe(false);

@@ -37,6 +37,22 @@ afterEach(async () => {
 });
 
 describe("durable isolated PostgreSQL adapter integration", () => {
+  it("persists optional comments as empty text across reopen", async () => {
+    for (const comment of [undefined, "", "   "]) {
+      const response = await post({ ...valid, comment });
+      expect(response.status).toBe(201);
+      expect((await response.json()).comment).toBe("");
+    }
+    for (const comment of [null, 42, true, {}, [], "x".repeat(1001)]) {
+      expect((await post({ ...valid, comment })).status).toBe(400);
+    }
+    await client!.close(); client = undefined;
+    await open();
+    expect((await client!.query("SELECT comment FROM feedback ORDER BY id")).rows).toEqual([
+      { comment: "" }, { comment: "" }, { comment: "" },
+    ]);
+    expect(await (await GET()).json()).toEqual([{ talkId: "t1", average: 5, count: 3 }]);
+  });
   it("starts empty", async () => {
     expect(await (await GET()).json()).toEqual([]);
   });
