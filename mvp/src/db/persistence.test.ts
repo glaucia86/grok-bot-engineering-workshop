@@ -49,9 +49,32 @@ describe("durable isolated PostgreSQL adapter integration", () => {
     const stored = await client!.query("SELECT talk_id, author, comment, rating FROM feedback");
     expect(stored.rows).toEqual([{ talk_id: "t1", author: "Ana", comment: "Great", rating: 5 }]);
   });
+  it("persists optional comments as non-null empty text across a database reopen", async () => {
+    for (const body of [
+      { talkId: " t1 ", author: " Ana ", rating: 5 },
+      { ...valid, comment: "", rating: 4 },
+      { ...valid, comment: " \t\n ", rating: 3 },
+    ]) {
+      const response = await post(body);
+      expect(response.status).toBe(201);
+      expect(await response.json()).toMatchObject({ talkId: "t1", author: "Ana", comment: "", rating: body.rating });
+    }
+    const response = await post({ ...valid, comment: `  ${"x".repeat(1000)}  `, rating: 2 });
+    expect(response.status).toBe(201);
+    expect(await response.json()).toMatchObject({ comment: "x".repeat(1000) });
+    await client!.close(); client = undefined;
+    await open();
+    expect((await client!.query("SELECT comment, rating FROM feedback ORDER BY id")).rows).toEqual([
+      { comment: "", rating: 5 },
+      { comment: "", rating: 4 },
+      { comment: "", rating: 3 },
+      { comment: "x".repeat(1000), rating: 2 },
+    ]);
+    expect(await (await GET()).json()).toEqual([{ talkId: "t1", average: 3.5, count: 4 }]);
+  });
   it("rejects invalid requests without inserting rows", async () => {
     await post(valid);
-    for (const body of [{ ...valid, rating: "5" }, { ...valid, author: " " }, { ...valid, comment: "x".repeat(1001) }]) {
+    for (const body of [{ ...valid, rating: "5" }, { ...valid, author: " " }, { ...valid, comment: "x".repeat(1001) }, ...[null, 42, true, {}, []].map((comment) => ({ ...valid, comment }))]) {
       expect((await post(body)).status).toBe(400);
     }
     expect((await client!.query("SELECT count(*)::int AS count FROM feedback")).rows).toEqual([{ count: 1 }]);

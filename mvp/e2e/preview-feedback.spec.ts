@@ -37,8 +37,8 @@ test("authorized preview: public form creates feedback visible after reload", as
   expect(JSON.stringify(await afterInvalid.json()) === "[]", "Rejected requests must not insert").toBe(true);
   await page.getByLabel("Talk", { exact: true }).fill(`  ${talk}  `);
   await page.getByLabel("Your name", { exact: true }).fill("  Preview QA  ");
-  await page.getByLabel("Comment", { exact: true }).fill("  Synthetic QA  ");
-  await page.getByRole("radio", { name: "5", exact: true }).check();
+  await page.getByLabel("Comment (optional)", { exact: true }).fill("  Synthetic QA  ");
+  await page.getByRole("radio", { name: "5 stars", exact: true }).check();
   const response = page.waitForResponse((result) => result.url().endsWith("/api/feedback") && result.request().method() === "POST");
   await page.getByRole("button", { name: "Send feedback", exact: true }).click();
   const created = await response;

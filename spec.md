@@ -15,8 +15,8 @@ The repository contains two independent applications. The root Fastify exercise 
 ## User Stories
 
 1. As an attendee, I want to identify a talk and myself when leaving feedback, so that my submission has useful context.
-2. As an attendee, I want to submit a required comment and an integer rating from 1 to 5, so that feedback includes both explanation and score.
-3. As an attendee, I want surrounding whitespace removed, so that accidental spaces do not create empty values or separate talks.
+2. As an attendee, I want to submit a required integer rating from 1 to 5 and an optional comment, so that I can leave a score with or without an explanation.
+3. As an attendee, I want surrounding whitespace removed, so that whitespace-only talk and author values are rejected and blank optional comments are stored consistently.
 4. As an attendee, I want the same field errors in the form and API, so that invalid input is explained consistently.
 5. As an attendee, I want a confirmation and a reset form after success, so that I know the submission was accepted.
 6. As an attendee, I want rejected submissions to retain my input, so that I can correct it without retyping everything.
@@ -45,11 +45,11 @@ The repository contains two independent applications. The root Fastify exercise 
 
 **POST `/api/feedback`**
 
-- Accept JSON fields `talkId`, `author`, `comment`, and `rating`. The three text fields must be strings, are trimmed, and must remain nonempty. The trimmed comment is required and limited to 1–1000 characters. No additional maximum for talk or author text has been agreed.
+- Accept required JSON fields `talkId`, `author`, and `rating`, plus optional `comment`. Talk and author must be strings and remain nonempty after trimming. An omitted, empty, or whitespace-only comment is accepted and normalized to `""`. A supplied comment must be a string (including rejection of `null`) and contain at most 1000 characters after trimming. No additional maximum for talk or author text has been agreed.
 - Rating is required, numeric, and an integer from 1 to 5. API strings such as `"5"` are rejected rather than coerced. The form converts its rating control to a number before invoking the same schema.
 - A valid request inserts the normalized input and returns 201 with the stored record: `id`, `talkId`, `author`, `comment`, `rating`, and `createdAt`. Current Zod parsing discards unknown object properties; they are not inserted.
 - Invalid input returns 400 with an `errors` map. Each field has its first validation message; malformed JSON produces a body-level error. Validation rejection occurs before database access and must not insert a record.
-- Current field messages include `talkId must be text` / `talkId is required` (and the corresponding author/comment messages), `comment must be at most 1000 characters`, `rating must be a number`, `rating must be a whole number`, and `rating must be between 1 and 5`. The form must show the exact shared message for the same invalid value, not a separate paraphrase.
+- Current field messages include `talkId must be text` / `talkId is required` (and the corresponding author messages), `comment must be text`, `comment must be at most 1000 characters`, `rating must be a number`, `rating must be a whole number`, and `rating must be between 1 and 5`. The form must show the exact shared message for the same invalid value, not a separate paraphrase. An absent or blank comment has no validation error.
 - A missing database configuration or failed database operation must not be reported as successful creation. Current handlers propagate such failures; a new stable server-error response format has not been specified.
 
 **GET `/api/feedback`**
@@ -68,7 +68,7 @@ The repository contains two independent applications. The root Fastify exercise 
 
 ### Persistence and environment lifecycle
 
-- The committed migration creates a `feedback` table with generated serial primary key, required talk identifier, author and comment text, required integer rating, and a creation timestamp defaulting to the database's current time.
+- The committed migration creates a `feedback` table with generated serial primary key, required talk identifier, non-null author and comment text, required integer rating, and a creation timestamp defaulting to the database's current time. Optional comments are stored as empty text, preserving the existing NOT NULL column without a migration.
 - Validation rules are currently enforced by Zod; the migration has NOT NULL constraints but no rating-range or trimmed-text CHECK constraints. Do not claim that bypassing the API has equivalent validation.
 - The Neon adapter reads `DATABASE_URL` at runtime. The migration command reads the process environment directly. Builds do not apply migrations automatically. Provision and apply migrations to the intended environment before testing valid POST/GET calls.
 - Development/test isolation is the documented target. The reported current risk is that Playwright would write to the same Neon database used by previews and production. Until that is separated or safely scoped, every test must use a unique talk name with a run-specific identifier; clean up only its own records.
@@ -90,7 +90,7 @@ Use the already agreed public journey as the highest acceptance seam: submit the
 
 The lower-level seams already present are supporting diagnostics, not substitutes for that preview journey:
 
-- Shared schema/statistics unit tests exercise invalid types, missing/empty/blank text, trim behavior, comment boundaries, rating boundaries and fractions, aggregation, and rounding. Extend existing cases for case-insensitive grouping and the explicit 4.25 boundary.
+- Shared schema/statistics unit tests exercise invalid types, required talk/author text, accepted omitted/empty/blank comments normalized to `""`, trim behavior, comment boundaries, rating boundaries and fractions, aggregation, and rounding. Extend existing cases for case-insensitive grouping and the explicit 4.25 boundary.
 - Actual route-handler tests substitute the existing database boundary and check status/payload, normalized insert values, no database access on rejection, empty summaries, and failure propagation.
 - Persistence tests invoke those same handlers with Drizzle against an isolated on-disk PGlite database, apply the committed migration, and reopen the database. Direct local test-database queries are test fixtures/assertions, not a requirement for QA to inspect remote production data.
 - The existing production-server HTTP smoke verifier owns its localhost process, blanks `DATABASE_URL`, and checks the homepage, Next.js `/feedback` 404, and invalid feedback 400. It neither sends valid feedback nor targets a preview.
@@ -98,7 +98,7 @@ The lower-level seams already present are supporting diagnostics, not substitute
 
 ### Required final evidence
 
-1. Valid creation and public observation; reject invalid cases without adding a contribution. Cover comment length after trimming (including 1, 1000, and 1001), missing/blank/wrong-type fields, ratings omitted, 0, 1, 5, 6, fractional, and string-valued.
+1. Valid creation and public observation; reject invalid cases without adding a contribution. Accept omitted, empty and whitespace-only comments as `""` in the POST response and storage. Cover comment length after trimming (0, 1, 1000 accepted; 1001 rejected), non-string comments including `null`, missing/blank/wrong-type talk/author fields, and ratings omitted, 0, 1, 5, 6, fractional, and string-valued.
 2. Identical field error text in API and form; successful confirmation/reset and rejected-input retention.
 3. Grouped talk count and one-decimal mean, including `Talk A`/`talk a` and a mean of 4.25; graph value and label/tooltip agree.
 4. Empty state in isolated data; reload shows the new contribution; a fresh application instance connected to the same test database still observes it.

@@ -34,8 +34,8 @@ async function fixture(page: Page) {
 async function fill(page: Page, talk = "  Engineering bots  ", rating = "5") {
   await page.getByLabel("Talk", { exact: true }).fill(talk);
   await page.getByLabel("Your name", { exact: true }).fill("  Ana  ");
-  await page.getByLabel("Comment", { exact: true }).fill("  Useful examples  ");
-  await page.getByRole("radio", { name: rating, exact: true }).check();
+  await page.getByLabel("Comment (optional)", { exact: true }).fill("  Useful examples  ");
+  await page.getByRole("radio", { name: rating === "1" ? "1 star" : `${rating} stars`, exact: true }).check();
 }
 
 test("local fixture: shared errors, retained input, normalized creation, reset and reload", async ({ page }, testInfo) => {
@@ -47,27 +47,25 @@ test("local fixture: shared errors, retained input, normalized creation, reset a
   await page.getByLabel("Your name", { exact: true }).fill("Ana");
   await page.getByLabel("Talk", { exact: true }).fill(" ");
   await page.getByRole("button", { name: "Send feedback", exact: true }).click();
-  const expected = feedbackSchema.safeParse({ talkId: " ", author: "Ana", comment: "", rating: undefined });
-  if (expected.success) throw new Error("Invalid fixture unexpectedly passed");
-  for (const message of Object.values(fieldErrors(expected.error))) {
+  for (const message of ["talkId is required", "rating must be a number"]) {
     await expect(page.locator("#feedback").getByText(message, { exact: true })).toBeVisible();
   }
   await expect(page.getByLabel("Your name", { exact: true })).toHaveValue("Ana");
   expect(api.created).toHaveLength(0);
   await fill(page);
-  await page.getByLabel("Comment", { exact: true }).fill(`  ${"x".repeat(1001)}  `);
+  await page.getByLabel("Comment (optional)", { exact: true }).fill(`  ${"x".repeat(1001)}  `);
   await page.getByRole("button", { name: "Send feedback", exact: true }).click();
   await expect(page.getByText("comment must be at most 1000 characters", { exact: true })).toBeVisible();
-  await expect(page.getByLabel("Comment", { exact: true })).toHaveValue(`  ${"x".repeat(1001)}  `);
+  await expect(page.getByLabel("Comment (optional)", { exact: true })).toHaveValue(`  ${"x".repeat(1001)}  `);
   expect(api.created).toHaveLength(0);
-  await page.getByLabel("Comment", { exact: true }).fill("  Useful examples  ");
-  await page.getByRole("radio", { name: "4", exact: true }).focus();
+  await page.getByLabel("Comment (optional)", { exact: true }).fill("  Useful examples  ");
+  await page.getByRole("radio", { name: "4 stars", exact: true }).focus();
   await page.keyboard.press("ArrowRight");
-  await expect(page.getByRole("radio", { name: "5", exact: true })).toBeChecked();
+  await expect(page.getByRole("radio", { name: "5 stars", exact: true })).toBeChecked();
   await page.getByRole("button", { name: "Send feedback", exact: true }).click();
   await expect(page.getByText("Feedback saved", { exact: false })).toBeVisible();
   expect(api.created).toEqual([{ talkId: "Engineering bots", author: "Ana", comment: "Useful examples", rating: 5 }]);
-  for (const label of ["Talk", "Your name", "Comment"]) await expect(page.getByLabel(label, { exact: true })).toHaveValue("");
+  for (const label of ["Talk", "Your name", "Comment (optional)"]) await expect(page.getByLabel(label, { exact: true })).toHaveValue("");
   await expect(page.getByRole("radio", { checked: true })).toHaveCount(0);
   await expect(page.locator("#results").getByText("Engineering bots", { exact: true }).first()).toBeVisible();
   await page.reload();
@@ -127,8 +125,80 @@ test("local fixture: failed server retains inputs and re-enables submission", as
   await page.getByRole("button", { name: "Send feedback", exact: true }).click();
   await expect(page.locator("#feedback").getByRole("alert")).toBeVisible();
   await expect(page.getByLabel("Talk", { exact: true })).toHaveValue("  Engineering bots  ");
-  await expect(page.getByLabel("Comment", { exact: true })).toHaveValue("  Useful examples  ");
-  await expect(page.getByRole("radio", { name: "5", exact: true })).toBeChecked();
+  await expect(page.getByLabel("Comment (optional)", { exact: true })).toHaveValue("  Useful examples  ");
+  await expect(page.getByRole("radio", { name: "5 stars", exact: true })).toBeChecked();
   await expect(page.getByRole("button", { name: "Send feedback", exact: true })).toBeEnabled();
   expect(api.created).toHaveLength(0);
+});
+
+test("local fixture: required stars support keyboard, focus, shape cues and optional comments", async ({ page }, testInfo) => {
+  const api = await fixture(page);
+  await page.setViewportSize({ width: 320, height: 800 });
+  await page.goto("/");
+  const group = page.getByRole("group", { name: "Rating", exact: true });
+  const stars = group.getByRole("radio");
+  const first = group.getByRole("radio", { name: "1 star", exact: true });
+  const fourth = group.getByRole("radio", { name: "4 stars", exact: true });
+  const fifth = group.getByRole("radio", { name: "5 stars", exact: true });
+  const comment = page.getByLabel("Comment (optional)", { exact: true });
+  await expect(stars).toHaveCount(5);
+  await expect(group.getByRole("radio", { checked: true })).toHaveCount(0);
+  await expect(comment).not.toHaveAttribute("required", "");
+  await expect(page.getByText("All fields are required.")).toHaveCount(0);
+  await page.getByLabel("Talk", { exact: true }).fill("Engineering bots");
+  await page.getByLabel("Your name", { exact: true }).fill("Ana");
+  await page.getByRole("button", { name: "Send feedback", exact: true }).click();
+  await expect(page.getByText("rating must be a number", { exact: true })).toBeVisible();
+  await expect(first).toBeFocused();
+  await expect(first).toHaveAttribute("aria-describedby", /rating-error/);
+  expect(api.created).toHaveLength(0);
+  await page.keyboard.press("Space");
+  await expect(first).toBeChecked();
+  await page.keyboard.press("ArrowLeft");
+  await expect(fifth).toBeChecked();
+  await page.keyboard.press("ArrowRight");
+  await expect(first).toBeChecked();
+  for (let step = 0; step < 3; step++) await page.keyboard.press("ArrowRight");
+  await expect(fourth).toBeChecked();
+  await expect(group.getByRole("radio", { checked: true })).toHaveCount(1);
+  await expect(page.getByText("4 of 5 stars selected", { exact: true })).toBeVisible();
+  // Inspect the visible cues: four filled star shapes, one outline, no numeric buttons.
+  const shapes = group.locator("svg");
+  await expect(shapes).toHaveCount(5);
+  for (let index = 0; index < 4; index++) await expect(shapes.nth(index)).toHaveAttribute("fill", "currentColor");
+  await expect(shapes.nth(4)).toHaveAttribute("fill", "none");
+  for (const number of ["1", "2", "3", "4", "5"]) await expect(group.getByText(number, { exact: true })).toHaveCount(0);
+  const focusTarget = fourth.locator("..").locator("span");
+  await expect(focusTarget).toHaveCSS("outline-style", "solid");
+  await expect(focusTarget).toHaveCSS("outline-width", "2px");
+  for (const star of await stars.all()) {
+    const box = await star.boundingBox();
+    expect(box!.width).toBeGreaterThanOrEqual(44);
+    expect(box!.height).toBeGreaterThanOrEqual(44);
+  }
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.screenshot({ path: testInfo.outputPath("stars-keyboard-mobile.png"), fullPage: true });
+  await page.emulateMedia({ forcedColors: "active" });
+  await expect(focusTarget).toHaveCSS("outline-style", "solid");
+  await expect(focusTarget).toHaveCSS("outline-width", "2px");
+  await page.screenshot({ path: testInfo.outputPath("stars-forced-colors.png"), fullPage: true });
+  await page.emulateMedia({ forcedColors: "none" });
+  await page.keyboard.press("Tab");
+  await expect(comment).toBeFocused();
+  await page.keyboard.press("Shift+Tab");
+  await expect(fourth).toBeFocused();
+  await page.getByRole("button", { name: "Send feedback", exact: true }).click();
+  await expect(page.getByText("Feedback saved", { exact: false })).toBeVisible();
+  expect(api.created).toEqual([{ talkId: "Engineering bots", author: "Ana", comment: "", rating: 4 }]);
+  await expect(group.getByRole("radio", { checked: true })).toHaveCount(0);
+  await expect(page.getByText("No rating selected", { exact: true })).toBeVisible();
+
+  await fill(page, "Engineering bots", "3");
+  await comment.fill(" \t\n ");
+  await page.getByRole("button", { name: "Send feedback", exact: true }).click();
+  await expect(page.getByText("Feedback saved", { exact: false })).toBeVisible();
+  expect(api.created).toEqual([
+    { talkId: "Engineering bots", author: "Ana", comment: "", rating: 4 },
+    { talkId: "Engineering bots", author: "Ana", comment: "", rating: 3 },
+  ]);
 });

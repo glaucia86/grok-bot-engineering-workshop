@@ -8,8 +8,8 @@ afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 function fill() {
   fireEvent.change(screen.getByLabelText("Talk"), { target: { value: "  Engineering bots  " } });
   fireEvent.change(screen.getByLabelText("Your name"), { target: { value: "  Ana  " } });
-  fireEvent.change(screen.getByLabelText("Comment"), { target: { value: "  Useful workshop  " } });
-  fireEvent.click(screen.getByRole("radio", { name: "5" }));
+  fireEvent.change(screen.getByLabelText("Comment (optional)"), { target: { value: "  Useful workshop  " } });
+  fireEvent.click(screen.getByRole("radio", { name: "5 stars" }));
 }
 it("shows shared errors and preserves invalid input without sending", async () => {
   const fetcher = vi.fn(); vi.stubGlobal("fetch", fetcher);
@@ -18,7 +18,7 @@ it("shows shared errors and preserves invalid input without sending", async () =
   fireEvent.click(screen.getByRole("button", { name: /Send feedback/ }));
   expect(await screen.findByText("talkId is required")).toBeTruthy();
   expect(screen.getByText("author is required")).toBeTruthy();
-  expect(screen.getByText("comment is required")).toBeTruthy();
+  expect(screen.queryByText("comment is required")).toBeNull();
   expect(screen.getByText("rating must be a number")).toBeTruthy();
   expect((screen.getByLabelText("Talk") as HTMLInputElement).value).toBe("  ");
   expect(fetcher).not.toHaveBeenCalled();
@@ -55,4 +55,85 @@ it("blocks duplicate submissions while saving", async () => {
   render(<FeedbackForm onSaved={() => {}} />); fill();
   fireEvent.click(screen.getByRole("button", { name: /Send feedback/ }));
   expect((await screen.findByRole("button", { name: /Saving/ }) as HTMLButtonElement).disabled).toBe(true);
+});
+
+it("labels optional comments and exposes five required native star radios", () => {
+  render(<FeedbackForm onSaved={() => {}} />);
+  expect(screen.getByText("Talk, your name and a rating are required. Comments are optional.")).toBeTruthy();
+  expect(screen.queryByText("All fields are required.")).toBeNull();
+  expect((screen.getByLabelText("Comment (optional)") as HTMLTextAreaElement).required).toBe(false);
+  expect(screen.getAllByRole("radio")).toHaveLength(5);
+  for (const rating of [1, 2, 3, 4, 5]) {
+    const radio = screen.getByRole("radio", { name: rating === 1 ? "1 star" : `${rating} stars` }) as HTMLInputElement;
+    expect(radio.type).toBe("radio");
+    expect(radio.required).toBe(true);
+    expect(radio.checked).toBe(false);
+  }
+  expect(screen.getByText("No rating selected")).toBeTruthy();
+  fireEvent.click(screen.getByRole("radio", { name: "3 stars" }));
+  expect(screen.getByText("3 of 5 stars selected")).toBeTruthy();
+  expect(screen.getAllByRole("radio", { checked: true })).toHaveLength(1);
+});
+
+it.each([1, 2, 3, 4, 5])("submits a %s-star rating with an empty comment and resets", async (rating) => {
+  const saved = vi.fn();
+  const fetcher = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+    id: 2, talkId: "Engineering bots", author: "Ana", comment: "", rating, createdAt: "2026-01-01T00:00:00.000Z",
+  }), { status: 201 }));
+  vi.stubGlobal("fetch", fetcher);
+  render(<FeedbackForm onSaved={saved} />);
+  fireEvent.change(screen.getByLabelText("Talk"), { target: { value: "  Engineering bots  " } });
+  fireEvent.change(screen.getByLabelText("Your name"), { target: { value: "  Ana  " } });
+  fireEvent.click(screen.getByRole("radio", { name: rating === 1 ? "1 star" : `${rating} stars` }));
+  fireEvent.click(screen.getByRole("button", { name: /Send feedback/ }));
+  expect(await screen.findByText(/Feedback saved/)).toBeTruthy();
+  expect(JSON.parse(fetcher.mock.calls[0][1].body)).toEqual({ talkId: "Engineering bots", author: "Ana", comment: "", rating });
+  expect(saved).toHaveBeenCalledOnce();
+  expect(screen.getAllByRole("radio").every((input) => !(input as HTMLInputElement).checked)).toBe(true);
+  expect(screen.getByText("No rating selected")).toBeTruthy();
+});
+
+it("normalizes a whitespace-only comment before sending", async () => {
+  const fetcher = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+    id: 3, talkId: "Engineering bots", author: "Ana", comment: "", rating: 5, createdAt: "2026-01-01T00:00:00.000Z",
+  }), { status: 201 }));
+  vi.stubGlobal("fetch", fetcher);
+  render(<FeedbackForm onSaved={() => {}} />); fill();
+  fireEvent.change(screen.getByLabelText("Comment (optional)"), { target: { value: " \t\n " } });
+  fireEvent.click(screen.getByRole("button", { name: /Send feedback/ }));
+  expect(await screen.findByText(/Feedback saved/)).toBeTruthy();
+  expect(JSON.parse(fetcher.mock.calls[0][1].body).comment).toBe("");
+});
+
+it("requires a rating even when the optional comment is empty", async () => {
+  const fetcher = vi.fn(); vi.stubGlobal("fetch", fetcher);
+  render(<FeedbackForm onSaved={() => {}} />);
+  fireEvent.change(screen.getByLabelText("Talk"), { target: { value: "Engineering bots" } });
+  fireEvent.change(screen.getByLabelText("Your name"), { target: { value: "Ana" } });
+  fireEvent.click(screen.getByRole("button", { name: /Send feedback/ }));
+  expect(await screen.findByText("rating must be a number")).toBeTruthy();
+  const firstStar = screen.getByRole("radio", { name: "1 star" });
+  expect(firstStar.getAttribute("aria-invalid")).toBe("true");
+  expect(firstStar.getAttribute("aria-describedby")).toContain("rating-error");
+  await waitFor(() => expect(document.activeElement).toBe(firstStar));
+  expect(screen.queryByText("comment is required")).toBeNull();
+  expect(fetcher).not.toHaveBeenCalled();
+});
+
+it("rejects an overlong comment without sending and accepts 1000 trimmed characters", async () => {
+  const fetcher = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+    id: 4, talkId: "Engineering bots", author: "Ana", comment: "x".repeat(1000), rating: 5, createdAt: "2026-01-01T00:00:00.000Z",
+  }), { status: 201 }));
+  vi.stubGlobal("fetch", fetcher);
+  render(<FeedbackForm onSaved={() => {}} />); fill();
+  const comment = screen.getByLabelText("Comment (optional)") as HTMLTextAreaElement;
+  fireEvent.change(comment, { target: { value: `  ${"x".repeat(1001)}  ` } });
+  fireEvent.click(screen.getByRole("button", { name: /Send feedback/ }));
+  expect(await screen.findByText("comment must be at most 1000 characters")).toBeTruthy();
+  expect(comment.value).toBe(`  ${"x".repeat(1001)}  `);
+  expect(fetcher).not.toHaveBeenCalled();
+  fireEvent.change(comment, { target: { value: `  ${"x".repeat(1000)}  ` } });
+  fireEvent.click(screen.getByRole("button", { name: /Send feedback/ }));
+  expect(await screen.findByText(/Feedback saved/)).toBeTruthy();
+  expect(JSON.parse(fetcher.mock.calls[0][1].body).comment).toBe("x".repeat(1000));
 });

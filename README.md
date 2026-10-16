@@ -101,7 +101,7 @@ Read spec.md, docs/inception.md, mvp/README.md and the selected GitHub issue.
 Identify the exact base commit and distinguish the Next.js MVP from the root Fastify exercise.
 Use the complete reference app on main for comparison and the frozen checkpoint/mvp-base for exercises.
 Design the assigned form/dashboard exercise using the existing schema, API and UI primitives.
-Show files to change and observable tests. Keep comment required (trimmed 1–1000), rating integer 1–5,
+Show files to change and observable tests. Keep comment optional (omitted/blank becomes empty text; maximum 1000 after trim), rating integer 1–5,
 and one-decimal averages (4.25 → 4.3). Group Talk A/talk a together under the approved contract.
 List unresolved prerequisites separately. Do not change code until I approve the design. Never merge.
 ```
@@ -152,7 +152,7 @@ The original in-memory API and its exercises remain available. They are **not** 
 - [Delete feedback](docs/issues/02-delete-feedback.md) and [feedback summary](docs/issues/03-feedback-summary.md): optional Fastify extensions, not MVP requirements or remote test cleanup mechanisms.
 - Root commands: `npm ci`, `npm test`, `npm run typecheck`, `npm run verify`.
 - The historical `checkpoint/01-setup`, `02-design`, `03-verification`, `04-backup-pr`, and `05-routine` branches capture stages of this extra exercise. Do not merge them wholesale into main or use them as the MVP base.
-- Fastify uses `/feedback`, optional rating and in-memory persistence; the MVP uses `/api/feedback`, required rating/comment and Postgres. Never substitute one verifier's evidence for the other.
+- Fastify uses `/feedback`, required comment, optional rating and in-memory persistence; the MVP uses `/api/feedback`, required rating, optional comment and Postgres. Never substitute one verifier's evidence for the other.
 
 <a id="credits"></a>
 ## Credits and further reading
