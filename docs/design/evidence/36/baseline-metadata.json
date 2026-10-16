@@ -1,0 +1,239 @@
+{
+  "scope": "Baseline form on shared shell #35; local intercepted API fixtures, not persistence or preview acceptance",
+  "commit": "0d10c3152e92582790959acb3104015a15c28f3f",
+  "buildId": "gZXrxPtp2tjvHshDCwFZA",
+  "origin": "http://127.0.0.1:3193",
+  "browser": "Chromium",
+  "capturedAt": "2026-10-16T12:39:18.163Z",
+  "formSourceSha256": "6ab5633815cd372ad9071e72e4a67b9918f2bdeeda24b1654c08951e69525f7b",
+  "formSourceMatchesMainC69fa31": true,
+  "fixture": "GET returns []; POST #1 deferred then503; POST #2 valid synthetic201; DATABASE_URL blank in server",
+  "captures": [
+    {
+      "filename": "390x844-untouched-baseline-shell35-local-fixture.png",
+      "state": "untouched",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "posts": 0,
+      "horizontalOverflow": false,
+      "focusName": null,
+      "scrollY": 0,
+      "talk": "",
+      "author": "",
+      "comment": "",
+      "selectedRating": null
+    },
+    {
+      "filename": "390x844-focused-baseline-shell35-local-fixture.png",
+      "state": "focused",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "posts": 0,
+      "horizontalOverflow": false,
+      "focusName": "talkId",
+      "scrollY": 0,
+      "talk": "",
+      "author": "",
+      "comment": "",
+      "selectedRating": null
+    },
+    {
+      "filename": "390x844-selected-rating-baseline-shell35-local-fixture.png",
+      "state": "selected-rating",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "posts": 0,
+      "horizontalOverflow": false,
+      "focusName": "rating",
+      "scrollY": 0,
+      "talk": "Baseline fixture talk",
+      "author": "Fixture attendee",
+      "comment": "Retain this baseline fixture comment",
+      "selectedRating": "4"
+    },
+    {
+      "filename": "390x844-validation-errors-baseline-shell35-local-fixture.png",
+      "state": "validation-errors",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "posts": 0,
+      "horizontalOverflow": false,
+      "focusName": "talkId",
+      "scrollY": 0,
+      "talk": "",
+      "author": "",
+      "comment": "",
+      "selectedRating": null
+    },
+    {
+      "filename": "390x844-saving-baseline-shell35-local-fixture.png",
+      "state": "saving",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "posts": 1,
+      "horizontalOverflow": false,
+      "focusName": null,
+      "scrollY": 507,
+      "talk": "Baseline fixture talk",
+      "author": "Fixture attendee",
+      "comment": "Retain this baseline fixture comment",
+      "selectedRating": "4"
+    },
+    {
+      "filename": "390x844-server-failure-baseline-shell35-local-fixture.png",
+      "state": "server-failure",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "posts": 1,
+      "horizontalOverflow": false,
+      "focusName": null,
+      "scrollY": 507,
+      "talk": "Baseline fixture talk",
+      "author": "Fixture attendee",
+      "comment": "Retain this baseline fixture comment",
+      "selectedRating": "4"
+    },
+    {
+      "filename": "390x844-saved-baseline-shell35-local-fixture.png",
+      "state": "saved",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "posts": 2,
+      "horizontalOverflow": false,
+      "focusName": null,
+      "scrollY": 507,
+      "talk": "",
+      "author": "",
+      "comment": "",
+      "selectedRating": null
+    },
+    {
+      "filename": "1440x900-untouched-baseline-shell35-local-fixture.png",
+      "state": "untouched",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "posts": 0,
+      "horizontalOverflow": false,
+      "focusName": null,
+      "scrollY": 0,
+      "talk": "",
+      "author": "",
+      "comment": "",
+      "selectedRating": null
+    },
+    {
+      "filename": "1440x900-focused-baseline-shell35-local-fixture.png",
+      "state": "focused",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "posts": 0,
+      "horizontalOverflow": false,
+      "focusName": "talkId",
+      "scrollY": 0,
+      "talk": "",
+      "author": "",
+      "comment": "",
+      "selectedRating": null
+    },
+    {
+      "filename": "1440x900-selected-rating-baseline-shell35-local-fixture.png",
+      "state": "selected-rating",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "posts": 0,
+      "horizontalOverflow": false,
+      "focusName": "rating",
+      "scrollY": 0,
+      "talk": "Baseline fixture talk",
+      "author": "Fixture attendee",
+      "comment": "Retain this baseline fixture comment",
+      "selectedRating": "4"
+    },
+    {
+      "filename": "1440x900-validation-errors-baseline-shell35-local-fixture.png",
+      "state": "validation-errors",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "posts": 0,
+      "horizontalOverflow": false,
+      "focusName": "talkId",
+      "scrollY": 39,
+      "talk": "",
+      "author": "",
+      "comment": "",
+      "selectedRating": null
+    },
+    {
+      "filename": "1440x900-saving-baseline-shell35-local-fixture.png",
+      "state": "saving",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "posts": 1,
+      "horizontalOverflow": false,
+      "focusName": null,
+      "scrollY": 163,
+      "talk": "Baseline fixture talk",
+      "author": "Fixture attendee",
+      "comment": "Retain this baseline fixture comment",
+      "selectedRating": "4"
+    },
+    {
+      "filename": "1440x900-server-failure-baseline-shell35-local-fixture.png",
+      "state": "server-failure",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "posts": 1,
+      "horizontalOverflow": false,
+      "focusName": null,
+      "scrollY": 163,
+      "talk": "Baseline fixture talk",
+      "author": "Fixture attendee",
+      "comment": "Retain this baseline fixture comment",
+      "selectedRating": "4"
+    },
+    {
+      "filename": "1440x900-saved-baseline-shell35-local-fixture.png",
+      "state": "saved",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "posts": 2,
+      "horizontalOverflow": false,
+      "focusName": null,
+      "scrollY": 163,
+      "talk": "",
+      "author": "",
+      "comment": "",
+      "selectedRating": null
+    }
+  ],
+  "completedAt": "2026-10-16T12:39:20.537Z",
+  "captureCount": 14
+}

@@ -1,7 +1,7 @@
 /* Form-only refinement; shell geometry belongs to the shared visual direction. */
 .feedback-panel { min-width: 0; color: #172126; }
 .feedback-panel .panel-heading h2 { margin-top: 0; }
-.feedback-panel .form-note { font-size: 13px; line-height: 1.6; margin-block: 24px; color: #53616a; }
+.feedback-panel .form-note { font-size: 13px; line-height: 1.6; margin-block: 12px; color: #53616a; }
 .feedback-panel .form-field { margin-bottom: 24px; }
 .feedback-panel .form-field label, .feedback-panel .rating-field legend { color: #172126; line-height: 1.5; }
 .feedback-panel .form-field input, .feedback-panel .form-field textarea { background: #fff; color: #172126; border: 1px solid #7a8790; border-radius: 6px; font-size: 16px; padding: 12px; transition: border-color var(--motion-control, 160ms) var(--motion-ease, ease); }
