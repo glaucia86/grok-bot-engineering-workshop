@@ -71,3 +71,26 @@ test("touch devices retain a static composition without horizontal overflow", as
   } finally { await context.close(); }
 });
 
+
+test("black bot blinks only its measured eye regions and opens for reduced motion", async ({ page }, info) => {
+  await page.clock.install({ time: new Date("2026-10-16T12:00:00Z") });
+  await page.clock.pauseAt(new Date("2026-10-16T12:00:01Z"));
+  await page.addInitScript(() => { Math.random = () => 0.5; });
+  await page.goto("/");
+  const blink = page.locator('[data-bot="grok"] .bot-blink');
+  const portrait = page.locator('[data-bot="grok"] .bot-portrait');
+  await expect(blink).toHaveAttribute("data-blink", "open");
+  await page.clock.runFor(1000);
+  await page.screenshot({ path: info.outputPath("black-bot-eyes-open.png"), fullPage: true });
+  await page.clock.runFor(5070);
+  await expect(blink).toHaveAttribute("data-blink", "closed");
+  await expect(portrait).toHaveCSS("transform", "none");
+  await expect(page.locator(".bot-eye-lid")).toHaveCount(2);
+  await page.screenshot({ path: info.outputPath("black-bot-eyes-closed.png"), fullPage: true });
+  await page.clock.runFor(140);
+  await expect(blink).toHaveAttribute("data-blink", "open");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.clock.runFor(20000);
+  await expect(blink).toHaveAttribute("data-blink", "open");
+  await expect(blink).toHaveCSS("display", "none");
+});

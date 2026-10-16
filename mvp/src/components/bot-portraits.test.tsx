@@ -19,3 +19,9 @@ it("working page decoration stays static", () => {
   expect(container.querySelectorAll("[data-bot]")).toHaveLength(5);
   expect(container.querySelectorAll("[data-bot-depth], [data-bot-tilt]")).toHaveLength(0);
 });
+
+it("adds two local eyelids only to the home black portrait", () => {
+  const { container } = render(<BotPortraits interactive />);
+  expect(container.querySelectorAll('[data-bot="grok"] .bot-eye-lid')).toHaveLength(2);
+  expect(container.querySelectorAll('[data-bot]:not([data-bot="grok"]) .bot-eye-lid')).toHaveLength(0);
+});

@@ -1,7 +1,8 @@
 import type { CSSProperties } from "react";
+import { BotBlink } from "./bot-blink";
 
 // Display only the avatar region of each supplied screenshot. Original PNG bytes
-// remain intact; no eyes, layers, or missing animation frames are generated.
+// remain intact; measured CSS eyelids occlude only the home black bot eyes.
 const portraits = [
   { id: "fde", file: "fde-typescript", width: 278, height: 208, x: 100, y: 10 },
   { id: "qa", file: "qa-bot", width: 312, height: 198, x: 120, y: 0 },
@@ -17,6 +18,6 @@ export function BotPortraits({ interactive = false }: { interactive?: boolean })
       backgroundSize: `${bot.width / 80 * 100}% ${bot.height / 80 * 100}%`,
       backgroundPosition: `calc(${-bot.x / 80} * var(--sprite-size)) calc(${-bot.y / 80} * var(--sprite-size))`,
     } as CSSProperties} />
+    {interactive && bot.id === "grok" && <BotBlink><span className="bot-eye-lid bot-eye-lid--left"><span /><span /></span><span className="bot-eye-lid bot-eye-lid--right"><span /><span /></span></BotBlink>}
   </span>);
 }
-
