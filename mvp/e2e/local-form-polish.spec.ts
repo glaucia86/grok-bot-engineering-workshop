@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { writeFile } from "node:fs/promises";
 
 // Local intercepted API fixtures: visual and interaction evidence, NOT persistence.
 for (const reducedMotion of ["no-preference", "reduce"] as const) {
@@ -72,3 +73,23 @@ for (const reducedMotion of ["no-preference", "reduce"] as const) {
     }
   });
 }
+
+test("local form fixture: 320px stars fit the form content without losing44px targets", async ({ page }, info) => {
+  await page.setViewportSize({ width: 320, height: 844 });
+  await page.route("**/api/feedback", route => route.fulfill({ json: [] }));
+  await page.goto("/");
+  const group = page.locator(".rating-options");
+  const bounds = await page.locator("#feedback form").boundingBox();
+  const ratingBounds = await group.boundingBox();
+  const targets = await page.getByRole("radio").all();
+  const boxes = await Promise.all(targets.map(target => target.boundingBox()));
+  await writeFile(info.outputPath("320px-rating-geometry.json"), JSON.stringify({ bounds, ratingBounds, boxes }, null, 2));
+  await info.attach("320px-rating-geometry.json", { path: info.outputPath("320px-rating-geometry.json"), contentType: "application/json" });
+  await page.locator("#feedback").screenshot({ path: info.outputPath("320px-rating-content-local-fixture.png") });
+  for (const box of boxes) {
+    expect(box!.width).toBeGreaterThanOrEqual(44);
+    expect(box!.height).toBeGreaterThanOrEqual(44);
+    expect(box!.x).toBeGreaterThanOrEqual(bounds!.x - .5);
+    expect(box!.x + box!.width).toBeLessThanOrEqual(bounds!.x + bounds!.width + .5);
+  }
+});

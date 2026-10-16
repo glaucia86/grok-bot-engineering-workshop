@@ -121,4 +121,7 @@ test("combined fixture: form and stale-results retries remain independent", asyn
   expect(gets).toBe(beforeRetry + 2);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({ path: info.outputPath("combined-independent-retries-320-local-fixture.png"), fullPage: true });
+  await page.evaluate(() => window.scrollTo(0, 0));
+  const narrow = await page.screenshot({ path: info.outputPath("combined-320-viewport-local-fixture.jpg"), type: "jpeg", quality: 65 });
+  console.log(`INTEGRATION_IMAGE combined-320-viewport ${narrow.toString("base64")}`);
 });
