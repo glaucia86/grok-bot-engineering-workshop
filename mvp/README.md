@@ -100,10 +100,13 @@ production migrations separately; do not point tests at production.
 
 ## API contract
 
-`POST /api/feedback` accepts JSON with `talkId`, `author`, `comment` and `rating`.
-The text fields are trimmed and must be nonempty. The trimmed comment is limited
-to 1000 characters. Rating must be a numeric integer from 1 to 5; strings are
-not coerced. Valid input returns 201 with the stored record. Invalid input
+`POST /api/feedback` requires `talkId`, `author` and `rating`; `comment` is optional.
+Talk and author are trimmed and must remain nonempty. Omitted, empty or
+whitespace-only comments are accepted and normalized to `""` in the 201 response
+and storage, preserving the existing NOT NULL column. A supplied comment must be
+a string (not `null`) and contain at most 1000 characters after trimming; invalid
+types and oversized comments return 400. Rating must be a numeric integer from
+1 to 5; strings are not coerced. Valid input returns 201 with the stored record. Invalid input
 returns 400 with an `errors` map and does not insert a row. Malformed JSON has a
 body-level error.
 
