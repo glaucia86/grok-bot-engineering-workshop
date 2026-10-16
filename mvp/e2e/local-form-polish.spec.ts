@@ -1,0 +1,74 @@
+import { expect, test } from "@playwright/test";
+
+// Local intercepted API fixtures: visual and interaction evidence, NOT persistence.
+for (const reducedMotion of ["no-preference", "reduce"] as const) {
+  test(`local form fixture: pointer, keyboard, recovery and saved states (${reducedMotion})`, async ({ page }, info) => {
+    await page.emulateMedia({ reducedMotion });
+    let posts = 0;
+    let finish: (() => void) | undefined;
+    await page.route("**/api/feedback", async (route) => {
+      if (route.request().method() === "GET") return route.fulfill({ json: [] });
+      posts++;
+      await new Promise<void>((resolve) => { finish = resolve; });
+      if (posts === 1) return route.fulfill({ status: 503, body: "Unavailable" });
+      await route.fulfill({ status: 201, json: { id: 1, ...route.request().postDataJSON(), createdAt: "2026-01-01T00:00:00.000Z" } });
+    });
+    for (const viewport of [{ width: 390, height: 844 }, { width: 1440, height: 900 }]) {
+      await page.setViewportSize(viewport);
+      await page.goto("/");
+      const form = page.locator("#feedback");
+      const capture = async (state: string) => {
+        expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+        await form.screenshot({ path: info.outputPath(`${viewport.width}-${state}-local-fixture.png`) });
+      };
+      await capture("untouched");
+      await page.getByLabel("Talk", { exact: true }).focus(); await capture("focused");
+      await page.getByRole("button", { name: "Send feedback", exact: true }).click();
+      await expect(page.getByLabel("Talk", { exact: true })).toBeFocused(); await capture("validation");
+      await page.getByLabel("Talk", { exact: true }).fill("Local fixture talk");
+      await page.getByLabel("Your name", { exact: true }).fill("Fixture attendee");
+      await page.getByLabel("Comment (optional)").fill("Retain this comment");
+      const second = page.getByRole("radio", { name: "2 stars", exact: true });
+      await second.check();
+      await page.getByRole("radio", { name: "5 stars", exact: true }).hover();
+      await expect(page.getByText("Preview: 5 of 5 stars")).toBeVisible();
+      await expect(second).toBeChecked();
+      await page.getByLabel("Talk", { exact: true }).hover();
+      await expect(page.getByText("Preview: 5 of 5 stars")).toHaveCount(0);
+      await second.focus(); await page.keyboard.press("ArrowRight");
+      await expect(page.getByText("3 of 5 stars selected")).toBeVisible();
+      await page.keyboard.press("Space"); await capture("selected");
+      for (const radio of await page.getByRole("radio").all()) {
+        const box = await radio.boundingBox(); expect(box!.width).toBeGreaterThanOrEqual(44); expect(box!.height).toBeGreaterThanOrEqual(44);
+      }
+      posts = 0;
+      const submit = page.getByRole("button", { name: "Send feedback", exact: true });
+      const before = await submit.boundingBox(); await submit.click();
+      const saving = page.getByRole("button", { name: /Saving/ });
+      await expect(saving).toBeDisabled();
+      const during = await saving.boundingBox(); expect(during!.width).toBe(before!.width); expect(during!.height).toBe(before!.height);
+      await expect.poll(() => posts).toBe(1); await capture("saving");
+      await page.locator("#feedback form").evaluate((form) => { form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true })); });
+      expect(posts).toBe(1); finish!();
+      await expect(form.getByRole("alert")).toBeVisible();
+      await expect(page.getByLabel("Comment (optional)")).toHaveValue("Retain this comment");
+      await expect(page.getByRole("radio", { name: "3 stars", exact: true })).toBeChecked(); await capture("failure");
+      await page.getByRole("button", { name: "Try again", exact: true }).click();
+      await expect.poll(() => posts).toBe(2); finish!();
+      await expect(form.getByRole("link", { name: "View results" })).toHaveAttribute("href", "#results");
+      await capture("saved");
+      await page.getByLabel("Talk", { exact: true }).fill("Another talk");
+      await expect(form.getByText(/Feedback saved/)).toBeVisible();
+    }
+    await page.setViewportSize({ width: 320, height: 844 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.locator("body").evaluate((body) => { body.style.zoom = "2"; });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    if (reducedMotion === "reduce") {
+      await page.getByRole("radio", { name: "1 star", exact: true }).hover();
+      expect(await page.locator(".rating-option span").first().evaluate((el) => getComputedStyle(el).transitionDuration)).toBe("0s");
+      expect(await page.locator(".rating-option span").first().evaluate((el) => getComputedStyle(el).transform)).toBe("none");
+    }
+  });
+}
