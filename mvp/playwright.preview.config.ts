@@ -11,6 +11,8 @@ export default defineConfig({
   retries: 0,
   metadata: { ...target, evidenceScope: "operator-attested isolated preview; deployment SHA/isolation require external verification" },
   reporter: [["list"]],
+  // Curated JSON lives outside outputDir; discard automatic failure context.
+  preserveOutput: "never",
   use: {
     ...devices["Desktop Chrome"], baseURL: target.origin,
     trace: "off", screenshot: "off", video: "off", serviceWorkers: "block",
