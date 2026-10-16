@@ -5,7 +5,7 @@ import { useEffect, useRef, type ReactNode } from "react";
 const MOTION_QUERY = "(prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)";
 
 /** Drives an authored eye overlay; CSS decides how open and closed eyes look. */
-export function BotBlink({ children }: { children: ReactNode }) {
+export function BotBlink({ children, phase = 0 }: { children: ReactNode; phase?: number }) {
   const root = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export function BotBlink({ children }: { children: ReactNode }) {
           element.dataset.blink = "open";
           if (media.matches && !document.hidden) schedule();
         }, 140);
-      }, 4000 + Math.random() * 4000);
+      }, 4000 + Math.random() * 4000 + Math.max(0, Math.min(4, phase)) * 600);
     };
     const sync = () => {
       stop();
@@ -44,7 +44,7 @@ export function BotBlink({ children }: { children: ReactNode }) {
       document.removeEventListener("visibilitychange", sync);
       stop();
     };
-  }, []);
+  }, [phase]);
 
   return <span ref={root} className="bot-blink" aria-hidden="true" data-blink="open">{children}</span>;
 }

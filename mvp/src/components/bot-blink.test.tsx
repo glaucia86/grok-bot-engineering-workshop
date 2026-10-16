@@ -105,3 +105,12 @@ it("survives Strict Mode replay and blinks without React commits", () => {
   unmount();
   expect(vi.getTimerCount()).toBe(0);
 });
+
+it("staggers five mascots even with the same random sample", () => {
+  const { container } = render(<>{[0, 1, 2, 3, 4].map(phase => <BotBlink key={phase} phase={phase}><span /></BotBlink>)}</>);
+  advance(4000);
+  const blinks = [...container.querySelectorAll<HTMLElement>(".bot-blink")];
+  expect(blinks.map(blink => blink.dataset.blink)).toEqual(["closed", "open", "open", "open", "open"]);
+  advance(600);
+  expect(blinks.map(blink => blink.dataset.blink)).toEqual(["open", "closed", "open", "open", "open"]);
+});

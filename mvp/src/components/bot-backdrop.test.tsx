@@ -172,3 +172,18 @@ it("survives Strict Mode effect replay without orphaned frames", () => {
   pointer();
   expect(frames.size).toBe(0);
 });
+
+it("aims each face from its own stationary character center", () => {
+  const { container } = render(<BotBackdrop><span data-bot="left"><span data-bot-depth="0.75" data-bot-tilt="1"><svg><g className="mascot-face" data-bot-depth="0.65" /></svg></span></span><span data-bot="right"><span data-bot-depth="0.75" data-bot-tilt="1"><svg><g className="mascot-face" data-bot-depth="0.65" /></svg></span></span></BotBackdrop>);
+  const bots = container.querySelectorAll<HTMLElement>("[data-bot]");
+  vi.spyOn(bots[0], "getBoundingClientRect").mockReturnValue({ left: 0, top: 100, width: 100, height: 100 } as DOMRect);
+  vi.spyOn(bots[1], "getBoundingClientRect").mockReturnValue({ left: 400, top: 100, width: 100, height: 100 } as DOMRect);
+  pointer("mouse", 250, 150); settle();
+  const faces = container.querySelectorAll<SVGElement>(".mascot-face");
+  expect(faces[0].style.transform).toMatch(/^translate3d\([1-9]/);
+  expect(faces[1].style.transform).toMatch(/^translate3d\(-[1-9]/);
+  expect(faces[0].style.transform).toContain(", 0px, 0)");
+  expect([...bots].every(bot => bot.style.transform === "")).toBe(true);
+  pointer("mouse", 50, 150); settle();
+  expect(faces[0].style.transform).toBe("translate3d(0px, 0px, 0)");
+});

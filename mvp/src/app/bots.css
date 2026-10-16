@@ -1,12 +1,17 @@
-/* One vector character belongs to the existing feedback-loop illustration. */
+/* Original vector team within the approved feedback-loop illustration. */
 .loop-diagram { position: relative; }
 .loop-diagram > svg { position: relative; z-index: 1; pointer-events: none; }
 .bot-backdrop { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
-.workshop-mascot { position: absolute; left: 29%; top: 29%; width: 42%; aspect-ratio: 1; pointer-events: none; }
-.bot-blink, .mascot-art { display: block; width: 100%; height: 100%; }
+.workshop-mascot { position: absolute; width: 24%; aspect-ratio: 1; pointer-events: none; }
+.workshop-mascot[data-bot="grok"] { left: 30%; top: 30%; width: 40%; }
+.workshop-mascot[data-bot="fde"] { left: 3%; top: 3%; }
+.workshop-mascot[data-bot="qa"] { right: 3%; top: 3%; }
+.workshop-mascot[data-bot="devops"] { right: 3%; bottom: 0; }
+.workshop-mascot[data-bot="lead"] { left: 3%; bottom: 0; }
+.mascot-motion, .bot-blink, .mascot-art { display: block; width: 100%; height: 100%; }
 .mascot-eye { transform-box: fill-box; transform-origin: center; transition: transform 70ms ease-in-out; }
 .bot-blink[data-blink="closed"] .mascot-eye { transform: scaleY(.08); }
 @media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) {
-  .workshop-mascot, .mascot-face { transform: none !important; }
+  .mascot-motion, .mascot-face { transform: none !important; }
   .mascot-eye { transform: none !important; transition: none !important; }
 }
