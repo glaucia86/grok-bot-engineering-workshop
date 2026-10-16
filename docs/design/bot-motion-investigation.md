@@ -27,3 +27,7 @@ The Codex setup dry-run proposed modifying the user's global .codex/config.toml.
 ## Implementation boundary
 
 The replacement is original native SVG/CSS, authored for the workshop rather than copied from reference paths, proprietary bundles or screenshots. It uses one black character, bounded body motion, a smaller face-gaze offset, and native ellipse scaling for eye closure. The supplied PNGs and black eyelid masks are removed from the application. Feedback and results use the approved pre-mascot shell. Reference scripts and third-party screenshots are not shipped in the product or evidence folder.
+
+## Later authorized installed-app investigation
+
+See [the installed Grok Bot findings](local-grok-bot-assets.md). Static REA analysis now identifies a procedural SVG model, gaze and blink capabilities in Grok Bot 0.71.2. This does not resolve the blocked website runtime or private per-bot assignments.

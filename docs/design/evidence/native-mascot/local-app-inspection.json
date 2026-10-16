@@ -1,0 +1,85 @@
+{
+  "product": "Grok Bot",
+  "version": "0.71.2",
+  "executableSignature": "Valid; Anysphere, Inc.",
+  "archive": "resources/app.asar",
+  "archiveSha256": "68a8c906bdff14aa81b3d124c35d37d165684509a667226293a5b9c292abb955",
+  "archiveHeaderMemberCount": 667,
+  "inspectedVisualMembers": [
+    {
+      "path": "dist/renderer/assets/index.eager-platform-DKZJbDqM.js",
+      "bytes": 676970,
+      "sha256": "e9374e46362df4c5d3787441f83d8341c19ee4380939eb911b31380e89789dc9",
+      "integrity": "verified member sha256"
+    },
+    {
+      "path": "dist/renderer/assets/index.eager-app-CrGjYQbA.js",
+      "bytes": 1801446,
+      "sha256": "58fe7e4306225e63b8ee4454531d35ac5be3564d68977f952999d77ae6f1490c",
+      "integrity": "verified member sha256"
+    },
+    {
+      "path": "dist/renderer/assets/index-CUXtfEUp.js",
+      "bytes": 2289106,
+      "sha256": "30e587ec03a9eeb0ff266caeb4e26d2688ac304574e390351aba4f5ae9894496",
+      "integrity": "verified member sha256"
+    },
+    {
+      "path": "dist/renderer/assets/index-DkV65EBE.css",
+      "bytes": 701663,
+      "sha256": "30beefeee1dd1b707732f529954a6ab7b9be5bbb43fa2ec4ac9525c4dee7ed5a",
+      "integrity": "verified member sha256"
+    },
+    {
+      "path": "dist/renderer/assets/chunk-agent-avatar-editor-CCIIBRSX.js",
+      "bytes": 22368,
+      "sha256": "9a0c6ae94f9a8ffc321812642e4ae6f50dca2526000c383a2ebdbe7a443b47d3",
+      "integrity": "verified member sha256"
+    },
+    {
+      "path": "dist/renderer/assets/index.eager-common-BN38Qy-9.js",
+      "bytes": 12326,
+      "sha256": "c771acc0ff329009c870cfd0057c32157bea2a32504494f88bec58df22f3b484",
+      "integrity": "verified member sha256"
+    },
+    {
+      "path": "dist/electron-preload/preload-avatar-source.cjs",
+      "bytes": 5568,
+      "sha256": "d9297d2841742972a10938e87c114eb08d85648a9f690fa9357036267fcdbe17",
+      "integrity": "verified member sha256"
+    }
+  ],
+  "reaEvidence": [
+    "ev_580893755ea300bde85e7536122091182dad00273e8b83c581fe0caf8884d22c",
+    "ev_27d716867941188e97a7f4dcde06f58b6ec0737fa90b5c3b51f20bab8b8415a1"
+  ],
+  "rendererLocations": [
+    {
+      "binding": "const KN=",
+      "utf8ByteOffset": 500362
+    },
+    {
+      "binding": "function ih(",
+      "utf8ByteOffset": 349032
+    },
+    {
+      "binding": "function ax(",
+      "utf8ByteOffset": 341105
+    },
+    {
+      "binding": "function ZN(",
+      "utf8ByteOffset": 504994
+    },
+    {
+      "binding": "function Xh(",
+      "utf8ByteOffset": 499563
+    }
+  ],
+  "limitations": [
+    "Static only; app and packaged JS were never executed",
+    "Native companion integrity mismatches retained as untrusted; selected visual member hashes matched",
+    "Exact source selection and bounded graph; other relationships unknown",
+    "No private profiles/account data or custom avatar assignments inspected",
+    "No license to redistribute app assets established; no proprietary source shipped"
+  ]
+}
