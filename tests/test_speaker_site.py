@@ -9,6 +9,21 @@ builder = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(builder)
 
 class SpeakerSite(unittest.TestCase):
+    def test_rule_run_sheet_click_count_uses_slide_source(self):
+        from unittest.mock import patch
+        content_spec = importlib.util.spec_from_file_location('speaker_content', ROOT/'scripts/speaker_content.py')
+        content = importlib.util.module_from_spec(content_spec)
+        content_spec.loader.exec_module(content)
+        def rule_row(table):
+            return next(line for line in table.splitlines() if len(line.split('|')) > 4 and line.split('|')[3].strip() == '5')
+        self.assertEqual(content.SL[4]['clicks'], 1)
+        self.assertIn('(1 clique)', rule_row(content.run_sheet()))
+        guide = (ROOT/'docs/speaker/guia-glaucia.md').read_text(encoding='utf-8')
+        self.assertIn('(1 clique)', rule_row(guide))
+        # A future fragment change must also update the table, including pluralization.
+        with patch.dict(content.SL[4], clicks=3):
+            self.assertIn('(3 cliques)', rule_row(content.run_sheet()))
+
     def test_build_is_allowlisted_and_relative(self):
         with tempfile.TemporaryDirectory() as tmp:
             out = pathlib.Path(tmp)/'site'
@@ -21,7 +36,7 @@ class SpeakerSite(unittest.TestCase):
             self.assertFalse((out/'package.json').exists())
             guide = (out/'guide/index.html').read_text()
             self.assertIn('../slides/#/0', guide)
-            self.assertIn('../slides/#/19', guide)
+            self.assertIn('../slides/#/21', guide)
             self.assertIn('Copiar prompt', guide)
             self.assertIn('lang="en"', guide)
             self.assertIn('11:00', guide)
@@ -44,10 +59,16 @@ class SpeakerSite(unittest.TestCase):
             output = (pathlib.Path(tmp)/'site/guide/index.html').read_text()
             copied = [unescape(x).rstrip() for x in re.findall(r'<pre><code[^>]*>(.*?)</code></pre>',output,re.S)]
             self.assertEqual([x.rstrip() for x in prompts],copied)
-            self.assertEqual(output.count('class="copy-prompt"'),7)
+            self.assertEqual(output.count('class="copy-prompt"'),10)
             self.assertEqual(output.count('class="copy-command"'),1)
             self.assertIn('Copiar comando',output)
             self.assertIn('git ls-remote --exit-code --heads origin refs/heads/checkpoint/mvp-base',output)
+    def test_generated_speaker_content_is_up_to_date(self):
+        import subprocess, sys
+        before = {p: p.read_bytes() for p in [ROOT/'docs/speaker/guia-glaucia.md', ROOT/'docs/speaker/slides/index.html']}
+        result = subprocess.run([sys.executable, str(ROOT/'scripts/speaker_content.py'), '--check'], cwd=ROOT, capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, 'Generated guide/deck notes are stale. Run: python scripts/speaker_content.py\n' + result.stdout + result.stderr)
+        self.assertEqual(before, {p: p.read_bytes() for p in before}, '--check must be read-only')
     def test_all_relative_resources_and_anchors_resolve(self):
         from html.parser import HTMLParser
         from urllib.parse import urlsplit, unquote

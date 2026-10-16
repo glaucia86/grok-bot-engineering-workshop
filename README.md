@@ -84,10 +84,12 @@ These checks prove only their stated local scope. `verify:http` rejects invalid 
 
 ## Team and workshop prompts
 
-Load at most three skills per bot:
+Load at most three skills per bot (QA is the one exception, see below). Every bot also applies the pstack principle `principle-prove-it-works` as its done-definition: no bot declares a task done without proof from the real artifact.
+
+Skills:
 
 - FDE: `shadcn`, `vercel-react-best-practices`, `neon-drizzle`
-- QA: `playwright-best-practices`, `playwright-cli`, `create-verification-skill`
+- QA: `playwright-best-practices`, `playwright-cli`, `create-verification-skill`, `interrogate` (pstack; the one exception to the three-skill limit)
 - DevOps: `deploy-to-vercel`, `ci-cd-and-automation`
 
 FDE builds; QA independently evaluates the criteria; DevOps reports checks and preview. No bot approves or merges. Use one task per prompt and attach commit-specific evidence.
