@@ -1,0 +1,6 @@
+{
+  "code": 0,
+  "foreignHttpRequests": 4,
+  "reproduced": true,
+  "scope": "Intentional false-evidence RED reproduction only. Foreign HTTP200 fixture, no remote traffic/database."
+}
