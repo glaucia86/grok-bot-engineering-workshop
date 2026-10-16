@@ -1,16 +1,6 @@
-import { FeedbackWorkspace } from "@/components/feedback-workspace";
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 
 export default function Home() {
-  return (
-    <>
-      <a className="skip-link" href="#feedback">Skip to feedback</a>
-      <header className="site-header"><Link href="/" className="wordmark">Talk<span>Feedback</span><span className="wordmark-square" aria-hidden="true" /></Link><nav aria-label="Main navigation"><a href="#feedback">Leave feedback</a><a href="#results">See results ↗</a></nav></header>
-      <main className="site-main">
-        <div className="workshop-intro"><p className="workshop-label">PACKT WORKSHOP / ENGINEERING BOTS</p><h1>Workshop feedback</h1><p className="intro-copy">Leave feedback on a talk and explore the room&apos;s results.</p></div>
-        <FeedbackWorkspace />
-      </main>
-      <footer className="site-footer"><span>Talk Feedback</span><p>Built to learn. Improved together.</p></footer>
-    </>
-  );
+  return <div className="loop-home"><section className="loop-hero" aria-labelledby="home-heading"><div><h1 id="home-heading">Build.<br />Listen.<br />Improve.</h1><p>Good engineering keeps the conversation going. Share what you learned from a talk and help shape what comes next.</p><div className="loop-actions"><Link className="loop-primary" href="/feedback">Leave feedback <ArrowUpRight aria-hidden="true" size={20} /></Link><Link className="loop-secondary" href="/results">Explore results</Link></div></div><div className="loop-diagram" role="img" aria-label="Loop Engineering: build, listen to feedback, improve, and repeat"><svg viewBox="0 0 440 360" aria-hidden="true" focusable="false"><defs><marker id="loop-arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M1 1 6 4 1 7" fill="none" stroke="currentColor" strokeWidth="1.5" /></marker></defs><g fill="none" stroke="currentColor" strokeWidth="2" markerEnd="url(#loop-arrow)"><path d="M220 70C320 70 355 123 335 192" /><path d="M320 235C260 315 155 302 116 250" /><path d="M100 205C55 130 110 65 165 65" /></g><g fill="currentColor"><circle cx="200" cy="65" r="6" /><circle cx="335" cy="225" r="6" /><circle cx="98" cy="232" r="6" /></g><text x="200" y="40" textAnchor="middle" className="loop-diagram-label">Build</text><text x="355" y="258" textAnchor="middle" className="loop-diagram-label">Listen</text><text x="80" y="268" textAnchor="middle" className="loop-diagram-label">Improve</text><text x="220" y="170" textAnchor="middle" className="loop-diagram-title">Loop</text><text x="220" y="203" textAnchor="middle" className="loop-diagram-label">Engineering</text></svg></div></section><section className="loop-how" aria-labelledby="how-heading"><h2 id="how-heading">One workshop.<br />A useful feedback loop.</h2><ol className="loop-steps"><li><h3>Take something in.</h3><p>Join a talk. Notice the ideas, examples, and questions that stay with you.</p></li><li><h3>Leave something useful.</h3><p>Choose your rating and share a thought. A comment is always optional.</p></li><li><h3>See the bigger picture.</h3><p>Explore the room&apos;s ratings and response counts, one talk at a time.</p></li></ol></section></div>;
 }

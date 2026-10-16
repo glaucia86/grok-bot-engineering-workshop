@@ -5,7 +5,7 @@ import type { TalkStats } from "../lib/stats";
 
 type DashboardState = { requestKey: string; status: "error" | "ready" };
 
-export function FeedbackDashboard({ revision = 0 }: { revision?: number }) {
+export function FeedbackDashboard({ revision = 0, feedbackHref = "#feedback" }: { revision?: number; feedbackHref?: string }) {
   const [attempt, setAttempt] = useState(0);
   const [result, setResult] = useState<DashboardState | null>(null);
   const [talks, setTalks] = useState<TalkStats[] | null>(null);
@@ -50,19 +50,19 @@ export function FeedbackDashboard({ revision = 0 }: { revision?: number }) {
       ) : null}
       {talks !== null && (talks.length > 0 || current?.status === "ready") && <>
         {(!current || current.status === "error") && <p className="dashboard-stale">Previously loaded results. These may not include your latest feedback.</p>}
-        <TalkResults talks={talks} />
+        <TalkResults talks={talks} feedbackHref={feedbackHref} />
       </>}
     </section>
   );
 }
 
-export function TalkResults({ talks }: { talks: TalkStats[] }) {
+export function TalkResults({ talks, feedbackHref = "#feedback" }: { talks: TalkStats[]; feedbackHref?: string }) {
   if (talks.length === 0) {
     return (
       <div className="dashboard-empty">
         <h3>No feedback yet</h3>
         <p>Leave the first review to start the conversation.</p>
-        <a href="#feedback">Leave feedback</a>
+        <a href={feedbackHref}>Leave feedback</a>
       </div>
     );
   }

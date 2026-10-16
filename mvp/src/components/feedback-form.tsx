@@ -10,7 +10,7 @@ import { Textarea } from "./ui/textarea";
 
 const initial = { talkId: "", author: "", comment: "", rating: "" };
 
-export function FeedbackForm({ onSaved }: { onSaved: () => void }) {
+export function FeedbackForm({ onSaved, resultsHref = "#results" }: { onSaved: () => void; resultsHref?: string }) {
   const [values, setValues] = useState(initial);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "saving" | "saved">("idle");
@@ -105,7 +105,7 @@ export function FeedbackForm({ onSaved }: { onSaved: () => void }) {
         <div className="form-field"><Label htmlFor="comment">Comment (optional)</Label><Textarea id="comment" name="comment" rows={4} value={values.comment} placeholder="What clicked? What could be clearer?" disabled={status === "saving"} aria-invalid={!!errors.comment} aria-describedby={`comment-hint${errors.comment ? " comment-error" : ""}`} onChange={(event) => update("comment", event.target.value)} /><p id="comment-hint" className="field-hint">{values.comment.trim().length} / 1000 characters after trimming</p>{errors.comment && <p id="comment-error" className="field-error">{errors.comment}</p>}</div>
         {failure && <p role="alert" className="save-error">{failure}</p>}
         <Button type="submit" className="submit-button" disabled={status === "saving"}>{status === "saving" ? "Saving…" : failure ? "Try again" : "Send feedback"}<ArrowUpRight aria-hidden="true" /></Button>
-        <div aria-live="polite" aria-atomic="true">{status === "saved" && <div className="save-success"><Check aria-hidden="true" size={18} /><div><p>Feedback saved. Thank you for helping the next talk.</p><a href="#results">View results</a></div></div>}</div>
+        <div aria-live="polite" aria-atomic="true">{status === "saved" && <div className="save-success"><Check aria-hidden="true" size={18} /><div><p>Feedback saved. Thank you for helping the next talk.</p><a href={resultsHref}>View results</a></div></div>}</div>
       </form>
     </section>
   );
