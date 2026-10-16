@@ -25,3 +25,12 @@ From mvp run npmci, npmrunbuild and the local Playwright config (local-*.spec.ts
 The inherited `node scripts/capture-shell.mjs <phase> <output-directory>` reproduces the full-page trace, timings and asset inventory with the same viewport/data/device profile as #35. Use the recorded revision/fixture labels; never compare a development server with a production build.
 
 Real preview/API/confirmation/persisted-results acceptance remains BLOCKED by #16 until authorized isolated preview/database binding and access are independently verified. Glaucia retains review/merge control. This PR is stacked on #35 and does not duplicate the shell diff or claim #37 dashboard completion.
+
+
+## Joint integration check of #40 and #41
+
+A separate local worktree materialized Git's clean combined tree from #40 c6eed38 and #41 883e3ce on #39 0d10c31. No remote merge occurred. Both root CSS imports and both local-feedback.spec.ts changes were retained. The combined production app passed123Vitest and32browser scenarios, plus build/types/lint0errors(1existingwarning)/HTTP3/3. This includes both complete form-state motion modes, the full dashboard size/data matrix, actual form submission/revision/refresh fixtures, transport/evidence checks and shell keyboard/reflow/zoom.
+
+The additional P3 was real: at320px the form content measured246px, while5x44px radio minima plus4x8px gaps required252px. The final target ended atx289,6px past the content right edge283, inside the panel padding. Page-level overflow alone missed it. The new regression compares every radio bounding box to the actual form content (not the intrinsically expanded rating row), preserves44px target minimums, and records geometry. It failed before the fix. A scoped max360px rule reduces gaps8to6px; after, the row measures246px and all targets44.39-44.41x48px, ending exactly atx283. Desktop spacing remains8px.
+
+[Joint actual captures and source manifest](evidence/36/integration-40-41) retain before/after320px crops, measured geometry, saved form390px in both motion modes,20talk results320/1440px and saved/refresh-failed state. The manifest records both input heads, combined tree, checks and SHA256 hashes of the actual tested runtime/test sources. An independent read-only reviewer inspected combined code and these real screenshots, confirmed preserved imports/tests and no further actionable issue. Visual review was not inferred from CI. All requests/delays/data are labeled local intercepted fixtures; remote acceptance under #16 remains blocked.

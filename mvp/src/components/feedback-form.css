@@ -42,3 +42,7 @@
   .feedback-panel .rating-option input:checked + span { border-color: Highlight; }
   .feedback-panel .rating-option input:focus-visible + span { outline-color: Highlight; }
 }
+
+@media (max-width: 360px) {
+  .feedback-panel .rating-options { gap: 6px; }
+}
