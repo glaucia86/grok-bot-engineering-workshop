@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -25,16 +26,36 @@ export function previewCiTarget(env: Environment) {
   } catch { throw new Error(blocked); }
 }
 
+// Read dispatch values inside the process: Actions prints workflow env/run values
+// before a script can validate them. Never export raw inputs via GITHUB_ENV.
+export function previewCiEventTarget(env: Environment) {
+  try {
+    if (!env.GITHUB_EVENT_PATH) throw new Error(blocked);
+    const event = JSON.parse(readFileSync(env.GITHUB_EVENT_PATH, "utf8"));
+    const inputs = event.inputs;
+    if (!inputs || typeof inputs.preview_url !== "string"
+      || typeof inputs.preview_commit !== "string" || typeof inputs.qa_database_id !== "string"
+      || (inputs.isolated_authorized !== true && inputs.isolated_authorized !== "true")) throw new Error(blocked);
+    return previewCiTarget({ ...env,
+      MVP_PREVIEW_URL: inputs.preview_url, MVP_PREVIEW_COMMIT: inputs.preview_commit,
+      MVP_PREVIEW_QA_DATABASE_ID: inputs.qa_database_id, MVP_PREVIEW_ISOLATED_AUTHORIZED: "true",
+    });
+  } catch { throw new Error(blocked); }
+}
+
 if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.meta.url) {
   try {
-    previewCiTarget(process.env);
+    const target = previewCiEventTarget(process.env);
     if (process.argv.length > 3 || (process.argv[2] && process.argv[2] !== "--check")) throw new Error(blocked);
     if (process.argv[2] === "--check") {
       console.log("Preview CI gate passed; isolation and deployment remain operator attestations. No journey started.");
     } else {
       const require = createRequire(import.meta.url);
       const child = spawn(process.execPath, [require.resolve("@playwright/test/cli"), "test", "--config=playwright.preview.config.ts"], {
-        stdio: "inherit", windowsHide: true, env: { ...process.env, DATABASE_URL: "" },
+        stdio: "inherit", windowsHide: true, env: { ...process.env, DATABASE_URL: "",
+          MVP_PREVIEW_URL: target.origin, MVP_PREVIEW_COMMIT: target.commit,
+          MVP_PREVIEW_QA_DATABASE_ID: target.databaseId, MVP_PREVIEW_ISOLATED_AUTHORIZED: "true",
+        },
       });
       child.once("error", () => { console.error("Preview runner failed to start."); process.exitCode = 1; });
       child.once("close", code => { process.exitCode = code === 0 ? 0 : 1; });

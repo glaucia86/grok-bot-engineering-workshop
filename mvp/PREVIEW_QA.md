@@ -98,6 +98,11 @@ environment. Do not enter a connection string, token or credential into inputs,
 variables, source or logs. No `DATABASE_URL` or provider secret is needed by the
 runner, because the deployed preview owns its already verified database binding.
 
+Dispatch inputs are read inside the runner from `GITHUB_EVENT_PATH`, validated
+without printing them, and passed to Playwright only after approval matching.
+They are never interpolated into workflow `env`/`run` or exported to `GITHUB_ENV`.
+This avoids step-header disclosure; dispatch inputs are still not a secret store.
+
 Dispatch **from main** with the matching non-secret preview URL, full deployed
 SHA and QA resource ID, and explicitly confirm `isolated_authorized`. Missing,
 disabled or mismatched approved configuration fails before browser installation

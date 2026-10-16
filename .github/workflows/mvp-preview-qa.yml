@@ -39,10 +39,6 @@ jobs:
         working-directory: mvp
     env:
       NEXT_TELEMETRY_DISABLED: "1"
-      MVP_PREVIEW_URL: ${{ inputs.preview_url }}
-      MVP_PREVIEW_COMMIT: ${{ inputs.preview_commit }}
-      MVP_PREVIEW_QA_DATABASE_ID: ${{ inputs.qa_database_id }}
-      MVP_PREVIEW_ISOLATED_AUTHORIZED: ${{ inputs.isolated_authorized && 'true' || 'false' }}
       MVP_PREVIEW_QA_ENABLED: ${{ vars.MVP_PREVIEW_QA_ENABLED }}
       MVP_PREVIEW_APPROVED_URL: ${{ vars.MVP_PREVIEW_APPROVED_URL }}
       MVP_PREVIEW_APPROVED_COMMIT: ${{ vars.MVP_PREVIEW_APPROVED_COMMIT }}

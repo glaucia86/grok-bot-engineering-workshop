@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
+import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
@@ -61,13 +61,29 @@ describe("manually dispatched preview CI gate, offline", () => {
     expect(result.stderr).toContain("BLOCKED: preview CI configuration or authorization");
     expect(result.stdout + result.stderr).not.toContain("SECRET_SENTINEL");
   });
-  it("checks a valid fixture through the CLI without starting a journey", () => {
+  it("checks a valid event fixture through the CLI without trusting inherited target inputs", async () => {
+    const directory = await mkdtemp(join(tmpdir(), "preview-ci-event-"));
+    directories.push(directory);
+    const eventPath = join(directory, "event.json");
+    const inputs = { preview_url: origin, preview_commit: commit, qa_database_id: "qa-isolated-branch", isolated_authorized: "true" };
+    await writeFile(eventPath, JSON.stringify({ inputs }));
     const result = spawnSync(process.execPath, ["--import", "tsx", "scripts/preview-ci.ts", "--check"], {
       cwd: process.cwd(), windowsHide: true, encoding: "utf8", timeout: 15000,
-      env: { ...process.env, ...valid, DATABASE_URL: "" },
+      env: { ...process.env, ...valid, GITHUB_EVENT_PATH: eventPath, MVP_PREVIEW_URL: "SECRET_SENTINEL", DATABASE_URL: "" },
     });
     expect(result.status).toBe(0);
     expect(result.stdout).toContain("No journey started.");
+    expect(result.stdout + result.stderr).not.toContain("SECRET_SENTINEL");
+    for (const event of ["malformed", "{}", JSON.stringify({ inputs: { ...inputs, preview_url: "https://user:SECRET_SENTINEL@example.com" } }), JSON.stringify({ inputs: { ...inputs, isolated_authorized: "false" } })]) {
+      await writeFile(eventPath, event);
+      const failure = spawnSync(process.execPath, ["--import", "tsx", "scripts/preview-ci.ts", "--check"], {
+        cwd: process.cwd(), windowsHide: true, encoding: "utf8", timeout: 15000,
+        env: { ...process.env, ...valid, GITHUB_EVENT_PATH: eventPath, DATABASE_URL: "" },
+      });
+      expect(failure.status).toBe(1);
+      expect(failure.stderr).toContain("BLOCKED");
+      expect(failure.stdout + failure.stderr).not.toContain("SECRET_SENTINEL");
+    }
   });
   it("binds the CI workflow to manual execution, the offline gate and curated artifacts only", async () => {
     const workflow = await readFile(join(process.cwd(), "../.github/workflows/mvp-preview-qa.yml"), "utf8");
@@ -77,6 +93,7 @@ describe("manually dispatched preview CI gate, offline", () => {
     expect(workflow).toContain("environment: mvp-preview-qa");
     expect(workflow).toContain("cancel-in-progress: false");
     expect(workflow).not.toContain("secrets.");
+    expect(workflow).not.toMatch(/\$\{\{[^}]*\binputs[.\[]/);
     const gate = workflow.indexOf("scripts/preview-ci.ts --check");
     expect(gate).toBeGreaterThan(0);
     expect(gate).toBeLessThan(workflow.indexOf("npx playwright install"));
