@@ -26,9 +26,13 @@ test("mouse tracking is bounded and becomes static when reduced motion is enable
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/");
   const bot = page.locator('[data-bot="grok"]');
-  await page.mouse.move(10, 10);
-  await expect.poll(() => bot.evaluate(element => getComputedStyle(element).transform)).not.toBe("none");
-  await expect.poll(() => bot.evaluate(element => new DOMMatrix(getComputedStyle(element).transform).m41)).toBeLessThan(-5);
+  // Navigation can finish before React effects attach on a fast server. Repeat
+  // actual mouse input while awaiting the response, without a hydration sleep.
+  await expect.poll(async () => {
+    await page.mouse.move(12, 12);
+    await page.mouse.move(10, 10);
+    return bot.evaluate(element => new DOMMatrix(getComputedStyle(element).transform).m41);
+  }).toBeLessThan(-5);
   await page.screenshot({ path: info.outputPath("home-bots-pointer-left.png"), fullPage: true });
   await page.mouse.move(1270, 710);
   await expect.poll(() => bot.evaluate(element => new DOMMatrix(getComputedStyle(element).transform).m41)).toBeGreaterThan(6);
