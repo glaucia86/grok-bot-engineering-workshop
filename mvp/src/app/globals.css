@@ -4,6 +4,7 @@
 @import "../components/feedback-dashboard.css";
 @import "../components/feedback-form.css";
 @import "./loop.css";
+@import "./bots.css";
 
 @custom-variant dark (&:is(.dark *));
 
