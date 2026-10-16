@@ -1,0 +1,74 @@
+name: MVP isolated preview QA (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      preview_url:
+        description: Exact immutable preview origin; never credentials or a production alias
+        required: true
+        type: string
+      preview_commit:
+        description: Full deployed Git SHA, independently verified
+        required: true
+        type: string
+      qa_database_id:
+        description: Non-secret isolated empty QA database resource ID, independently verified
+        required: true
+        type: string
+      isolated_authorized:
+        description: Isolation and preview binding verified; up to four synthetic POSTs authorized
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mvp-isolated-preview-qa
+  cancel-in-progress: false
+
+jobs:
+  preview:
+    if: github.ref == 'refs/heads/main'
+    environment: mvp-preview-qa
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: mvp
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      MVP_PREVIEW_URL: ${{ inputs.preview_url }}
+      MVP_PREVIEW_COMMIT: ${{ inputs.preview_commit }}
+      MVP_PREVIEW_QA_DATABASE_ID: ${{ inputs.qa_database_id }}
+      MVP_PREVIEW_ISOLATED_AUTHORIZED: ${{ inputs.isolated_authorized && 'true' || 'false' }}
+      MVP_PREVIEW_QA_ENABLED: ${{ vars.MVP_PREVIEW_QA_ENABLED }}
+      MVP_PREVIEW_APPROVED_URL: ${{ vars.MVP_PREVIEW_APPROVED_URL }}
+      MVP_PREVIEW_APPROVED_COMMIT: ${{ vars.MVP_PREVIEW_APPROVED_COMMIT }}
+      MVP_PREVIEW_APPROVED_QA_DATABASE_ID: ${{ vars.MVP_PREVIEW_APPROVED_QA_DATABASE_ID }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: mvp/package-lock.json
+      - run: npm ci
+      - name: Check approved configuration without contacting preview
+        run: node --import tsx scripts/preview-ci.ts --check
+      - run: npx playwright install --with-deps chromium
+      - name: Run authorized isolated preview journey
+        run: node --import tsx scripts/preview-ci.ts
+      - name: Retain curated cleanup evidence even after journey failure
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: mvp-preview-curated-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            mvp/preview-evidence/*/manifest.json
+            mvp/preview-evidence/*/outcome.json
+          if-no-files-found: ignore
+          retention-days: 7
