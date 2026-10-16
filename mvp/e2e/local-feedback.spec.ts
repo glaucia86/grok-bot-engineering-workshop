@@ -132,7 +132,7 @@ test("local fixture: failed server retains inputs and re-enables submission", as
   await expect(page.getByLabel("Talk", { exact: true })).toHaveValue("  Engineering bots  ");
   await expect(page.getByLabel("Comment (optional)", { exact: true })).toHaveValue("  Useful examples  ");
   await expect(page.getByRole("radio", { name: "5 stars", exact: true })).toBeChecked();
-  await expect(page.getByRole("button", { name: "Send feedback", exact: true })).toBeEnabled();
+  await expect(page.getByRole("button", { name: "Try again", exact: true })).toBeEnabled();
   expect(api.created).toHaveLength(0);
 });
 
