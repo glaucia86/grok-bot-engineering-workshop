@@ -1,0 +1,6 @@
+{
+  "code": 0,
+  "foreignHttpRequests": 0,
+  "passed": true,
+  "scope": "GREEN isolation check: a foreign HTTP200 remains on3187 but corrected capture uses its own dynamic-port child; no remote traffic/database."
+}

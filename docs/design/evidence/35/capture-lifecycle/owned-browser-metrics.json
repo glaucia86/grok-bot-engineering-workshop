@@ -1,0 +1,233 @@
+{
+  "revision": "PR39 capture lifecycle correction candidate",
+  "fixture": "five talks; intercepted GET; no persistence or remote requests",
+  "device": {
+    "platform": "win32",
+    "architecture": "x64",
+    "osType": "Windows_NT",
+    "osRelease": "10.0.26200",
+    "browserVersion": "156.0.8078.4",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.8078.4 Safari/537.36",
+    "deviceScaleFactor": 1,
+    "cpuThrottling": "none",
+    "networkThrottling": "none",
+    "requestProfile": "sequential warm requests"
+  },
+  "origin": "http://127.0.0.1:61978",
+  "ownedPid": 14200,
+  "metrics": [
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "url": "http://127.0.0.1:61978/",
+      "overflow": false,
+      "firstInputY": 395.578125,
+      "perf": {
+        "longTasks": [],
+        "shifts": []
+      },
+      "resources": [
+        {
+          "name": "/_next/static/chunks/0clj0u6fhc2by.css",
+          "duration": 28.799999998882413,
+          "transferSize": 8644
+        },
+        {
+          "name": "/_next/static/chunks/1x6obpmlu1_c2.js",
+          "duration": 25.200000001117587,
+          "transferSize": 2275
+        },
+        {
+          "name": "/_next/static/chunks/06bs-nf19b2js.js",
+          "duration": 30.09999999962747,
+          "transferSize": 8005
+        },
+        {
+          "name": "/_next/static/chunks/turbopack-3-ry682tkyiqk.js",
+          "duration": 33.80000000074506,
+          "transferSize": 4240
+        },
+        {
+          "name": "/_next/static/chunks/1tq6ppe__m8m-.js",
+          "duration": 37.100000001490116,
+          "transferSize": 3902
+        },
+        {
+          "name": "/_next/static/chunks/132ka9qxfkh9c.js",
+          "duration": 40.80000000074506,
+          "transferSize": 46874
+        },
+        {
+          "name": "/_next/static/chunks/21czei0hna638.js",
+          "duration": 46.5,
+          "transferSize": 72291
+        },
+        {
+          "name": "/_next/static/chunks/4147g-hqy4rab.js",
+          "duration": 61.59999999962747,
+          "transferSize": 157092
+        },
+        {
+          "name": "/api/feedback",
+          "duration": 10.199999999254942,
+          "transferSize": 641
+        },
+        {
+          "name": "/",
+          "duration": 15.5,
+          "transferSize": 466
+        }
+      ],
+      "navigation": [
+        {
+          "domContentLoaded": 50.5,
+          "load": 106.5
+        }
+      ]
+    },
+    {
+      "viewport": [
+        768,
+        1024
+      ],
+      "url": "http://127.0.0.1:61978/",
+      "overflow": false,
+      "firstInputY": 384.578125,
+      "perf": {
+        "longTasks": [],
+        "shifts": []
+      },
+      "resources": [
+        {
+          "name": "/_next/static/chunks/0clj0u6fhc2by.css",
+          "duration": 16.699999999254942,
+          "transferSize": 8644
+        },
+        {
+          "name": "/_next/static/chunks/1x6obpmlu1_c2.js",
+          "duration": 13.100000001490116,
+          "transferSize": 2275
+        },
+        {
+          "name": "/_next/static/chunks/06bs-nf19b2js.js",
+          "duration": 16.800000000745058,
+          "transferSize": 8005
+        },
+        {
+          "name": "/_next/static/chunks/turbopack-3-ry682tkyiqk.js",
+          "duration": 17.90000000037253,
+          "transferSize": 4240
+        },
+        {
+          "name": "/_next/static/chunks/132ka9qxfkh9c.js",
+          "duration": 23.200000001117587,
+          "transferSize": 46874
+        },
+        {
+          "name": "/_next/static/chunks/21czei0hna638.js",
+          "duration": 27.100000001490116,
+          "transferSize": 72291
+        },
+        {
+          "name": "/_next/static/chunks/1tq6ppe__m8m-.js",
+          "duration": 20.199999999254942,
+          "transferSize": 3902
+        },
+        {
+          "name": "/_next/static/chunks/4147g-hqy4rab.js",
+          "duration": 41.29999999888241,
+          "transferSize": 157092
+        },
+        {
+          "name": "/api/feedback",
+          "duration": 8,
+          "transferSize": 641
+        },
+        {
+          "name": "/",
+          "duration": 8.5,
+          "transferSize": 466
+        }
+      ],
+      "navigation": [
+        {
+          "domContentLoaded": 28.800000000745058,
+          "load": 62.09999999962747
+        }
+      ]
+    },
+    {
+      "viewport": [
+        1440,
+        900
+      ],
+      "url": "http://127.0.0.1:61978/",
+      "overflow": false,
+      "firstInputY": 393.78125,
+      "perf": {
+        "longTasks": [],
+        "shifts": []
+      },
+      "resources": [
+        {
+          "name": "/_next/static/chunks/0clj0u6fhc2by.css",
+          "duration": 11.699999999254942,
+          "transferSize": 8644
+        },
+        {
+          "name": "/_next/static/chunks/1x6obpmlu1_c2.js",
+          "duration": 6.5,
+          "transferSize": 2275
+        },
+        {
+          "name": "/_next/static/chunks/06bs-nf19b2js.js",
+          "duration": 7.599999999627471,
+          "transferSize": 8005
+        },
+        {
+          "name": "/_next/static/chunks/132ka9qxfkh9c.js",
+          "duration": 15.699999999254942,
+          "transferSize": 46874
+        },
+        {
+          "name": "/_next/static/chunks/21czei0hna638.js",
+          "duration": 19.800000000745058,
+          "transferSize": 72291
+        },
+        {
+          "name": "/_next/static/chunks/turbopack-3-ry682tkyiqk.js",
+          "duration": 9,
+          "transferSize": 4240
+        },
+        {
+          "name": "/_next/static/chunks/1tq6ppe__m8m-.js",
+          "duration": 13.5,
+          "transferSize": 3902
+        },
+        {
+          "name": "/_next/static/chunks/4147g-hqy4rab.js",
+          "duration": 32.70000000111759,
+          "transferSize": 157092
+        },
+        {
+          "name": "/api/feedback",
+          "duration": 12.799999998882413,
+          "transferSize": 641
+        },
+        {
+          "name": "/",
+          "duration": 14.300000000745058,
+          "transferSize": 466
+        }
+      ],
+      "navigation": [
+        {
+          "domContentLoaded": 27.299999998882413,
+          "load": 56.09999999962747
+        }
+      ]
+    }
+  ]
+}
