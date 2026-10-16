@@ -12,7 +12,7 @@ for (const hasRating of [true, false]) {
       await new Promise<void>((resolve) => { finish = resolve; });
       await route.fulfill({ status: 503, body: "Local fixture unavailable" });
     });
-    await page.goto("/");
+    await page.goto("/feedback");
     await page.getByLabel("Talk", { exact: true }).fill("Keyboard preview fixture");
     const author = page.getByLabel("Your name", { exact: true });
     await author.fill("Fixture attendee");
@@ -55,7 +55,7 @@ for (const reducedMotion of ["no-preference", "reduce"] as const) {
     });
     for (const viewport of [{ width: 390, height: 844 }, { width: 1440, height: 900 }]) {
       await page.setViewportSize(viewport);
-      await page.goto("/");
+      await page.goto("/feedback");
       const form = page.locator("#feedback");
       const capture = async (state: string) => {
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -95,7 +95,7 @@ for (const reducedMotion of ["no-preference", "reduce"] as const) {
       await expect(page.getByRole("radio", { name: "3 stars", exact: true })).toBeChecked(); await capture("failure");
       await page.getByRole("button", { name: "Try again", exact: true }).click();
       await expect.poll(() => posts).toBe(2); finish!();
-      await expect(form.getByRole("link", { name: "View results" })).toHaveAttribute("href", "#results");
+      await expect(form.getByRole("link", { name: "View results" })).toHaveAttribute("href", "/results");
       await capture("saved");
       await page.getByLabel("Talk", { exact: true }).fill("Another talk");
       await expect(form.getByText(/Feedback saved/)).toBeVisible();
@@ -116,7 +116,7 @@ for (const reducedMotion of ["no-preference", "reduce"] as const) {
 test("local form fixture: 320px stars fit the form content without losing44px targets", async ({ page }, info) => {
   await page.setViewportSize({ width: 320, height: 844 });
   await page.route("**/api/feedback", route => route.fulfill({ json: [] }));
-  await page.goto("/");
+  await page.goto("/feedback");
   const group = page.locator(".rating-options");
   const bounds = await page.locator("#feedback form").boundingBox();
   const ratingBounds = await group.boundingBox();

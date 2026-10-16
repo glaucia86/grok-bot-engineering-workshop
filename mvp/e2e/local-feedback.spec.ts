@@ -40,9 +40,8 @@ async function fill(page: Page, talk = "  Engineering bots  ", rating = "5") {
 
 test("local fixture: shared errors, retained input, normalized creation, reset and reload", async ({ page }, testInfo) => {
   const api = await fixture(page);
-  await page.goto("/");
-  await expect(page.locator("#results")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "No feedback yet" })).toBeVisible();
+  await page.goto("/feedback");
+  await expect(page.locator("#results")).toHaveCount(0);
   await page.screenshot({ path: testInfo.outputPath("empty-local-fixture.png"), fullPage: true });
   await page.getByLabel("Your name", { exact: true }).fill("Ana");
   await page.getByLabel("Talk", { exact: true }).fill(" ");
@@ -67,7 +66,9 @@ test("local fixture: shared errors, retained input, normalized creation, reset a
   expect(api.created).toEqual([{ talkId: "Engineering bots", author: "Ana", comment: "Useful examples", rating: 5 }]);
   for (const label of ["Talk", "Your name", "Comment (optional)"]) await expect(page.getByLabel(label, { exact: true })).toHaveValue("");
   await expect(page.getByRole("radio", { checked: true })).toHaveCount(0);
-  await expect(page.locator("#results").getByText("Engineering bots", { exact: true }).first()).toBeVisible();
+  await expect(page).toHaveURL(/\/feedback$/);
+  await page.getByRole("link", { name: "View results", exact: true }).click();
+  await expect(page).toHaveURL(/\/results$/);
   await page.reload();
   await expect(page.locator("#results").getByText("Engineering bots", { exact: true }).first()).toBeVisible();
   await page.screenshot({ path: testInfo.outputPath("desktop-local-fixture.png"), fullPage: true });
@@ -82,7 +83,7 @@ test("local fixture: chart and table show the same one-decimal aggregates", asyn
     { talkId: "Engineering bots", average: 4.3, count: 4 },
     { talkId: "Reliable tests", average: 3, count: 2 },
   ] }));
-  await page.goto("/");
+  await page.goto("/results");
   const table = page.getByRole("table", { name: "Talk feedback summary" });
   const first = table.getByRole("row").filter({ hasText: "Engineering bots" });
   await expect(first.getByRole("cell", { name: /^4\.3\s*\/ 5$/ })).toBeVisible();
@@ -116,7 +117,7 @@ test("local fixture: dashboard failure can be retried", async ({ page }) => {
       ? route.fulfill({ status: 503, body: "Unavailable" })
       : route.fulfill({ json: [] });
   });
-  await page.goto("/");
+  await page.goto("/results");
   await expect(page.locator("#results").getByRole("alert")).toBeVisible();
   await page.getByRole("button", { name: "Try again", exact: true }).click();
   await expect(page.getByRole("heading", { name: "No feedback yet" })).toBeVisible();
@@ -125,7 +126,7 @@ test("local fixture: dashboard failure can be retried", async ({ page }) => {
 test("local fixture: failed server retains inputs and re-enables submission", async ({ page }) => {
   const api = await fixture(page);
   api.fail();
-  await page.goto("/");
+  await page.goto("/feedback");
   await fill(page);
   await page.getByRole("button", { name: "Send feedback", exact: true }).click();
   await expect(page.locator("#feedback").getByRole("alert")).toBeVisible();
@@ -139,7 +140,7 @@ test("local fixture: failed server retains inputs and re-enables submission", as
 test("local fixture: required stars support keyboard, focus, shape cues and optional comments", async ({ page }, testInfo) => {
   const api = await fixture(page);
   await page.setViewportSize({ width: 320, height: 800 });
-  await page.goto("/");
+  await page.goto("/feedback");
   const group = page.getByRole("group", { name: "Rating", exact: true });
   const stars = group.getByRole("radio");
   const first = group.getByRole("radio", { name: "1 star", exact: true });

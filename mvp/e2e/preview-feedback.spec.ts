@@ -18,7 +18,7 @@ test("authorized preview: public form creates feedback visible after reload", as
     const before = await page.request.get("/api/feedback", { maxRedirects: 0 });
     expect(before.status(), "BLOCKED: preview API unavailable or protected").toBe(200);
     expect(JSON.stringify(await before.json()) === "[]", "BLOCKED: QA dataset must start empty").toBe(true);
-    await page.goto("/");
+    await page.goto("/results");
     await expect(page.getByRole("heading", { name: "No feedback yet" })).toBeVisible();
     // Three bounded invalid writes; public aggregates must remain empty.
     run.phase("invalid-submit");
@@ -34,6 +34,7 @@ test("authorized preview: public form creates feedback visible after reload", as
     const afterInvalid = await page.request.get("/api/feedback", { maxRedirects: 0 });
     expect(afterInvalid.status()).toBe(200);
     expect(JSON.stringify(await afterInvalid.json()) === "[]", "Rejected requests must not insert").toBe(true);
+    await page.goto("/feedback");
     await page.getByLabel("Talk", { exact: true }).fill(`  ${talk}  `);
     await page.getByLabel("Your name", { exact: true }).fill("  Preview QA  ");
     await page.getByLabel("Comment (optional)", { exact: true }).fill("  Synthetic QA  ");
@@ -48,6 +49,9 @@ test("authorized preview: public form creates feedback visible after reload", as
     expect(record.talkId === talk && record.author === "Preview QA" && record.comment === "Synthetic QA" && record.rating === 5,
       "POST returns normalized synthetic values").toBe(true);
     await expect(page.getByText("Feedback saved", { exact: false })).toBeVisible();
+    await expect(page).toHaveURL(/\/feedback$/);
+    await page.getByRole("link", { name: "View results", exact: true }).click();
+    await expect(page).toHaveURL(/\/results$/);
     run.phase("reload");
     await page.reload();
     const persisted = await page.request.get("/api/feedback", { maxRedirects: 0 });
