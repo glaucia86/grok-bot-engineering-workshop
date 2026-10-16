@@ -81,6 +81,29 @@ it("keeps the previous results visible while a real refresh is pending", async (
   expect(screen.getByRole("rowheader", { name: "Existing talk" })).toBeTruthy();
 });
 
+it("hides an outdated empty prompt while the first saved response is refreshing or fails", async () => {
+  let settleRefresh: ((response: Response) => void) | undefined;
+  vi.stubGlobal("fetch", vi.fn()
+    .mockResolvedValueOnce(new Response("[]"))
+    .mockImplementationOnce(() => new Promise<Response>(resolve => { settleRefresh = resolve; }))
+    .mockResolvedValueOnce(new Response("[]")));
+  const { rerender } = render(<FeedbackDashboard />);
+  expect(await screen.findByRole("heading", { name: "No feedback yet" })).toBeTruthy();
+  rerender(<FeedbackDashboard revision={1} />);
+  expect(screen.getByRole("status").textContent).toContain("Refreshing results");
+  expect(screen.queryByRole("heading", { name: "No feedback yet" })).toBeNull();
+  expect(screen.queryByText(/Leave the first review/)).toBeNull();
+  expect(screen.queryByText(/Previously loaded results/)).toBeNull();
+  await waitFor(() => expect(settleRefresh).toBeDefined());
+  settleRefresh!(new Response("Unavailable", { status: 503 }));
+  expect((await screen.findByRole("alert")).textContent).toContain("Feedback saved. Results could not refresh");
+  expect(screen.queryByRole("heading", { name: "No feedback yet" })).toBeNull();
+  expect(screen.queryByText(/Leave the first review/)).toBeNull();
+  expect(screen.queryByText(/Previously loaded results/)).toBeNull();
+  fireEvent.click(screen.getByRole("button", { name: "Try again" }));
+  expect(await screen.findByRole("heading", { name: "No feedback yet" })).toBeTruthy();
+});
+
 describe("TalkResults", () => {
   it("renders twenty full labels, readable values and proportional horizontal bars without growing the chart width", () => {
     const talks = Array.from({ length: 20 }, (_, index) => ({

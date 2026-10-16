@@ -48,7 +48,7 @@ export function FeedbackDashboard({ revision = 0 }: { revision?: number }) {
           <button type="button" onClick={() => setAttempt(value => value + 1)}>Try again</button>
         </div>
       ) : null}
-      {talks !== null && <>
+      {talks !== null && (talks.length > 0 || current?.status === "ready") && <>
         {(!current || current.status === "error") && <p className="dashboard-stale">Previously loaded results. These may not include your latest feedback.</p>}
         <TalkResults talks={talks} />
       </>}

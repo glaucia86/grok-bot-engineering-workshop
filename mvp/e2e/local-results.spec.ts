@@ -86,6 +86,50 @@ test("local fixture: reduced motion, reflow, settled motion and keyboard retry",
   await page.screenshot({ path: info.outputPath("200-percent-zoom-local-fixture.png"), fullPage: true });
 });
 
+test("local fixture: first saved feedback hides outdated empty prompts during pending and failed refresh", async ({ page }, info) => {
+  test.skip(baseline, "Post-save regression only");
+  await page.setViewportSize({ width: 390, height: 844 });
+  let gets = 0;
+  let releaseRefresh: (() => void) | undefined;
+  await page.route("**/api/feedback", async route => {
+    if (route.request().method() === "POST") {
+      await route.fulfill({ status: 201, json: { id: 1, ...route.request().postDataJSON(), comment: "", createdAt: new Date().toISOString() } });
+      return;
+    }
+    gets++;
+    if (gets === 1) return route.fulfill({ json: [] });
+    if (gets === 2) {
+      await new Promise<void>(resolve => { releaseRefresh = resolve; });
+      return route.fulfill({ status: 503, body: "Unavailable" });
+    }
+    return route.fulfill({ json: [{ talkId: "First saved talk", average: 5, count: 1 }] });
+  });
+  await page.goto("/");
+  const results = page.locator("#results");
+  await expect(results.getByRole("heading", { name: "No feedback yet" })).toBeVisible();
+  await page.getByLabel("Talk", { exact: true }).fill("First saved talk");
+  await page.getByLabel("Your name", { exact: true }).fill("Ana");
+  await page.getByRole("radio", { name: "5 stars", exact: true }).check();
+  await page.getByRole("button", { name: "Send feedback", exact: true }).click();
+  await expect(page.locator("#feedback").getByText("Feedback saved", { exact: false })).toBeVisible();
+  await expect(results.getByRole("status")).toContainText("Refreshing results");
+  await expect(results.getByRole("heading", { name: "No feedback yet" })).toHaveCount(0);
+  await expect(results.getByText(/Leave the first review/)).toHaveCount(0);
+  await expect(results.getByText(/Previously loaded results/)).toHaveCount(0);
+  await page.screenshot({ path: info.outputPath("first-save-refresh-pending-local-fixture.png"), fullPage: true });
+  await expect.poll(() => Boolean(releaseRefresh)).toBe(true);
+  releaseRefresh!();
+  await expect(results.getByRole("alert")).toContainText("Feedback saved. Results could not refresh");
+  await expect(results.getByRole("heading", { name: "No feedback yet" })).toHaveCount(0);
+  await expect(results.getByText(/Leave the first review/)).toHaveCount(0);
+  await expect(results.getByText(/Previously loaded results/)).toHaveCount(0);
+  await page.screenshot({ path: info.outputPath("first-save-refresh-failed-local-fixture.png"), fullPage: true });
+  await results.getByRole("button", { name: "Try again", exact: true }).focus();
+  await page.keyboard.press("Enter");
+  await expect(results.getByRole("rowheader", { name: "First saved talk" })).toBeVisible();
+  await expect(results.getByRole("alert")).toHaveCount(0);
+});
+
 test("local fixture: initial retrieval failure has no fabricated results", async ({ page }, info) => {
   test.skip(baseline, "Redesign state capture only");
   await page.setViewportSize({ width: 390, height: 844 });
