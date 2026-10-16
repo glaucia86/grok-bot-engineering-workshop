@@ -1,0 +1,45 @@
+/* Scoped results styles. Native bars keep full labels and exact values in flow;
+   the installed chart's growing SVG width is unnecessary for this fixed scale. */
+.dashboard-root { min-width: 0; color: #172126; }
+.dashboard-root .dashboard-header h2 { margin: 0 0 8px; font-size: 24px; line-height: 1.3; letter-spacing: -.4px; }
+.dashboard-root .dashboard-header p { margin: 0; color: #53616a; font-size: 14px; line-height: 1.6; }
+.dashboard-root .dashboard-figure { margin-top: 24px; animation: dashboard-state-enter var(--motion-control, 160ms) ease-out; }
+.dashboard-root .dashboard-chart-caption { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; margin-bottom: 12px; font-size: 13px; font-weight: 600; }
+.dashboard-root .dashboard-chart-caption span { color: #53616a; }
+.dashboard-root .dashboard-scale { display: flex; justify-content: space-between; border-bottom: 1px solid #cbd2d6; padding-bottom: 8px; color: #53616a; font-size: 12px; font-variant-numeric: tabular-nums; }
+.dashboard-root .dashboard-bars { list-style: none; padding: 0; margin: 0; }
+.dashboard-root .dashboard-bar-row { padding: 16px 0; border-bottom: 1px solid #e1e5e8; min-width: 0; }
+.dashboard-root .dashboard-bar-name { margin: 0 0 8px; overflow-wrap: anywhere; font-size: 14px; line-height: 1.5; font-weight: 600; }
+.dashboard-root .dashboard-bar-values { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; color: #53616a; font-size: 13px; font-variant-numeric: tabular-nums; }
+.dashboard-root .dashboard-bar-average { color: #172126; font-size: 15px; font-weight: 650; }
+.dashboard-root .dashboard-bar-track { width: 100%; height: 8px; border-radius: 6px; background: #e1e5e8; }
+.dashboard-root .dashboard-bar-fill { height: 100%; background: #16604f; border-radius: 6px; transform-origin: left; animation: dashboard-bar-enter var(--motion-state, 240ms) var(--motion-ease, cubic-bezier(.2,.7,.2,1)) both; }
+.dashboard-root .dashboard-chart-note { color: #53616a; margin: 16px 0 24px; font-size: 12px; }
+.dashboard-root .dashboard-table-wrap { min-width: 0; }
+.dashboard-root .dashboard-table { width: 100%; table-layout: fixed; font-size: 13px; }
+.dashboard-root .dashboard-table th:first-child { width: 48%; padding-right: 12px; overflow-wrap: anywhere; }
+.dashboard-root .dashboard-table thead th { color: #53616a; font-size: 12px; padding-block: 12px; overflow-wrap: anywhere; }
+.dashboard-root .dashboard-table td, .dashboard-root .dashboard-table tbody th { padding-block: 16px; font-variant-numeric: tabular-nums; }
+.dashboard-root .dashboard-table tbody tr + tr { border-color: #e1e5e8; }
+.dashboard-root .dashboard-average span { color: #53616a; white-space: nowrap; }
+.dashboard-root .dashboard-state, .dashboard-root .dashboard-empty { min-height: 320px; padding: 32px 0; color: #53616a; font-size: 14px; animation: dashboard-state-enter var(--motion-control, 160ms) ease-out; }
+.dashboard-root .dashboard-empty { justify-content: center; }
+.dashboard-root .dashboard-empty h3 { color: #172126; font-size: 20px; font-weight: 600; }
+.dashboard-root .dashboard-empty p { color: #53616a; margin: 8px 0 16px; }
+.dashboard-root .dashboard-empty a, .dashboard-root .dashboard-state button { color: #16604f; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.dashboard-root .dashboard-state button { min-height: 44px; padding: 8px 0; cursor: pointer; }
+.dashboard-root a:focus-visible, .dashboard-root button:focus-visible { outline: 2px solid #16604f; outline-offset: 4px; }
+.dashboard-root .dashboard-refresh { min-height: 0; padding: 16px 0 0; }
+.dashboard-root .dashboard-stale { margin-top: 12px; padding: 12px; border-left: 3px solid #53616a; background: #f5f6f8; color: #53616a; font-size: 13px; line-height: 1.6; }
+.dashboard-root .dashboard-skeleton { display: grid; gap: 24px; margin-top: 24px; }
+.dashboard-root .dashboard-skeleton span { display: block; height: 48px; border-radius: 6px; background: #e1e5e8; animation: dashboard-loading 1.6s ease-in-out infinite alternate; }
+@keyframes dashboard-bar-enter { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes dashboard-state-enter { from { opacity: .6; } to { opacity: 1; } }
+@keyframes dashboard-loading { from { opacity: .5; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-root .dashboard-bar-fill, .dashboard-root .dashboard-skeleton span, .dashboard-root .dashboard-state, .dashboard-root .dashboard-empty, .dashboard-root .dashboard-figure { animation: none; }
+}
+@media (forced-colors: active) {
+  .dashboard-root .dashboard-bar-fill { background: CanvasText; }
+  .dashboard-root .dashboard-bar-track { outline: 1px solid CanvasText; }
+}
