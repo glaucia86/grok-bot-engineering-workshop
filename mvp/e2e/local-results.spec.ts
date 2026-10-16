@@ -86,6 +86,19 @@ test("local fixture: reduced motion, reflow, settled motion and keyboard retry",
   await page.screenshot({ path: info.outputPath("200-percent-zoom-local-fixture.png"), fullPage: true });
 });
 
+test("local fixture: initial retrieval failure has no fabricated results", async ({ page }, info) => {
+  test.skip(baseline, "Redesign state capture only");
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.route("**/api/feedback", route => route.fulfill({ status: 503, body: "Unavailable" }));
+  await page.goto("/");
+  const results = page.locator("#results");
+  await expect(results.getByRole("alert")).toContainText("We couldn't load the feedback");
+  await expect(results.getByRole("button", { name: "Try again" })).toBeVisible();
+  await expect(results.getByRole("table")).toHaveCount(0);
+  await expect(results.getByRole("heading", { name: "No feedback yet" })).toHaveCount(0);
+  await page.screenshot({ path: info.outputPath("initial-error-local-fixture.png"), fullPage: true });
+});
+
 test("local fixture: normal motion runs once and stops after settling", async ({ page }) => {
   test.skip(baseline, "Redesign motion only");
   await page.emulateMedia({ reducedMotion: "no-preference" });
