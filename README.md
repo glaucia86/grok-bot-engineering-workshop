@@ -20,7 +20,18 @@ English · [Português (Brasil)](README.pt-br.md)
 
 </div>
 
-> **How to use this README.** Every step has three parts: the **prompt to paste**, the **expected result**, and a **checkpoint branch**. If you fall behind, check out the checkpoint branch and continue from there. Nobody gets left behind.
+## Start here: Next.js MVP exercise
+
+This checkout is the incomplete MVP starter. For the main workshop, begin with
+[MVP setup, frozen SHA, requirements and exercise prompts](mvp/README.md#reproducible-exercise-entry).
+Run MVP commands from `mvp/`. The feedback form and dashboard are deliberate
+exercise gaps; compare with the complete reference linked there.
+
+The instructions below are **optional legacy Fastify practice**. Their root
+`npm run verify`, numbered checkpoints and required-comment/optional-rating
+contract do not verify or define the MVP exercise.
+
+> **How to use the legacy instructions below.** Every step has three parts: the **prompt to paste**, the **expected result**, and a **checkpoint branch**. If you fall behind, check out the checkpoint branch and continue from there. Nobody gets left behind.
 
 ---
 

@@ -20,7 +20,18 @@
 
 </div>
 
-> **Como usar este README.** Cada passo tem três partes: o **prompt para colar**, o **resultado esperado** e uma **branch de checkpoint**. Se você ficar para trás, é só fazer checkout da branch de checkpoint e continuar dali. Ninguém fica para trás.
+## Comece aqui: exercício MVP em Next.js
+
+Este checkout é o starter incompleto do MVP. Para a trilha principal, comece pelo
+[setup MVP, SHA congelado, requisitos e prompts do exercício](mvp/README.md#reproducible-exercise-entry).
+Execute os comandos MVP em `mvp/`. Formulário e dashboard são lacunas intencionais
+do exercício; a referência completa está no link indicado ali.
+
+As instruções abaixo são **prática extra do Fastify legado**. O `npm run verify`
+da raiz, os checkpoints numerados e o contrato de comentário obrigatório/nota
+opcional não verificam nem definem o exercício MVP.
+
+> **Como usar as instruções legadas abaixo.** Cada passo tem três partes: o **prompt para colar**, o **resultado esperado** e uma **branch de checkpoint**. Se você ficar para trás, é só fazer checkout da branch de checkpoint e continuar dali. Ninguém fica para trás.
 >
 > Os prompts estão em inglês de propósito: são exatamente os mesmos que usaremos ao vivo. Cole como estão.
 

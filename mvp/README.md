@@ -138,15 +138,19 @@ persistence verification as unverified or blocked, not as a localhost pass.
 
 ## Reproducible exercise entry
 
-The reviewed starting checkpoint before this optional-comment alignment is
-`4161cc77968ec5b11cf5495a47e93207efea039a`. This patch changes that base; it does
-not declare a new instructor-approved frozen revision. After human merge, record
-the resulting full checkpoint SHA in issue #21 and use that SHA, not a moving
-branch name, for the workshop:
+The verified frozen code baseline is
+`d15eea431a214210160eb6e363945ef42b3fbcb8`, recorded in
+[issue #21's post-merge handoff](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/21#issuecomment-6206554790).
+It includes optional comments and case-insensitive grouping, while retaining the
+UI exercise gaps. This documentation correction does not approve or move a new
+frozen revision. Before starting, confirm the instructor's approved SHA in #21;
+if it differs, resolve that with the instructor rather than substituting main.
+For the recorded baseline, in the authorized exercise repository/fork:
 
 ```sh
 git fetch origin
-git switch --detach <instructor-approved-full-checkpoint-SHA>
+git switch --detach d15eea431a214210160eb6e363945ef42b3fbcb8
+git rev-parse HEAD
 git switch -c exercise/feedback-ui
 cd mvp
 npm ci
@@ -157,12 +161,15 @@ npm run build
 npm run verify:http
 ```
 
-Read the requirements outside this starter at these fixed reference documents
-before following prompts that mention `spec.md` or `docs/issues/README.md`:
+Read these fixed reference documents **outside this starter**. `spec.md` and
+`docs/issues/README.md` are not local files here; when an exercise prompt names
+them, use the links below instead. The local `docs/inception.md` is an earlier
+snapshot; use the pinned reference inception for the agreed MVP contract.
 
-- [Technical specification](https://github.com/glaucia86/grok-bot-engineering-workshop/blob/b4a137b82e52ef5942e3568106f7c8876ba74f26/spec.md)
-- [Inception and acceptance criteria](https://github.com/glaucia86/grok-bot-engineering-workshop/blob/b4a137b82e52ef5942e3568106f7c8876ba74f26/docs/inception.md)
-- [Issue index and issue #21](https://github.com/glaucia86/grok-bot-engineering-workshop/blob/b4a137b82e52ef5942e3568106f7c8876ba74f26/docs/issues/README.md)
+- [Technical specification](https://github.com/glaucia86/grok-bot-engineering-workshop/blob/c69fa31ecccc85b5d8b9023b72568d319f2e2995/spec.md)
+- [Inception and acceptance criteria](https://github.com/glaucia86/grok-bot-engineering-workshop/blob/c69fa31ecccc85b5d8b9023b72568d319f2e2995/docs/inception.md)
+- [Issue index and issue #21](https://github.com/glaucia86/grok-bot-engineering-workshop/blob/c69fa31ecccc85b5d8b9023b72568d319f2e2995/docs/issues/README.md)
+- [MVP exercise prompts and roles](https://github.com/glaucia86/grok-bot-engineering-workshop/blob/c69fa31ecccc85b5d8b9023b72568d319f2e2995/README.md#team-and-workshop-prompts)
 
 Those documents include historical snapshots: PRs #9, #10 and #27 are merged.
 Use their approved optional-comment and case-insensitive grouping contract.
@@ -175,3 +182,26 @@ those as exercises using the existing shared schema/API and UI primitives.
 Do not copy the main page, components or CSS into this checkpoint. Local checks
 above cover the supported base only; preview acceptance needs a separately
 proven isolated environment. Only Glaucia approves merges and the frozen SHA.
+
+### Test and role setup: required versus optional
+
+`npm ci` in `mvp/` installs the committed base test tools, including Vitest and
+PGlite. The commands above run the 72 supported schema/API/local persistence
+tests and the localhost HTTP smoke; no DOM library or browser installation is
+needed for those checks. PGlite substitutes the database adapter in tests; it is
+not a runtime replacement for the production Neon HTTP adapter.
+
+During the UI exercise, choose suitable component/browser tests as part of the
+approved design. The reference uses DOM/component tools and Playwright, but
+adding those dependencies is an implementation choice, not a prerequisite for
+running this starter. This checkpoint has no `test:e2e` script. For actual
+preview acceptance, follow the separately prepared
+[preview QA instructions](https://github.com/glaucia86/grok-bot-engineering-workshop/blob/c69fa31ecccc85b5d8b9023b72568d319f2e2995/mvp/PREVIEW_QA.md)
+with authorized isolated data and preview access; the base commands cannot
+prove a valid remote form-to-dashboard journey.
+
+Bot creation and role skills are separate from npm setup. A prompt's mention of
+`principle-prove-it-works` does not make it available: that skill is not vendored
+in this frozen checkpoint. Confirm required role skills before the live session;
+keep the evidence rule explicit and report missing tooling rather than silently
+substituting the Fastify verifier or claiming unperformed acceptance checks.
