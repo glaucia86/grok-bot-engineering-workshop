@@ -92,14 +92,19 @@ test("local fixture: chart and table show the same one-decimal aggregates", asyn
   await expect(chart).toBeVisible();
   await expect(chart.getByText("4.3", { exact: true })).toBeVisible();
   await expect(chart.getByText("3.0", { exact: true })).toBeVisible();
-  // Inspect SVG geometry only for the chart's quantitative encoding, not React internals.
-  const bars = chart.locator(".recharts-bar-rectangle path");
+  // Verify the rendered horizontal encoding against the fixed 0–5 scale.
+  const bars = chart.locator(".dashboard-bar-fill");
   await expect(bars).toHaveCount(2);
-  const taller = await bars.nth(0).boundingBox();
-  const shorter = await bars.nth(1).boundingBox();
-  expect(taller?.height).toBeGreaterThan(0);
-  expect(shorter?.height).toBeGreaterThan(0);
-  expect(taller!.height / shorter!.height).toBeCloseTo(4.3 / 3, 2);
+  await expect.poll(async () => {
+    const longer = await bars.nth(0).boundingBox();
+    const shorter = await bars.nth(1).boundingBox();
+    return longer!.width / shorter!.width;
+  }).toBeCloseTo(4.3 / 3, 2);
+  await expect.poll(async () => {
+    const track = await chart.locator(".dashboard-bar-track").first().boundingBox();
+    const longer = await bars.nth(0).boundingBox();
+    return longer!.width / track!.width;
+  }).toBeCloseTo(4.3 / 5, 2);
   await page.screenshot({ path: testInfo.outputPath("two-talks-local-fixture.png"), fullPage: true });
 });
 
