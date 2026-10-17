@@ -15,6 +15,29 @@ export function WorkshopShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const currentPage = navigation.find(item => item.href === pathname)?.label ?? "Workshop";
 
+  if (pathname === "/") {
+    return (
+      <div className="loop-site loop-site-home">
+        <a className="skip-link" href="#main-content">Skip to content</a>
+        <header className="company-header">
+          <div className="company-header-inner">
+            <Link href="/" className="wordmark loop-wordmark" aria-label="Talk Feedback home">
+              <span className="loop-brand-icon" aria-hidden="true"><RefreshCw size={21} strokeWidth={2.2} /></span>
+              <span>Talk<span className="wordmark-light">Feedback</span></span>
+            </Link>
+            <nav aria-label="Main navigation">
+              {navigation.map(({ href, label }) => (
+                <Link key={href} href={href} aria-current={pathname === href ? "page" : undefined}>{label}</Link>
+              ))}
+            </nav>
+          </div>
+        </header>
+        <main id="main-content" className="company-main" tabIndex={-1}>{children}</main>
+        <footer className="company-footer"><span>Talk Feedback</span><p>Packt workshop · Participant feedback</p></footer>
+      </div>
+    );
+  }
+
   return (
     <div className="loop-site">
       <a className="skip-link" href="#main-content">Skip to content</a>
@@ -32,12 +55,7 @@ export function WorkshopShell({ children }: { children: ReactNode }) {
             </Link>
           ))}
         </nav>
-        <div className="sidebar-loop-note">
-          <RefreshCw size={21} aria-hidden="true" />
-          <strong>A little feedback.<br />A better next iteration.</strong>
-          <p>Build, listen, improve.<br />Keep the loop going.</p>
-        </div>
-        <div className="sidebar-workshop"><span className="workshop-monogram" aria-hidden="true">P</span><div><strong>Packt workshop</strong><span>Loop Engineering</span></div></div>
+        <div className="sidebar-workshop"><span className="workshop-monogram" aria-hidden="true">P</span><div><strong>Packt workshop</strong><span>Participant feedback</span></div></div>
       </aside>
       <div className="loop-workspace">
         <header className="loop-topbar">
@@ -45,7 +63,7 @@ export function WorkshopShell({ children }: { children: ReactNode }) {
           <span className="loop-topbar-note">Learn. Share. Improve.</span>
         </header>
         <main id="main-content" className="loop-main" tabIndex={-1}>{children}</main>
-        <footer className="loop-footer"><span>Talk Feedback</span><p>Build something. Learn from people. Make it better.</p></footer>
+        <footer className="loop-footer"><span>Talk Feedback</span><p>Packt workshop</p></footer>
       </div>
     </div>
   );
