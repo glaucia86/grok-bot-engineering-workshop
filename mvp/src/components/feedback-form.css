@@ -1,0 +1,48 @@
+/* Form-only refinement; shell geometry belongs to the shared visual direction. */
+.feedback-panel { min-width: 0; color: #172126; }
+.feedback-panel .panel-heading h2 { margin-top: 0; }
+.feedback-panel .form-note { font-size: 13px; line-height: 1.6; margin-block: 12px; color: #53616a; }
+.feedback-panel .form-field { margin-bottom: 24px; }
+.feedback-panel .form-field label, .feedback-panel .rating-field legend { color: #172126; line-height: 1.5; }
+.feedback-panel .form-field input, .feedback-panel .form-field textarea { background: #fff; color: #172126; border: 1px solid #7a8790; border-radius: 6px; font-size: 16px; padding: 12px; transition: border-color var(--motion-control, 160ms) var(--motion-ease, ease); }
+.feedback-panel .form-field input { min-height: 48px; }
+.feedback-panel .form-field textarea { min-height: 112px; }
+.feedback-panel .form-field input::placeholder, .feedback-panel .form-field textarea::placeholder { color: #53616a; }
+.feedback-panel .form-field :is(input, textarea):focus-visible { outline: 2px solid #16604f; outline-offset: 3px; box-shadow: none; border-color: #16604f; }
+.feedback-panel .form-field [aria-invalid="true"] { border-color: #a12b25; }
+.feedback-panel .field-hint, .feedback-panel .rating-field > p:not(.field-error) { font-size: 13px; line-height: 1.5; color: #53616a; }
+.feedback-panel .field-error { color: #a12b25; font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
+.feedback-panel .rating-options { gap: 8px; }
+.feedback-panel .rating-option span { pointer-events: none; }
+.feedback-panel .rating-option { min-width: 44px; max-width: 52px; min-height: 48px; }
+.feedback-panel .rating-option span { height: 48px; border-radius: 6px; border: 1px solid #7a8790; background: #fff; color: #16604f; transition: background-color var(--motion-control, 160ms) var(--motion-ease, ease), border-color var(--motion-control, 160ms) var(--motion-ease, ease), transform var(--motion-control, 160ms) var(--motion-ease, ease); }
+.feedback-panel .rating-option input:checked + span { border: 2px solid #16604f; background: #edf5f2; }
+.feedback-panel .rating-option[data-preview] span { background: #edf5f2; }
+.feedback-panel .rating-option input:hover:not(:disabled) + span { border-color: #16604f; transform: scale(1.04); }
+.feedback-panel .rating-option input:active:not(:disabled) + span { transform: scale(.98); }
+.feedback-panel .rating-option input:focus-visible + span { outline: 2px solid #16604f; outline-offset: 3px; }
+.feedback-panel .rating-selection { margin-top: 12px; }
+.feedback-panel .rating-preview { min-height: 20px; margin-top: 0; }
+.feedback-panel .form-field :is(input, textarea):disabled, .feedback-panel .rating-option input:disabled + span { background: #f5f6f8; opacity: 1; color: #53616a; cursor: not-allowed; }
+.feedback-panel .submit-button { width: 100%; height: 48px; min-height: 48px; border-radius: 6px; background: #16604f; color: #fff; padding: 12px 16px; transition: background-color var(--motion-control, 160ms) var(--motion-ease, ease); transform: none; }
+.feedback-panel .submit-button:hover:not(:disabled) { background: #104b3e; }
+.feedback-panel .submit-button:active:not(:disabled) { background: #0b3c31; }
+.feedback-panel .submit-button:focus-visible { outline: 2px solid #16604f; outline-offset: 4px; box-shadow: none; }
+.feedback-panel .submit-button:disabled { background: #53616a; color: #fff; opacity: 1; cursor: wait; }
+.feedback-panel .save-error { padding: 12px; margin-block: 0 16px; border: 1px solid #a12b25; border-radius: 6px; color: #a12b25; background: #fff; overflow-wrap: anywhere; }
+.feedback-panel .save-success { color: #16604f; padding: 16px; margin-top: 16px; border: 1px solid #16604f; border-radius: 6px; background: #fff; line-height: 1.6; }
+.feedback-panel .save-success a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: underline; text-underline-offset: 3px; font-weight: 600; }
+.feedback-panel .save-success a:focus-visible { outline: 2px solid #16604f; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .feedback-panel *, .feedback-panel *::before, .feedback-panel *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+  .feedback-panel .rating-option input:hover:not(:disabled) + span, .feedback-panel .rating-option input:active:not(:disabled) + span { transform: none; }
+}
+@media (forced-colors: active) {
+  .feedback-panel .rating-option span { color: CanvasText; border-color: ButtonText; background: Canvas; }
+  .feedback-panel .rating-option input:checked + span { border-color: Highlight; }
+  .feedback-panel .rating-option input:focus-visible + span { outline-color: Highlight; }
+}
+
+@media (max-width: 360px) {
+  .feedback-panel .rating-options { gap: 6px; }
+}
