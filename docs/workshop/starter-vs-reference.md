@@ -1,7 +1,7 @@
 # Starter and reference checkpoint
 
 The workshop starts from `checkpoint/mvp-base` at `d15eea431a214210160eb6e363945ef42b3fbcb8`.
-The completed reference is `341de00b` (`main` after PR #46; this guide is added on top).
+The completed reference is [`341de005662906e3c3ce46d45e12461e45c24a55`](https://github.com/glaucia86/grok-bot-engineering-workshop/commit/341de005662906e3c3ce46d45e12461e45c24a55) (`main` after PR #46; this guide is added on top).
 
 | Capability | Starter | Reference |
 | --- | --- | --- |
