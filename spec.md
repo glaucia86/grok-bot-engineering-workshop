@@ -14,6 +14,15 @@ Prepare a complete reference application on main before the workshop, including 
 
 The repository contains two independent applications. The root Fastify exercise remains an in-memory teaching example. The Next.js MVP is a separate application with persistent feedback. At the inspected snapshot, its base API, validation, database migration, and UI primitives exist; the form and dashboard do not yet. That is a historical implementation snapshot; the reference UI has since merged through #26/#27, while the exercise checkpoint remains incomplete by design. Do not present the starter homepage or a successful deployment as the finished MVP.
 
+### 90-minute teaching boundary
+
+The October 17 scope decision prioritizes the essential engineering loop within the existing 90-minute slot. The [time budget and cut line](docs/inception.md#90-minute-budget-and-cut-line) preserve time to create the three bots, test, review and recover. They are a planning budget, not proof that a full timed rehearsal has passed.
+
+- **Core exercise:** from the frozen starter, build the feedback form and a simple results view using the existing shared schema, `POST /api/feedback` and `GET /api/feedback`. Keep confirmation/reset, rejected-input retention, grouped average/count, an average-per-talk chart and empty/error states. Create FDE, QA and DevOps, inspect commit-specific evidence, and leave the approval/merge decision to the human.
+- **Reference enhancement:** the approved reference on main includes a selected-talk distribution of ratings 1–5 and written feedback, supplied by `GET /api/feedback/insights`. Show it as a prebuilt example or optional extra only after the core is verified. Implementing that endpoint, its detail UI and the polished reference layout is **not required** for the starter exercise. Do not infer distribution or comments from aggregate averages/counts.
+- The core exercise is compared with the reference's shared behavior, not pixel-for-pixel feature parity. The approved reference UI stays intact. The exercise's average-per-talk chart and the reference's detailed distribution have different explicit purposes; neither is evidence that the other's chart criterion ran.
+- Infrastructure, credentials, migrations, role-skill availability and isolated preview readiness must be prepared before the session. If remote acceptance is blocked, use previously verified, clearly labeled evidence for explanation and record BLOCKED; a shorter agenda never turns local fixtures into remote proof.
+
 ## User Stories
 
 1. As an attendee, I want to identify a talk and myself when leaving feedback, so that my submission has useful context.
@@ -40,7 +49,7 @@ The repository contains two independent applications. The root Fastify exercise 
 - The root application uses Fastify and an in-memory store. It retains `POST /feedback`, `GET /feedback`, and `GET /talks/:talkId/rating`. Rating remains optional there; its rating summary counts rated submissions and uses two-decimal averages. The MVP does not silently change that exercise.
 - The MVP uses Next.js App Router with TypeScript and React. Route handlers are the application API/BFF; shared Zod validation precedes database access. Drizzle connects to Neon over its HTTP adapter. Node.js 24 and npm are the documented execution baseline.
 - Tailwind CSS 4, shadcn/ui primitives, lucide-react, and shadcn/Recharts chart primitives are available for the live UI. At the historical snapshot, their presence alone did not mean the form or dashboard was implemented; current main includes both.
-- The Vercel application root is the MVP application. Next.js does not provide `/feedback` as an alias: that route returns 404 in this app. The separate Fastify application still serves its existing route.
+- The Vercel application root is `mvp`. The MVP API is `/api/feedback`; it does not alias the separate Fastify API. The frozen starter has no `/feedback` or `/results` UI. Current reference main has those two UI routes, alongside its homepage; their presence does not change the Fastify contract.
 - No new service, authentication system, repository layer, or database abstraction is required by this specification. Use existing validation, route-handler, statistics, and database seams.
 
 ### Observable MVP API contract
@@ -59,14 +68,14 @@ The repository contains two independent applications. The root Fastify exercise 
 - Return an array of talk summaries with `talkId`, `average`, and `count`; return an empty array when there are no records. This endpoint exposes aggregates, not the authors and comments of individual submissions.
 - Every MVP submission has a rating. Count all submissions in the talk's group and round the arithmetic mean to one decimal, half up (`4.25` → `4.3`). JSON numeric `3` remains a number; the dashboard renders it as `3.0` when displaying one decimal.
 - Approved target: trimmed talk names are compared case-insensitively. `Talk A` and `talk a` contribute to one average and count. At the historical inspected commit, the statistics function still grouped exact strings; case-insensitive grouping is implemented in [PR #10](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/10), since merged. That patch uses a lowercase grouping key, retains the first encountered spelling for display, and leaves input records unchanged; these are the patch’s implementation choices, not new display-casing requirements. No locale-specific collation, accent folding, slug system, or preferred display casing is agreed here.
-- Ordering, pagination, and talk lookup endpoints are not part of the agreed contract. The current GET reads the stored talk/rating rows and aggregates them in application memory; this is a workshop-scale design, not a scaling claim.
+- Ordering, pagination, and talk lookup endpoints are not required by the core exercise contract. The reference enhancement has a separate insights endpoint; do not add it to the core exercise implicitly. The current GET reads the stored talk/rating rows and aggregates them in application memory; this is a workshop-scale design, not a scaling claim.
 
 ### Form and dashboard: complete reference and checkpoint exercises
 
 - The public form submits the shared contract. On success, show confirmation and reset. On rejection, preserve the entered values and show field errors. No login or administrative flow is introduced.
-- The dashboard lists every talk with feedback, its one-decimal average, and count. Render one bar per grouped talk, with height equal to the displayed average and a readable value label or tooltip.
+- Both targets list every talk with feedback, its one-decimal average and count. For the **core exercise**, render one bar per grouped talk, with height equal to the displayed average and a readable value label or tooltip. The **approved reference enhancement** instead pairs its comparison table with a selected-talk five-bin rating-count distribution; do not require an additional average-per-talk chart in that approved UI.
 - When there is no data, show the empty state. After a valid submission, the new talk/result must be visible through the dashboard or public GET, and must remain visible after reload. API aggregation alone cannot verify the original comment/author; the POST response covers those fields, while GET/dashboard proves the created contribution.
-- No specific UI URL, page arrangement, polling frequency, or optimistic-update strategy has been decided. Do not turn those implementation choices into acceptance requirements without a decision.
+- The reference uses `/`, `/feedback` and `/results`. The core exercise does not need to reproduce its page arrangement, detailed insights or visual polish. Polling frequency and optimistic updates remain implementation choices, not additional acceptance requirements.
 
 ### Persistence and environment lifecycle
 
@@ -95,14 +104,14 @@ The lower-level seams already present are supporting diagnostics, not substitute
 - Shared schema/statistics unit tests exercise invalid types, required talk/author text, accepted omitted/empty/blank comments normalized to `""`, trim behavior, comment boundaries, rating boundaries and fractions, aggregation, and rounding. Extend existing cases for case-insensitive grouping and the explicit 4.25 boundary.
 - Actual route-handler tests substitute the existing database boundary and check status/payload, normalized insert values, no database access on rejection, empty summaries, and failure propagation.
 - Persistence tests invoke those same handlers with Drizzle against an isolated on-disk PGlite database, apply the committed migration, and reopen the database. Direct local test-database queries are test fixtures/assertions, not a requirement for QA to inspect remote production data.
-- The existing production-server HTTP smoke verifier owns its localhost process, blanks `DATABASE_URL`, and checks the homepage, Next.js `/feedback` 404, and invalid feedback 400. It neither sends valid feedback nor targets a preview.
+- The production-server HTTP smoke verifier owns its localhost process and blanks `DATABASE_URL`. The frozen starter checks its homepage, legacy `POST /feedback` 404 and invalid feedback 400. Current reference checks the homepage and both UI routes plus invalid feedback 400. Neither verifier sends valid feedback or targets a preview.
 - The root Fastify verifier starts its own localhost application. Its pass cannot establish any MVP, Neon, or preview behavior.
 
 ### Required final evidence
 
 1. Valid creation and public observation; reject invalid cases without adding a contribution. Accept omitted, empty and whitespace-only comments as `""` in the POST response and storage. Cover comment length after trimming (0, 1, 1000 accepted; 1001 rejected), non-string comments including `null`, missing/blank/wrong-type talk/author fields, and ratings omitted, 0, 1, 5, 6, fractional, and string-valued.
 2. Identical field error text in API and form; successful confirmation/reset and rejected-input retention.
-3. Grouped talk count and one-decimal mean, including `Talk A`/`talk a` and a mean of 4.25; graph value and label/tooltip agree.
+3. Grouped talk count and one-decimal mean, including `Talk A`/`talk a` and a mean of 4.25. For the core exercise, average-per-talk bars and labels/tooltips agree with those means. When judging the approved reference enhancement, verify its exact per-score counts and labels against insights data instead; do not derive counts from rounded means or demand the exercise chart in the reference UI.
 4. Empty state in isolated data; reload shows the new contribution; a fresh application instance connected to the same test database still observes it.
 5. No committed secrets, with all finding values redacted. Do not treat an ignored environment file or a build pass as a secret audit.
 
