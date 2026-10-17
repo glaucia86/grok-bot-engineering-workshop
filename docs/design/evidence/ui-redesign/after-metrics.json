@@ -1,0 +1,83 @@
+[
+  {
+    "name": "home-390.png",
+    "overflowX": false,
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "small": [
+      "Grok Bot:21"
+    ]
+  },
+  {
+    "name": "feedback-390.png",
+    "overflowX": false,
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "small": [
+      "Grok Bot:21"
+    ]
+  },
+  {
+    "name": "results-390.png",
+    "overflowX": false,
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "small": [
+      "Grok Bot:21"
+    ]
+  },
+  {
+    "name": "home-768.png",
+    "overflowX": false,
+    "scrollWidth": 768,
+    "innerWidth": 768,
+    "small": [
+      "Grok Bot:21"
+    ]
+  },
+  {
+    "name": "feedback-768.png",
+    "overflowX": false,
+    "scrollWidth": 768,
+    "innerWidth": 768,
+    "small": [
+      "Grok Bot:21"
+    ]
+  },
+  {
+    "name": "results-768.png",
+    "overflowX": false,
+    "scrollWidth": 768,
+    "innerWidth": 768,
+    "small": [
+      "Grok Bot:21"
+    ]
+  },
+  {
+    "name": "home-1440.png",
+    "overflowX": false,
+    "scrollWidth": 1440,
+    "innerWidth": 1440,
+    "small": [
+      "Grok Bot:21"
+    ]
+  },
+  {
+    "name": "feedback-1440.png",
+    "overflowX": false,
+    "scrollWidth": 1440,
+    "innerWidth": 1440,
+    "small": [
+      "Grok Bot:21"
+    ]
+  },
+  {
+    "name": "results-1440.png",
+    "overflowX": false,
+    "scrollWidth": 1440,
+    "innerWidth": 1440,
+    "small": [
+      "Grok Bot:21"
+    ]
+  }
+]
