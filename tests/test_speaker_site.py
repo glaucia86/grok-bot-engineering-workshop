@@ -22,7 +22,8 @@ class SpeakerSite(unittest.TestCase):
         self.assertIn('OPCIONAL', slide['do'][1]['pt'])
         self.assertIn('OPTIONAL', slide['do'][2]['en'])
         self.assertIn('OPCIONAL', slide['do'][2]['pt'])
-        self.assertIn('Q&A starts at 12:22', ' '.join(line['en'] for line in slide['say']))
+        self.assertIn('Recovery ends at 12:22 BRT', ' '.join(line['en'] for line in slide['say']))
+        self.assertIn('Questions open at 12:26 BRT', ' '.join(line['en'] for line in slide['say']))
 
     def test_rule_run_sheet_click_count_uses_slide_source(self):
         from unittest.mock import patch

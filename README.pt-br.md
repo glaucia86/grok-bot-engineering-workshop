@@ -45,7 +45,7 @@ Em 16 de outubro, os PRs [#9](https://github.com/glaucia86/grok-bot-engineering-
 | 70–82 | Recuperação primeiro; rotina opcional depois | Concluir verificação/revisão do núcleo ou explicar bloqueios; rotina só com núcleo concluído |
 | 82–90 | Perguntas | Revisar aprendizados e prática extra |
 
-Siga a [separação entre núcleo e extras](spec.md#90-minute-teaching-boundary) e o [orçamento de tempo e regra de corte](docs/inception.md#90-minute-budget-and-cut-line). Os minutos 70–82 (12:10–12:22 Brasília) ficam reservados primeiro à recuperação; 82–90 continua sendo o bloco de perguntas. Este é um orçamento de planejamento, **não é resultado de ensaio cronometrado**. A infraestrutura é preparada **antes** do evento, fora desses 90 minutos.
+Siga a [separação entre núcleo e extras](spec.md#90-minute-teaching-boundary) e o [orçamento de tempo e regra de corte](docs/inception.md#90-minute-budget-and-cut-line). Os minutos 70–82 (12:10–12:22 Brasília) ficam reservados primeiro à recuperação, que nunca passa de 12:22 BRT. O bloco de recap/Q&A começa às 12:22 BRT (10:22 ET), os bloqueios são ditos em voz alta ao entrar nele e as perguntas abrem às 12:26 BRT. Este é um orçamento de planejamento, **não é resultado de ensaio cronometrado**. A infraestrutura é preparada **antes** do evento, fora desses 90 minutos.
 
 O [guia da apresentadora](docs/speaker/guia-glaucia.md) e o deck foram alinhados nesta mudança com a mesma regra de recuperação prioritária nas issues [#17](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/17) e [#20](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/20). A revisão humana continua pendente, e ainda não houve ensaio cronometrado nem validação visual por humano.
 

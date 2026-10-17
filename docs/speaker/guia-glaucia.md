@@ -53,7 +53,7 @@ Minuto a minuto. Para cada slide: o que acontece e o que cortar se estiver atras
 | 11:47 | 9:47 | 15 | **Ao vivo:** enviar feedback, ver a barra no dashboard | Preview | Envie só um feedback. Não peça à plateia. |
 | 11:55 | 9:55 | 16 | Quem decide sou eu: desfaz em 1 min × humano decide | Deck | Leia só os títulos dos dois cartões. |
 | 11:58 | 9:58 | 17 | **Ao vivo:** ler o PR (mudou, QA, CI) e fazer o merge | GitHub | Se vier FAIL, não corrija ao vivo. Mostre como exemplo e siga. |
-| 12:10 | 10:10 | 18 | **Recuperação:** concluir núcleo, testes e revisão humana ou declarar BLOCKED; rotina só se tudo estiver concluído | Formulário / dashboard / evidências; Grok Bot só se opcional | A rotina já está omitida. Use o tempo para recuperar o núcleo. Se atrasar mais, não estenda: o Q&A começa às 12:22, e diga os bloqueios em voz alta. |
+| 12:10 | 10:10 | 18 | **Recuperação:** concluir núcleo, testes e revisão humana ou declarar BLOCKED; rotina só se tudo estiver concluído | Formulário / dashboard / evidências; Grok Bot só se opcional | A rotina já está omitida. Use o tempo para recuperar o núcleo, mas nunca passe de 12:22 BRT. Ao entrar no recap, diga os bloqueios em voz alta. As perguntas abrem às 12:26 BRT. |
 | 12:22 | 10:22 | 19 | Recap: três frases (3 cliques) | Deck | Nunca corte o recap. Leva um minuto. |
 | 12:23 | 10:23 | 20 | Economizar uso | Deck | Pule este slide. Termine exatamente às 12:30. |
 | 12:24 | 10:24 | 21 | **OPCIONAL:** pstack (`/poteto-mode`, `/poteto-help`) | Deck | Pule este slide. Vá direto para as perguntas. |
@@ -970,7 +970,7 @@ Você disse a decisão em voz alta. Com todos os critérios obrigatórios em PAS
 
 **Janela:** 12:10–12:22 (Brasília) = 10:10–10:22 ET · slides 18 · **Meta:** Recuperar o núcleo: concluir verificação, testes independentes e revisão humana do formulário e dashboard, ou declarar BLOCKED com a evidência que falta. Rotina apenas se tudo estiver concluído e sobrar tempo.
 
-✂️ **Se atrasar, corte isto:** a rotina já está omitida; use o tempo para recuperar o núcleo; se atrasar mais, não estenda: Q&A começa 12:22 e os bloqueios são ditos em voz alta.
+✂️ **Se atrasar, corte isto:** a rotina já está omitida; use o tempo para recuperar o núcleo, sem passar de 12:22 BRT; ao entrar no recap, diga os bloqueios em voz alta; as perguntas abrem às 12:26 BRT.
 
 ### 🖱 HANDS-ON · passo a passo
 
@@ -1014,18 +1014,18 @@ Do not comment, apply labels, edit files, open PRs, close issues, merge, deploy,
 > *Se tudo estiver concluído e sobrar tempo, aqui está um rascunho. Ele está desativado.*  
 > 🔊 everything → É-vri-thin; remains → ri-MÊINS; disabled → dis-ÊI-bold
 
-> "Q&A starts at 12:22, even if something is still blocked. I say it out loud."  
-> *O Q&A começa às 12:22, mesmo que algo ainda esteja BLOCKED. Eu digo isso em voz alta.*  
-> 🔊 starts → STÁRTS; blocked → BLÓCT; out loud → AUT LÁUD
+> "Recovery ends at 12:22 BRT. Then recap starts, and I say every blocker out loud. Questions open at 12:26 BRT."  
+> *A recuperação termina às 12:22 BRT. Então começa o recap, e eu digo cada bloqueio em voz alta. As perguntas abrem às 12:26 BRT.*  
+> 🔊 recovery → ri-CÂ-ve-ri; ends → ÉNDS; recap → RÍ-cap; blocker → BLÓ-ker; questions → KUÉS-tchans; open → ÔU-pen; out loud → AUT LÁUD
 
 **Perguntas prováveis**
 
-- **Q:** What if the core is still incomplete at 12:22? *(E se o núcleo ainda estiver incompleto às 12:22?)*  
-  **A:** Start Q&A on time and state what remains BLOCKED and which evidence is missing. *(Comece o Q&A no horário e diga o que continua BLOCKED e qual evidência falta.)*
+- **Q:** What if the core is still incomplete at 12:22 BRT? *(E se o núcleo ainda estiver incompleto às 12:22 BRT?)*  
+  **A:** Stop recovery, start recap, and state what remains BLOCKED and which evidence is missing. Open questions at 12:26 BRT. *(Encerre a recuperação, comece o recap e diga o que continua BLOCKED e qual evidência falta. Abra as perguntas às 12:26 BRT.)*
 - **Q:** Can I shorten the routine to fit? *(Posso encurtar a rotina para caber?)*  
   **A:** No. Skip it completely unless the core, tests, and human review are complete and time remains. *(Não. Pule-a por completo, a menos que núcleo, testes e revisão humana estejam concluídos e sobre tempo.)*
 
-✂️ **Se atrasar:** The routine is already omitted. Use the time to recover the core. If you fall further behind, do not extend: Q&A starts at 12:22, and say the blockers aloud. *(A rotina já está omitida. Use o tempo para recuperar o núcleo. Se atrasar mais, não estenda: o Q&A começa às 12:22, e diga os bloqueios em voz alta.)*
+✂️ **Se atrasar:** The routine is already omitted. Use the time to recover the core, but never past 12:22 BRT. As recap starts, say the blockers aloud. Questions open at 12:26 BRT. *(A rotina já está omitida. Use o tempo para recuperar o núcleo, mas nunca passe de 12:22 BRT. Ao entrar no recap, diga os bloqueios em voz alta. As perguntas abrem às 12:26 BRT.)*
 
 ### ➡️ Transição
 
@@ -1034,7 +1034,7 @@ Do not comment, apply labels, edit files, open PRs, close issues, merge, deploy,
 
 ### ✅ Checkpoint
 
-Verificação do núcleo, testes independentes e revisão humana estão concluídos, ou cada lacuna restante está BLOCKED com a evidência ausente dita em voz alta. O Q&A começou às 12:22. A rotina apareceu somente se tudo estava concluído e sobrou tempo.
+Verificação do núcleo, testes independentes e revisão humana estão concluídos, ou cada lacuna restante está BLOCKED com a evidência ausente dita em voz alta quando o recap começa às 12:22 BRT. A recuperação não passou de 12:22; as perguntas abriram às 12:26 BRT. A rotina apareceu somente se tudo estava concluído e sobrou tempo.
 
 ---
 
