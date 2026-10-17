@@ -72,6 +72,8 @@ export function TalkResults({ talks, feedbackHref = "#feedback", insights = fals
 
   const selected = talks.find(talk => talk.talkId === selection) ?? talks[0];
   const mostReviewed = talks.reduce((most, talk) => talk.count > most.count ? talk : most);
+  const leadingCount = talks.filter(talk => talk.count === mostReviewed.count).length;
+  const tied = leadingCount > 1;
   const responses = talks.reduce((total, talk) => total + talk.count, 0);
   const header = <>
     <div className="results-selected-title"><p>Selected talk</p><h3>{selected.talkId}</h3></div>
@@ -103,7 +105,7 @@ export function TalkResults({ talks, feedbackHref = "#feedback", insights = fals
     <dl className="results-overview" aria-label="Workshop response summary">
       <div className="results-metric"><dt>Responses received</dt><dd><strong className="results-total">{responses}</strong></dd></div>
       <div className="results-metric"><dt>{talks.length === 1 ? "Talk reviewed" : "Talks reviewed"}</dt><dd><strong>{talks.length}</strong></dd></div>
-      <div className="results-metric results-leading"><dt>Most reviewed talk</dt><dd><p>{mostReviewed.talkId}</p><span>{mostReviewed.count} {mostReviewed.count === 1 ? "rating" : "ratings"} received</span></dd></div>
+      <div className="results-metric results-leading"><dt>{tied ? "Most reviewed talks" : "Most reviewed talk"}</dt><dd><p>{tied ? `${leadingCount} tied` : mostReviewed.talkId}</p><span>{mostReviewed.count} {mostReviewed.count === 1 ? "rating" : "ratings"} {tied ? "each" : "received"}</span></dd></div>
     </dl>
     {insights ? <TalkInsights talkId={selected.talkId} revision={revision} header={header} comparison={comparison} /> : <>
       <Card className="results-analytics" role="region" aria-label="Selected talk feedback">

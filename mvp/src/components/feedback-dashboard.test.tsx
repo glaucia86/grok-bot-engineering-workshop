@@ -207,3 +207,29 @@ it("keeps supporting labels at AA contrast and the selector boundary identifiabl
   const notice = screen.getByText(/Previously loaded results/);
   expect((luminance(getComputedStyle(notice).backgroundColor) + 0.05) / (luminance(getComputedStyle(notice).color) + 0.05)).toBeGreaterThanOrEqual(4.5);
 });
+
+it.each([
+  { leadingCount: 2, ratingCount: 1, expectedCount: "1 rating each" },
+  { leadingCount: 3, ratingCount: 4, expectedCount: "4 ratings each" },
+])("reports $leadingCount tied leaders with $ratingCount ratings rather than choosing a sole leader", ({ leadingCount, ratingCount, expectedCount }) => {
+  const talks = Array.from({ length: leadingCount }, (_, index) => ({ talkId: `Leading talk ${index + 1}`, average: 4, count: ratingCount }));
+  if (ratingCount > 1) talks.push({ talkId: "Less reviewed talk", average: 5, count: 1 });
+  render(<TalkResults talks={talks} />);
+  const summary = screen.getByLabelText("Workshop response summary");
+  expect(within(summary).getAllByRole("term")[2].textContent).toBe("Most reviewed talks");
+  const leader = within(summary).getAllByRole("definition")[2];
+  expect(within(leader).getByText(`${leadingCount} tied`, { exact: true })).toBeTruthy();
+  expect(within(leader).getByText(expectedCount, { exact: true })).toBeTruthy();
+  expect(within(leader).queryByText("Leading talk 1", { exact: true })).toBeNull();
+});
+
+it("keeps the unique leader label for a single reviewed talk and omits leaders from the empty state", () => {
+  const { rerender } = render(<TalkResults talks={[{ talkId: "Only talk", average: 5, count: 1 }]} />);
+  const summary = screen.getByLabelText("Workshop response summary");
+  expect(within(summary).getAllByRole("term")[2].textContent).toBe("Most reviewed talk");
+  expect(within(summary).getAllByRole("definition")[2].textContent).toBe("Only talk1 rating received");
+  rerender(<TalkResults talks={[]} />);
+  expect(screen.getByRole("heading", { name: "No feedback yet" })).toBeTruthy();
+  expect(screen.queryByLabelText("Workshop response summary")).toBeNull();
+  expect(screen.queryByText(/Most reviewed/)).toBeNull();
+});

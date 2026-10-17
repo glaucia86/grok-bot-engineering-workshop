@@ -63,6 +63,8 @@ for (const width of [320, 390, 1440]) {
     const summary = page.getByLabel("Workshop response summary");
     await expect(summary.locator(".results-total")).toHaveText("2");
     await expect(summary.getByRole("definition").nth(1)).toHaveText("2");
+    await expect(summary.getByRole("term").nth(2)).toHaveText("Most reviewed talks");
+    await expect(summary.getByRole("definition").nth(2)).toHaveText("2 tied1 rating each");
     const analytics = page.getByRole("region", { name: "Selected talk feedback", exact: true });
     await expect(analytics.getByRole("heading", { name: "Workshop kickoff", exact: true })).toBeVisible();
     await expect(analytics.locator(".insight-score strong")).toHaveText("5.0");

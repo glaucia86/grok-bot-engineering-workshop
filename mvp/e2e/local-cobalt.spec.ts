@@ -15,7 +15,8 @@ async function expectCobaltDistribution(page: Page) {
   const chart = page.locator(".results-analytics [data-slot=chart]");
   await expect(chart.locator(".recharts-surface")).toBeVisible();
   await expect(page.getByText("Individual ratings · counts by score", { exact: true })).toBeVisible();
-  await expect(chart.locator(".recharts-xAxis .recharts-cartesian-axis-tick-value")).toHaveText(["1", "2", "3", "4", "5"]);
+  // Recharts 3 renders the tick-label layer separately from the axis-line layer.
+  await expect(chart.locator(".recharts-xAxis-tick-labels .recharts-cartesian-axis-tick-value")).toHaveText(["1", "2", "3", "4", "5"]);
   // The SVG uses real response counts on a fixed 0..12 sample-count axis.
   // Zero bins retain their accessible labels without fabricating visible bars.
   await expect.poll(async () => chart.locator(".recharts-bar-rectangle").evaluateAll(nodes => nodes.map(node => (node as SVGGraphicsElement).getBBox()).filter(box => box.height > 0 && box.width > 0).length)).toBe(3);
