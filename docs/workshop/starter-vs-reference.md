@@ -1,7 +1,7 @@
 # Starter and reference checkpoint
 
 The workshop starts from `checkpoint/mvp-base` at `d15eea431a214210160eb6e363945ef42b3fbcb8`.
-The completed reference is `<reference-sha>` on branch `fde/issues-delivery`; fill the SHA placeholder in the PR.
+The completed reference is `341de00b` (`main` after PR #46; this guide is added on top).
 
 | Capability | Starter | Reference |
 | --- | --- | --- |
