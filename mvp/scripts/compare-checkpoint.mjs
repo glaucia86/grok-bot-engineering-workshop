@@ -34,8 +34,7 @@ export function compareCheckpoint(mvpRoot, expected) {
   const root = resolve(mvpRoot);
   const wantsReference = expected === "reference";
   const rows = referenceOnly.map(([check, file]) => ({ check, present: existsSync(resolve(root, file)), expected: wantsReference }));
-  let homepage = "";
-  try { homepage = readFileSync(resolve(root, "src/app/page.tsx"), "utf8"); } catch {}
+  const homepage = readFileSync(resolve(root, "src/app/page.tsx"), "utf8");
   rows.push({ check: "form/rating text on homepage", present: /<form\b|feedback\s+form|\brating\b/i.test(homepage), expected: wantsReference });
   rows.push({ check: "test:e2e script", present: hasScript(root, "test:e2e"), expected: wantsReference });
   for (const [check, file] of sharedFiles) rows.push({ check, present: existsSync(resolve(root, file)), expected: true });
