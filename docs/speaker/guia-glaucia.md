@@ -791,8 +791,8 @@ Script one check (for example, a curl for the preview's HTTP status) and paste t
 5. Abra a preview URL do commit testado (pelo PR ou pelo DevOps). Mostre o dashboard primeiro: o estado vazio só se você usar o dataset de teste isolado. Nunca limpe um banco compartilhado para isso.
    - ⚠️ **Se falhar:** Se a preview não carregar, diga 'This is live, so things can be slow.' Se estiver fora do ar, mostre a aplicação de referência verificada (se acessível) e explique o bloqueio.
 6. Clique no slide uma vez (caixa do formulário), envie um feedback no formulário real (talk 'keynote', seu nome, um comentário curto, nota 5). Clique de novo (caixa do gráfico) e volte ao dashboard.
-   - ✅ **Esperado:** Na preview do PR do exercício (starter), aparece a barra de média de 'keynote' com uma casa decimal e a contagem; no fallback da aplicação de referência, leia a linha 'keynote' da tabela (média e contagem) e a distribuição 1–5 da talk selecionada.
-7. Recarregue a página uma vez. O dado precisa continuar lá.
+   - ✅ **Esperado:** Na preview do PR do exercício (starter), aparece a barra de média de 'keynote' com uma casa decimal e a contagem; no fallback da aplicação de referência, selecione explicitamente 'keynote' em “Explore a talk” ou pelo botão da linha, depois leia a linha 'keynote' da tabela (média e contagem) e confira sua faixa da nota 5 na distribuição de 1–5 da talk selecionada.
+7. Recarregue a página uma vez. Na aplicação de referência, selecione 'keynote' novamente em “Explore a talk” ou pelo botão da linha, depois confira sua faixa da nota 5 e a linha da tabela (média e contagem) antes de avaliar a persistência.
    - ⚠️ **Se falhar:** Se o dado ou resultado esperado sumir após o recarregamento, não esconda. Diga: 'QA will mark this as FAIL.' e mostre a causa só se você souber.
 8. Se der tempo, peça uma nota para alguém no chat e envie mais um, para o dado ou resultado mudar em qualquer um dos alvos.
 
