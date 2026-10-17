@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { TalkStats } from "../lib/stats";
 import { ArrowUpRight } from "lucide-react";
 import { TalkInsights } from "./talk-insights";
@@ -60,6 +60,7 @@ export function FeedbackDashboard({ revision = 0, feedbackHref = "#feedback", in
 
 export function TalkResults({ talks, feedbackHref = "#feedback", insights = false, revision = 0 }: { talks: TalkStats[]; feedbackHref?: string; insights?: boolean; revision?: number }) {
   const [selection, setSelection] = useState("");
+  const explorer = useRef<HTMLSelectElement>(null);
   if (talks.length === 0) {
     return (
       <div className="dashboard-empty">
@@ -79,7 +80,7 @@ export function TalkResults({ talks, feedbackHref = "#feedback", insights = fals
       <div className="results-workspace">
       <aside className="results-detail" aria-label="Selected talk feedback">
         <label htmlFor="talk-explorer">Explore a talk</label>
-        <select id="talk-explorer" value={selected.talkId} onChange={event => setSelection(event.target.value)}>{talks.map(talk => <option key={talk.talkId} value={talk.talkId}>{talk.talkId}</option>)}</select>
+        <select ref={explorer} id="talk-explorer" value={selected.talkId} onChange={event => setSelection(event.target.value)}>{talks.map(talk => <option key={talk.talkId} value={talk.talkId}>{talk.talkId}</option>)}</select>
         <h3>{selected.talkId}</h3>
         {insights ? <TalkInsights talkId={selected.talkId} revision={revision} /> : <p className="selected-summary">{selected.average.toFixed(1)} / 5 from {selected.count} {selected.count === 1 ? "response" : "responses"}.</p>}
       </aside>
@@ -91,7 +92,7 @@ export function TalkResults({ talks, feedbackHref = "#feedback", insights = fals
         <div className="dashboard-scale" aria-hidden="true">{[0, 1, 2, 3, 4, 5].map(value => <span key={value}>{value}</span>)}</div>
         <ul className="dashboard-bars" data-scroll={talks.length > 6 ? "true" : undefined} tabIndex={talks.length > 6 ? 0 : undefined} aria-label="Average ratings and response counts">
           {talks.map(talk => <li key={talk.talkId} className="dashboard-bar-row">
-            <button type="button" className="dashboard-bar-name" aria-pressed={selected.talkId === talk.talkId} onClick={() => setSelection(talk.talkId)}>{talk.talkId}<ArrowUpRight size={16} aria-hidden="true" /></button>
+            <button type="button" className="dashboard-bar-name" aria-pressed={selected.talkId === talk.talkId} onClick={() => { setSelection(talk.talkId); explorer.current?.focus(); }}>{talk.talkId}<ArrowUpRight size={16} aria-hidden="true" /></button>
             <p className="dashboard-bar-values"><span><strong className="dashboard-bar-average">{talk.average.toFixed(1)}</strong> / 5</span><span>{talk.count} {talk.count === 1 ? "response" : "responses"}</span></p>
             <div className="dashboard-bar-track" aria-hidden="true">
               <div key={`${talk.talkId}:${talk.average}`} className="dashboard-bar-fill" style={{ width: `${talk.average / 5 * 100}%` }} />

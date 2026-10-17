@@ -12,7 +12,7 @@ geometry, cursor movement, blink timing and static preferences are unchanged.
 The dashboard is a reading workspace: actual response/talk totals and the most
 reviewed talk; fixed-scale comparisons; a selected talk with rating histogram,
 4/5 share and dated comments; exact tabular values. Comparison labels select the
-talk too. Desktop has comparison and detail columns. Mobile puts the explorer
+talk too and return focus/viewport to its explorer. Desktop has comparison and detail columns. Mobile puts the explorer
 first; its DOM/focus order also precedes comparison controls. Long comparisons
 scroll only beyond six talks, with an explicit hint and a focusable scroll area.
 No trends, overall averages derived from already-rounded means, or sample data

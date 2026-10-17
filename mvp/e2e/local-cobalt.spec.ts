@@ -75,3 +75,17 @@ test("saved feedback appears in the chosen talk's distribution and comments afte
   await page.reload();
   await expect(page.getByText("My newly saved fixture comment.", { exact: true })).toBeVisible();
 });
+
+test("mobile comparison returns focus and viewport to the selected talk", async ({ page }, info) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await mockCobaltFeedback(page);
+  await page.goto("/results");
+  await expect(page.locator(".talk-comments li")).toHaveCount(3);
+  await page.getByRole("button", { name: fixtureTalks[1], exact: true }).click();
+  await expect(page.getByLabel("Explore a talk")).toBeFocused();
+  await expect(page.locator(".insight-score strong")).toHaveText("4.8");
+  const box = await page.getByLabel("Explore a talk").boundingBox();
+  expect(box!.y).toBeGreaterThanOrEqual(0);
+  expect(box!.y + box!.height).toBeLessThanOrEqual(844);
+  await page.screenshot({ path: info.outputPath("mobile-selected-talk-focus.png"), fullPage: true });
+});
