@@ -8,9 +8,26 @@ This defines the Next.js MVP reference application and its separate workshop exe
 
 ## 2. MVP scope
 
-The MVP has three parts. First, a **public feedback form** where anyone can submit a talk, an author, a comment, and a rating from 1 to 5. Second, a **talk dashboard** that shows the average rating and the number of submissions per talk as a chart. Third, **persistence in Postgres**, so the data is real and survives deploys.
+The core workshop MVP has three parts. First, a **public feedback form** with required talk, author and rating from 1 to 5, plus an optional comment. Second, a **talk dashboard** with grouped average/count and a simple average-per-talk chart. Third, **persistence in Postgres**, prepared before the session. The approved reference on main adds selected-talk rating distributions, written feedback and a polished layout. Those insights are an optional extra or prebuilt showcase, not required implementation for the 90-minute exercise; see the [teaching boundary](../spec.md#90-minute-teaching-boundary).
 
 We are leaving **login/auth, an admin area, and email notifications** out on purpose. Each one costs stage time and teaches nothing about engineering bots. A form, a chart, and a database are enough to show the full loop from issue to preview.
+
+### 90-minute budget and cut line
+
+Use the existing [README agenda](../README.md#agenda-and-expected-results) time bands. This is a planning budget, **not a timed rehearsal result**. Bot creation is live; account access, software installation, checkpoint availability, skills and isolated infrastructure are preflight work.
+
+| Minutes | Priority | Observable result |
+|---|---|---|
+| 0–5 | Inspect the prepared starter | Correct repository, app, SHA and base checks |
+| 5–12 | Create FDE, QA and DevOps | Three bounded roles; only the human merges |
+| 12–20 | Approve the core design | Shared API/schema, files and tests agreed |
+| 20–40 | Implement the small form/results exercise | Essential UI plus focused tests; QA starts independently as work becomes available |
+| 40–55 | Run QA and inspect the PR/preview | Valid/invalid feedback, results and scoped evidence; DevOps reports checks/access |
+| 55–70 | Review and decide | Human inspects the diff, independent findings and same-commit checks; request fixes if needed |
+| 70–82 | Protect the recovery buffer | Finish core verification or explain a blocker; optional routine draft/showcase only if core evidence is ready |
+| 82–90 | Questions and handoff | Known limits, next steps and optional practice |
+
+**Cut line:** do not start detailed distribution/comments work, reference-layout recreation or the optional routine while core implementation, tests or review need time. The published 70–82 routine slot is conditional; recovery takes priority. If implementation exceeds its budget, switch to an identified, previously verified reference for explanation, record the unfinished exercise and continue the review lesson. Do not rush a merge or claim the exercise passed. Fresh-instance persistence and isolated preview evidence must be prepared/reviewed without weakening AC10; missing evidence stays BLOCKED.
 
 ## 3. Planned MVP stack
 
@@ -85,14 +102,14 @@ The following are implementation requirements, not claims that the current API a
 4. The form and API use the same Zod schema and show exactly the same field-level validation error text for the same invalid value; the form converts the rating control to a number before validation.
 5. After a successful submission, the form shows a confirmation and resets. A rejected submission retains the input and displays the errors.
 6. The dashboard lists every talk with feedback, showing its average rating rounded to one decimal (round half up: `4.25` → `4.3`) and submission count. Treat trimmed talk names case-insensitively: `Talk A` and `talk a` are one talk with a combined count and average. Every new MVP submission has a rating.
-7. The dashboard chart shows one bar per talk, with height equal to the displayed average rating and a readable label or tooltip showing that value.
+7. **Core exercise:** the dashboard chart shows one bar per grouped talk, with height equal to the displayed average rating and a readable label or tooltip showing that value. **Approved reference enhancement:** main instead uses a comparison table plus a selected-talk distribution with five bins for ratings 1–5 and exact counts from `/api/feedback/insights`; verify that chart against its counts. The reference does not need a second average-per-talk chart. Identify which target and SHA are being judged. The shared validation, grouped averages/counts, persistence and other applicable criteria remain unchanged; the insights endpoint/detail UI is not a prerequisite for the starter core.
 8. With no data, the dashboard shows an empty state instead of an error.
 9. Vitest covers the schema, normalization, and average calculation. Include missing, empty, whitespace-only, wrong-type, and boundary text cases, distinguishing required talk/author rejection from optional comment acceptance and normalization to `""`. Verify comment lengths after trim (0, 1, 1000 accepted; 1001 rejected) and non-string rejection including `null`; ratings omitted, 0, 1, 5, 6, fractional, and string-valued; valid creation and rejection without insertion; and the agreed old/new route behavior. Run these tests in CI. Report an AC9 coverage gap as WARN, not BLOCKED; retain the required cases and CI checks. WARN does not turn failing tests or failed CI into a pass.
 10. Playwright e2e on the PR's actual preview URL submits the form, opens the dashboard, and verifies the new talk, average, and count. Include invalid submissions and the empty state in an isolated test dataset. Capture the actions and resulting state, and verify persistence after a fresh application instance against the same test database. A local-only pass does not satisfy this criterion.
 11. After a successful submission, reload the page and verify that the new record is still visible through the dashboard/public GET API, including its talk, average, and count. This reload check complements, rather than replaces, AC10’s fresh-instance persistence check.
 12. No secrets are committed to the repository. Verify this without printing secret values in logs, evidence, or chat; report findings with values redacted.
 
-Keep MVP acceptance BLOCKED until the PR defining these criteria is merged by the human tech lead. Approval of these requirements does not establish that the implementation passes; QA must then assess the tested commit against the merged criteria.
+PR #9, which defined the shared acceptance refinements, is merged. The core/reference distinction above records the October 17 teaching-scope decision. Neither approved requirements nor merged code establish acceptance: QA must assess the tested target and commit against the applicable criteria, and missing isolated preview/persistence evidence remains BLOCKED.
 
 Before accepting the MVP, the QA and DevOps bots must implement and execute the preview harness, CI workflow, and test-data setup/cleanup. Record the commit, target environment, observed results, and retained evidence; report missing preview access or infrastructure as BLOCKED rather than substituting a localhost pass.
 
@@ -102,7 +119,7 @@ A public account by kaize ([post on X](https://x.com/0x_kaize/status/21100556850
 
 ## 7. Stage rule and known risks
 
-The presenter’s October 15 decision supersedes the earlier restriction against implementing the full UI before the event. [spec.md](../spec.md) records the contract; [the issue index](issues/README.md) links the preparation, reference-app, slides and checkpoint deliveries. The acceptance refinements in [PR #9](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/9) remain a separate pending patch; this update does not duplicate them or declare them merged.
+The presenter’s October 15 decision supersedes the earlier restriction against implementing the full UI before the event. [spec.md](../spec.md) records the contract; [the issue index](issues/README.md) links the preparation, reference-app, slides and checkpoint deliveries. The acceptance refinements in [PR #9](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/9) are merged. The October 17 scope decision keeps the live exercise small and treats the approved reference's detailed insights as optional; it does not remove shared acceptance requirements.
 
 Live time is too short for infrastructure. The approved delivery has two separate states: **a complete reference application on main**, including the form and dashboard, and **a frozen checkpoint/mvp-base for exercises**, retaining the deliberate feature gaps. Prepare, review and verify the reference before the event; only the human merges it. Verify the checkpoint independently and record its exact commit and gaps without moving its ref as part of documentation work. On stage, attendees create the bots and implement the exercises from that base, compare with the reference, verify their preview, and make the human approval decision. This document does not provision infrastructure or claim either state is already ready.
 

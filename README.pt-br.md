@@ -42,10 +42,12 @@ Em 16 de outubro, os PRs [#9](https://github.com/glaucia86/grok-bot-engineering-
 | 20–40 | Construir e verificar | Formulário/dashboard e evidência por critério |
 | 40–55 | Inspecionar PR e preview | Enviar feedback e conferir dashboard |
 | 55–70 | Revisão e decisão humana | Aprovar/mergear pessoalmente ou pedir ajustes |
-| 70–82 | Rascunhar triagem nativa | Definição desativada e exemplo privado |
+| 70–82 | Recuperação primeiro; rotina opcional depois | Concluir verificação/revisão do núcleo ou explicar bloqueios; rotina só com núcleo concluído |
 | 82–90 | Perguntas | Revisar aprendizados e prática extra |
 
-O [guia da apresentadora](docs/speaker/guia-glaucia.md) traz o roteiro correspondente de 11h às 12h30 Brasília. A infraestrutura é preparada **antes** do evento, fora desses 90 minutos.
+Siga a [separação entre núcleo e extras](spec.md#90-minute-teaching-boundary) e o [orçamento de tempo e regra de corte](docs/inception.md#90-minute-budget-and-cut-line). Os minutos 70–82 (12:10–12:22 Brasília) ficam reservados primeiro à recuperação; 82–90 continua sendo o bloco de perguntas. Este é um orçamento de planejamento, **não é resultado de ensaio cronometrado**. A infraestrutura é preparada **antes** do evento, fora desses 90 minutos.
+
+O [guia da apresentadora](docs/speaker/guia-glaucia.md) e o deck ainda precisam da mesma regra de recuperação prioritária nas issues [#17](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/17) e [#20](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/20). Até esse alinhamento, siga esta regra de corte em vez do bloco obrigatório de rotina desses materiais; os roteiros ainda não estão sincronizados.
 
 ## Antes do evento
 
@@ -136,9 +138,14 @@ Clean up only authorized run-owned data/processes, keeping evidence. Never merge
 
 Leia a alteração, a evidência independente e os checks do mesmo commit. CI verde não é aceite. Somente o humano aprova e faz merge. Registre avisos de cobertura sem transformar falhas ou ausência de evidência em aprovação.
 
-### 5. Rascunho de rotina nativa (70–82 min)
+### 5. Recuperação primeiro; rotina só após concluir o núcleo (70–82 min)
+
+Use esse intervalo para concluir a implementação essencial de feedback/resultados, os testes independentes e a revisão humana. Pule a rotina por completo enquanto qualquer uma dessas etapas estiver pendente; não apenas a encurte. Se não for possível remover um bloqueio, registre o trabalho incompleto e use uma referência identificada e previamente verificada para explicar o resultado. A falta de evidência de preview/isolamento/persistência continua BLOCKED, sem exigir merge apressado. Encerre esse intervalo no minuto 82 para as perguntas.
+
+Somente com a implementação, os testes e a revisão do núcleo concluídos e tempo disponível, use o prompt opcional abaixo para um rascunho desativado. Insights/layout detalhados da referência também são opcionais e não ocupam o tempo de recuperação do núcleo.
 
 ```text
+Only use this optional prompt after the core implementation, tests and human review are complete.
 Read docs/routines/daily-triage.md. Draft a native Grok Bot routine for weekdays at 9 AM America/Sao_Paulo.
 Use its private delivery and read-only rules. Propose labels; do not apply them.
 Show a disabled definition and sample summary. Do not create or enable a scheduled task in this exercise.
