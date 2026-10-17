@@ -69,11 +69,11 @@ Minuto a minuto. Para cada slide: o que acontece e o que cortar se estiver atras
 
 A trilha principal é o MVP Next.js em `mvp/`; a API Fastify da raiz e os três exercícios antigos são prática extra. Fontes: [spec](../../spec.md), [inception](../inception.md) e [índice de issues/exercícios](../issues/README.md).
 
-Ponto de partida inspecionado: main `78783663fe2cdc345ca885cebb9f3778341254bc` (15/10/2026), com API/schema/migration/testes e página inicial padrão; sem formulário/dashboard. A spec já entrou no PR #11. PRs [#9](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/9) e [#10](https://github.com/glaucia86/grok-bot-engineering-workshop/pull/10) continuam pendentes nesta revisão: revalidar antes do evento. Não usar `checkpoint/mvp-base` como garantia de conter critérios/correções posteriores.
+Ponto de partida inspecionado: PRs #9, #10 e #27 estão mesclados; a turma parte do `checkpoint/mvp-base` no SHA aprovado pela instrutora (confirmar na issue #21), não da `main`. Não usar a `main` como starter.
 
 Preparação: [#16](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/16) comprova infraestrutura/API na preview isolada; [#17](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/17) alinha material. Referência completa na main e exercícios correspondentes: [#18](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/18) formulário e [#19](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/19) dashboard, podendo compartilhar um único PR de funcionalidade. A aplicação de referência completa deve ser construída e validada antes do evento na main, por PRs e merges humanos. A turma usa checkpoint/mvp-base separado e congelado com lacunas intencionais; não mover essa ref para a referência completa.
 
-Comentário obrigatório após trim (1–1000), nota inteira 1–5, média com uma casa (`4.25` → `4.3`) e agrupamento `Talk A`/`talk a` seguem a spec. FDE e DevOps usam no máximo três skills; o QA tem uma exceção: mantém a `interrogate` do pstack (decisão da Glaucia, porque a `interrogate` faz parte do pstack). Todos os bots aplicam `principle-prove-it-works` como definição de pronto: nenhum bot diz "pronto" sem prova do artefato real. WARN vale só para lacunas de cobertura AC9; falhas continuam FAIL, falta de acesso/isolamento/evidência continua BLOCKED. Os critérios 11–12 (reload e ausência de segredos) dependem da incorporação do PR #9; não dizer que já estão no inception de main.
+Comentário opcional (omitido ou em branco vira `""`, no máximo 1000 caracteres após trim; `null` é inválido), nota inteira 1–5, média com uma casa (`4.25` → `4.3`) e agrupamento `Talk A`/`talk a` seguem a spec. FDE e DevOps usam no máximo três skills; o QA tem uma exceção: mantém a `interrogate` do pstack (decisão da Glaucia, porque a `interrogate` faz parte do pstack). Todos os bots aplicam `principle-prove-it-works` como definição de pronto: nenhum bot diz "pronto" sem prova do artefato real. WARN vale só para lacunas de cobertura AC9; falhas continuam FAIL, falta de acesso/isolamento/evidência continua BLOCKED. Os critérios AC1–12 estão mesclados.
 
 O orçamento de 90 minutos é de planejamento, não resultado de ensaio cronometrado. Das 12:10 às 12:22, recuperação primeiro; a rotina só aparece se o núcleo estiver concluído e sobrar tempo. As imagens dos Grok Bots e os screenshots de ensaio continuam pendentes/BLOCKED nos 6 slots de placeholder; a revisão visual humana também continua pendente.
 
@@ -182,7 +182,7 @@ Todo bot tem um charter de três partes. A primeira diz **do que ele é dono**. 
 
 Skills, no máximo 3 por bot:
 - **FDE:** shadcn, vercel-react-best-practices, neon-drizzle.
-- **QA:** playwright-best-practices, playwright-cli, `create-verification-skill` e `interrogate` (pstack). **Exceção ao limite de 3:** a `interrogate` fica no QA por decisão da Glaucia, porque faz parte do pstack. A `create-verification-skill` gera uma skill de verificação local do projeto, que dirige o app e captura evidência; ela **não** monta o checklist. O checklist vem dos critérios 1–10 da seção 5 do inception.
+- **QA:** playwright-best-practices, playwright-cli, `create-verification-skill` e `interrogate` (pstack). **Exceção ao limite de 3:** a `interrogate` fica no QA por decisão da Glaucia, porque faz parte do pstack. A `create-verification-skill` gera uma skill de verificação local do projeto, que dirige o app e captura evidência; ela **não** monta o checklist. O checklist vem dos critérios AC1–12 da seção 5 do inception.
 - **Todos os bots:** aplicam a skill `principle-prove-it-works` (pstack, copiada em `.agents/skills/principle-prove-it-works`) no fim de cada entrega: conferir o artefato real, não um proxy, auto-relato ou "compila"; fazer um script da verificação; deixar a saída visível. Ela fecha a entrega e não conta no limite de 3.
 - **DevOps:** deploy-to-vercel, ci-cd-and-automation.
 
@@ -508,9 +508,9 @@ Os três bots existem e estão num grupo com você. FDE e DevOps têm no máximo
    **Prompt para colar:**
 
 ```
-Read spec.md, docs/inception.md section 5, the selected form/dashboard issue (#18/#19), and mvp/ at the agreed reviewed base commit. Check PR #9/#10 prerequisites; do not assume they are merged.
-Write a short design, no code yet, for two features: the public feedback form and the talk dashboard with a shadcn bar chart.
-Include: clarified decisions, files to change, the shared Zod schema usage, the empty state, and the Vitest and Playwright tests mapped to applicable merged acceptance criteria, including reload and secret checks from PR #9 once merged. Keep comment required (trimmed 1–1000), integer rating 1–5, identical API/form errors and one-decimal means (4.25 → 4.3).
+Read spec.md, docs/inception.md section 5, the selected form/dashboard issue (#18/#19), and mvp/ at the agreed reviewed base commit. PRs #9, #10 and #27 are merged; verify the actual base SHA instead of assuming.
+Write a short design, no code yet, for two features: the public feedback form and the talk dashboard with an average-per-talk shadcn bar chart (core exercise target).
+Include: clarified decisions, files to change, the shared Zod schema usage, the empty state, and the Vitest and Playwright tests mapped to applicable merged acceptance criteria, including reload and secret checks from PR #9. Keep comment optional (omitted or blank becomes "", at most 1000 characters after trim, null invalid), integer rating 1–5, identical API/form errors and one-decimal means (4.25 → 4.3).
 List anything you assumed separately. Stop and wait for my approval.
 ```
 
@@ -605,13 +605,13 @@ Put the check in a script I can re-run (a Vitest or Playwright test), and paste 
 **Slide 13 · Live: QA judges · 11:27–11:40** · 3 clique(s) no slide
 
 7. Alt+Tab para o chat do QA bot (ou o grupo). Cole o prompt do QA (abaixo).
-   - ✅ **Esperado:** O QA lista os critérios da seção 5 do inception (1–10 hoje) e gera uma skill de verificação local do projeto, que dirige a preview e captura evidência. Ele não usa o texto do PR.
+   - ✅ **Esperado:** O QA lista os critérios da seção 5 do inception (AC1–12) e gera uma skill de verificação local do projeto, que dirige a preview e captura evidência. Ele não usa o texto do PR.
    - ⚠️ **Se falhar:** Se o QA disser BLOCKED, leia o motivo. Falta de acesso, isolamento ou evidência é uma resposta válida: explique. Não esconda.
 
    **Prompt para colar:**
 
 ```
-Build the checklist from spec.md and the merged inception section 5 criteria (1–10 today; add 11–12 after PR #9 is merged), without using the author's PR description as the acceptance source. Keep acceptance BLOCKED until PR #9 is merged.
+Build the checklist from spec.md and the merged inception section 5 criteria (AC1–12), without using the author's PR description as the acceptance source.
 Using create-verification-skill, generate a project-local verification skill that drives the PR preview the way a user does and captures evidence (screenshots, command output, URLs) for each criterion.
 When the PR is ready, identify the tested commit, run the checks, and report PASS, FAIL, WARN (AC9 coverage gaps only), or BLOCKED per criterion with commands, target URL, outputs, and artifacts.
 Use the verified #16 preview path and isolated data. Observe saved contributions through public GET/dashboard, not direct remote database inspection. Check reload and separately fresh-instance persistence. Missing access/isolation/evidence is BLOCKED; failed tests remain failures.
@@ -791,10 +791,10 @@ Script one check (for example, a curl for the preview's HTTP status) and paste t
 5. Abra a preview URL do commit testado (pelo PR ou pelo DevOps). Mostre o dashboard primeiro: o estado vazio só se você usar o dataset de teste isolado. Nunca limpe um banco compartilhado para isso.
    - ⚠️ **Se falhar:** Se a preview não carregar, diga 'This is live, so things can be slow.' Se estiver fora do ar, mostre a aplicação de referência verificada (se acessível) e explique o bloqueio.
 6. Clique no slide uma vez (caixa do formulário), envie um feedback no formulário real (talk 'keynote', seu nome, um comentário curto, nota 5). Clique de novo (caixa do gráfico) e volte ao dashboard.
-   - ✅ **Esperado:** Aparece uma barra para 'keynote' com a média em uma casa decimal (exemplo: 5.0) e a contagem de feedbacks.
+   - ✅ **Esperado:** Na preview do PR do exercício (starter), aparece a barra de média de 'keynote' com uma casa decimal e a contagem; no fallback da aplicação de referência, leia a linha 'keynote' da tabela (média e contagem) e a distribuição 1–5 da talk selecionada.
 7. Recarregue a página uma vez. O dado precisa continuar lá.
-   - ⚠️ **Se falhar:** Se a barra sumir após o recarregamento, não esconda. Diga: 'QA will mark this as FAIL.' e mostre a causa só se você souber.
-8. Se der tempo, peça uma nota para alguém no chat e envie mais um, para a barra mudar.
+   - ⚠️ **Se falhar:** Se o dado ou resultado esperado sumir após o recarregamento, não esconda. Diga: 'QA will mark this as FAIL.' e mostre a causa só se você souber.
+8. Se der tempo, peça uma nota para alguém no chat e envie mais um, para o dado ou resultado mudar em qualquer um dos alvos.
 
 ### 🗣 SAY IT · fale em inglês
 
