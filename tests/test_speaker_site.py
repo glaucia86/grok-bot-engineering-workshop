@@ -9,6 +9,21 @@ builder = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(builder)
 
 class SpeakerSite(unittest.TestCase):
+    def test_recovery_block_keeps_routine_optional_and_qa_fixed(self):
+        content_spec = importlib.util.spec_from_file_location('speaker_content_recovery', ROOT/'scripts/speaker_content.py')
+        content = importlib.util.module_from_spec(content_spec)
+        content_spec.loader.exec_module(content)
+        recovery = content.BLOCKS[6]
+        slide = content.SL[17]
+        self.assertEqual(recovery['name'], 'Recovery')
+        self.assertEqual((recovery['t'], recovery['et'], recovery['slides']), ('12:10–12:22', '10:10–10:22', (18, 18)))
+        self.assertEqual((slide['title'], slide['m'], slide['clicks']), ('Block 6: Recovery first', 12, 1))
+        self.assertIn('OPTIONAL', slide['do'][1]['en'])
+        self.assertIn('OPCIONAL', slide['do'][1]['pt'])
+        self.assertIn('OPTIONAL', slide['do'][2]['en'])
+        self.assertIn('OPCIONAL', slide['do'][2]['pt'])
+        self.assertIn('Q&A starts at 12:22', ' '.join(line['en'] for line in slide['say']))
+
     def test_rule_run_sheet_click_count_uses_slide_source(self):
         from unittest.mock import patch
         content_spec = importlib.util.spec_from_file_location('speaker_content', ROOT/'scripts/speaker_content.py')

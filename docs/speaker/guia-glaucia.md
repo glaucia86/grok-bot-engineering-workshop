@@ -19,7 +19,7 @@ Como usar: deixe este guia aberto numa tela e compartilhe a outra. Cada bloco se
 4. [3 · Verify · 11:20–11:40](#3-verify-11201140) · slides 10–13
 5. [4 · Background PR · 11:40–11:55](#4-background-pr-11401155) · slides 14–15
 6. [5 · Approval · 11:55–12:10](#5-approval-11551210) · slides 16–17
-7. [6 · Routine · 12:10–12:22](#6-routine-12101222) · slide 18
+7. [6 · Recovery · 12:10–12:22](#6-recovery-12101222) · slide 18
 8. [7 · Q&A · 12:22–12:30](#7-qa-12221230) · slides 19–22
 
 **Antes do evento:** [Trilha e estado](#trilha-e-estado-da-preparacao) · [Como usar o deck](#como-usar-o-deck) · [Frases de emergência](#frases-de-emergencia) · [Checklist](#checklist-antes-do-evento) · [Charter de todo bot](#charter-de-todo-bot)
@@ -53,7 +53,7 @@ Minuto a minuto. Para cada slide: o que acontece e o que cortar se estiver atras
 | 11:47 | 9:47 | 15 | **Ao vivo:** enviar feedback, ver a barra no dashboard | Preview | Envie só um feedback. Não peça à plateia. |
 | 11:55 | 9:55 | 16 | Quem decide sou eu: desfaz em 1 min × humano decide | Deck | Leia só os títulos dos dois cartões. |
 | 11:58 | 9:58 | 17 | **Ao vivo:** ler o PR (mudou, QA, CI) e fazer o merge | GitHub | Se vier FAIL, não corrija ao vivo. Mostre como exemplo e siga. |
-| 12:10 | 10:10 | 18 | **Ao vivo:** preview da triagem diária, rascunho desativado | Grok Bot | Mostre só o rascunho desativado e a preview offline. Não ative a rotina. |
+| 12:10 | 10:10 | 18 | **Recuperação:** concluir núcleo, testes e revisão humana ou declarar BLOCKED; rotina só se tudo estiver concluído | Formulário / dashboard / evidências; Grok Bot só se opcional | A rotina já está omitida. Use o tempo para recuperar o núcleo. Se atrasar mais, não estenda: o Q&A começa às 12:22, e diga os bloqueios em voz alta. |
 | 12:22 | 10:22 | 19 | Recap: três frases (3 cliques) | Deck | Nunca corte o recap. Leva um minuto. |
 | 12:23 | 10:23 | 20 | Economizar uso | Deck | Pule este slide. Termine exatamente às 12:30. |
 | 12:24 | 10:24 | 21 | **OPCIONAL:** pstack (`/poteto-mode`, `/poteto-help`) | Deck | Pule este slide. Vá direto para as perguntas. |
@@ -75,7 +75,7 @@ Preparação: [#16](https://github.com/glaucia86/grok-bot-engineering-workshop/i
 
 Comentário obrigatório após trim (1–1000), nota inteira 1–5, média com uma casa (`4.25` → `4.3`) e agrupamento `Talk A`/`talk a` seguem a spec. FDE e DevOps usam no máximo três skills; o QA tem uma exceção: mantém a `interrogate` do pstack (decisão da Glaucia, porque a `interrogate` faz parte do pstack). Todos os bots aplicam `principle-prove-it-works` como definição de pronto: nenhum bot diz "pronto" sem prova do artefato real. WARN vale só para lacunas de cobertura AC9; falhas continuam FAIL, falta de acesso/isolamento/evidência continua BLOCKED. Os critérios 11–12 (reload e ausência de segredos) dependem da incorporação do PR #9; não dizer que já estão no inception de main.
 
-Este ajuste revisa texto e prompts. O deck visual e seus prompts antigos de critérios precisam de atualização na [issue #20](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/20) e da conferência final prevista em #17; números de slides e aparência não foram revalidados aqui.
+O orçamento de 90 minutos é de planejamento, não resultado de ensaio cronometrado. Das 12:10 às 12:22, recuperação primeiro; a rotina só aparece se o núcleo estiver concluído e sobrar tempo. As imagens dos Grok Bots e os screenshots de ensaio continuam pendentes/BLOCKED nos 6 slots de placeholder; a revisão visual humana também continua pendente.
 
 
 ---
@@ -964,23 +964,24 @@ Você disse a decisão em voz alta. Com todos os critérios obrigatórios em PAS
 
 ---
 
-## 6 · Routine · 12:10–12:22
+## 6 · Recovery · 12:10–12:22
 
 ### 🎯 Objetivo e janela
 
-**Janela:** 12:10–12:22 (Brasília) = 10:10–10:22 ET · slides 18 · **Meta:** Mostrar um bot com rotina: um rascunho desativado e uma preview offline. Nada é ativado ou agendado.
+**Janela:** 12:10–12:22 (Brasília) = 10:10–10:22 ET · slides 18 · **Meta:** Recuperar o núcleo: concluir verificação, testes independentes e revisão humana do formulário e dashboard, ou declarar BLOCKED com a evidência que falta. Rotina apenas se tudo estiver concluído e sobrar tempo.
 
-✂️ **Se atrasar, corte isto:** mostre apenas o rascunho desativado e a preview offline. Não ative a rotina.
+✂️ **Se atrasar, corte isto:** a rotina já está omitida; use o tempo para recuperar o núcleo; se atrasar mais, não estenda: Q&A começa 12:22 e os bloqueios são ditos em voz alta.
 
 ### 🖱 HANDS-ON · passo a passo
 
-**Slide 18 · Block 6: Routine · 12:10–12:22** · 1 clique(s) no slide
+**Slide 18 · Block 6: Recovery first · 12:10–12:22** · 1 clique(s) no slide
 
-1. Abra o recurso de rotinas nativo do Grok Bot (nenhuma ferramenta de terceiros; tela exata: conferir no ensaio). Clique uma vez para mostrar o cartão de triagem diária (mock).
-   - ⚠️ **Se falhar:** Se não for possível salvar a rotina desativada, mantenha o rascunho no documento e mostre só a preview offline.
-2. Só rascunho: segunda a sexta, 09:00, fuso America/Sao_Paulo, Enabled: No. Acesso GitHub somente leitura, entrega privada. Use o prompt completo de docs/routines/daily-triage.md. NÃO ative nem agende nada.
+1. Confira implementação do núcleo, testes independentes e revisão humana do formulário e dashboard. Use este tempo para concluí-los, ou declare BLOCKED e diga qual evidência falta.
+   - ✅ **Esperado:** Núcleo, testes e revisão humana estão concluídos, com evidência.
+   - ⚠️ **Se falhar:** Toda evidência ausente continua BLOCKED e é dita em voz alta antes do Q&A.
+2. OPCIONAL — somente se núcleo, testes e revisão humana estiverem concluídos e sobrar tempo: abra o recurso nativo de rotinas do Grok Bot e mostre um rascunho desativado. Segunda a sexta, 09:00, America/Sao_Paulo, Enabled: No, acesso GitHub somente leitura, entrega privada. NÃO ative nem agende nada.
    - ✅ **Esperado:** O rascunho mostra Enabled: No.
-3. Execute só o prompt da preview offline (abaixo) nos três arquivos de exemplo locais.
+3. OPCIONAL — somente se tudo estiver concluído e sobrar tempo: execute o prompt da preview offline abaixo nos três arquivos de exemplo locais.
    - ✅ **Esperado:** O bot propõe um label por exemplo (bug, feature ou unclear) e não aplica nada.
    - ⚠️ **Se falhar:** Se tentar mexer em issues reais, pare e diga: 'This is preview only.'
 
@@ -999,32 +1000,32 @@ Do not comment, apply labels, edit files, open PRs, close issues, merge, deploy,
 
 ### 🗣 SAY IT · fale em inglês
 
-*Slide 18 · Block 6: Routine*
+*Slide 18 · Block 6: Recovery first*
 
-> "A bot with a routine is a teammate."  
-> *Um bot com rotina é um colega de time.*  
-> 🔊 routine → ru-TIIN; teammate → TIIM-mêit
+> "First we recover. The routine comes only after the core is done."  
+> *Primeiro recuperamos. A rotina vem somente depois que o núcleo estiver concluído.*  
+> 🔊 first → FÂRST; recover → ri-CÂ-ver; routine → ru-TIIN
 
-> "Once a day. If nothing is new, one line."  
-> *Uma vez por dia. Se não houver nada novo, uma linha.*  
-> 🔊 once → UÂNS; nothing → NÂ-thin
+> "If the form, the tests, or the human review are unfinished, I skip the routine. I do not shorten it."  
+> *Se o formulário, os testes ou a revisão humana estiverem inacabados, eu pulo a rotina. Não a encurto.*  
+> 🔊 unfinished → an-FÍ-nisht; skip → SKÍP; shorten → SHÓR-ten
 
-> "This is a draft, and it is disabled. I do not schedule anything today."  
-> *Este é um rascunho e está desativado. Hoje eu não agendo nada.*  
-> 🔊 draft → DRÉFT; disabled → dis-ÊI-bold; schedule → SKÉ-djul
+> "If everything is done and time remains, here is a draft. It is disabled."  
+> *Se tudo estiver concluído e sobrar tempo, aqui está um rascunho. Ele está desativado.*  
+> 🔊 everything → É-vri-thin; remains → ri-MÊINS; disabled → dis-ÊI-bold
 
-> "Routines can also start from a Linear issue."  
-> *As rotinas também podem começar a partir de uma issue do Linear.*  
-> 🔊 Linear → LÍ-ni-er; issue → Í-shu
+> "Q&A starts at 12:22, even if something is still blocked. I say it out loud."  
+> *O Q&A começa às 12:22, mesmo que algo ainda esteja BLOCKED. Eu digo isso em voz alta.*  
+> 🔊 starts → STÁRTS; blocked → BLÓCT; out loud → AUT LÁUD
 
 **Perguntas prováveis**
 
-- **Q:** Will it run now? *(Vai rodar agora?)*  
-  **A:** No. It is a disabled draft. Enabling it needs an explicit decision later. *(Não. É um rascunho desativado. Ativar exige uma decisão explícita depois.)*
-- **Q:** What does it cost? *(Quanto custa?)*  
-  **A:** Run it rarely and stay quiet when nothing is new. That keeps the cost low. I do not quote prices. *(Rode poucas vezes e fique quieto quando não houver nada novo. Isso mantém o custo baixo. Eu não cito preços.)*
+- **Q:** What if the core is still incomplete at 12:22? *(E se o núcleo ainda estiver incompleto às 12:22?)*  
+  **A:** Start Q&A on time and state what remains BLOCKED and which evidence is missing. *(Comece o Q&A no horário e diga o que continua BLOCKED e qual evidência falta.)*
+- **Q:** Can I shorten the routine to fit? *(Posso encurtar a rotina para caber?)*  
+  **A:** No. Skip it completely unless the core, tests, and human review are complete and time remains. *(Não. Pule-a por completo, a menos que núcleo, testes e revisão humana estejam concluídos e sobre tempo.)*
 
-✂️ **Se atrasar:** Show only the disabled draft and the offline preview. Do not enable the routine. *(Mostre só o rascunho desativado e a preview offline. Não ative a rotina.)*
+✂️ **Se atrasar:** The routine is already omitted. Use the time to recover the core. If you fall further behind, do not extend: Q&A starts at 12:22, and say the blockers aloud. *(A rotina já está omitida. Use o tempo para recuperar o núcleo. Se atrasar mais, não estenda: o Q&A começa às 12:22, e diga os bloqueios em voz alta.)*
 
 ### ➡️ Transição
 
@@ -1033,7 +1034,7 @@ Do not comment, apply labels, edit files, open PRs, close issues, merge, deploy,
 
 ### ✅ Checkpoint
 
-O rascunho está desativado (ou mantido no documento) e a preview offline rodou. Nada foi agendado.
+Verificação do núcleo, testes independentes e revisão humana estão concluídos, ou cada lacuna restante está BLOCKED com a evidência ausente dita em voz alta. O Q&A começou às 12:22. A rotina apareceu somente se tudo estava concluído e sobrou tempo.
 
 ---
 

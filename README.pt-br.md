@@ -47,7 +47,7 @@ Em 16 de outubro, os PRs [#9](https://github.com/glaucia86/grok-bot-engineering-
 
 Siga a [separação entre núcleo e extras](spec.md#90-minute-teaching-boundary) e o [orçamento de tempo e regra de corte](docs/inception.md#90-minute-budget-and-cut-line). Os minutos 70–82 (12:10–12:22 Brasília) ficam reservados primeiro à recuperação; 82–90 continua sendo o bloco de perguntas. Este é um orçamento de planejamento, **não é resultado de ensaio cronometrado**. A infraestrutura é preparada **antes** do evento, fora desses 90 minutos.
 
-O [guia da apresentadora](docs/speaker/guia-glaucia.md) e o deck ainda precisam da mesma regra de recuperação prioritária nas issues [#17](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/17) e [#20](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/20). Até esse alinhamento, siga esta regra de corte em vez do bloco obrigatório de rotina desses materiais; os roteiros ainda não estão sincronizados.
+O [guia da apresentadora](docs/speaker/guia-glaucia.md) e o deck foram alinhados nesta mudança com a mesma regra de recuperação prioritária nas issues [#17](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/17) e [#20](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/20). A revisão humana continua pendente, e ainda não houve ensaio cronometrado nem validação visual por humano.
 
 ## Antes do evento
 
