@@ -93,3 +93,9 @@ test("local journey fixture: saved contribution survives results retrieval failu
   expect(posts).toBe(1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
+
+// These pre-existing scenarios provide aggregate-only fixtures. Explicitly
+// isolate the new detail read too; no request should reach a real database.
+test.beforeEach(async ({ page }) => {
+  await page.route("**/api/feedback/insights?*", route => route.fulfill({ status: 503, body: "Details outside this aggregate-only fixture" }));
+});

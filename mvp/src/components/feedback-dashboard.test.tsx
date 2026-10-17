@@ -114,7 +114,7 @@ describe("TalkResults", () => {
     expect(bars).toHaveLength(20);
     expect(bars[0].style.width).toBe("86%");
     expect(bars[1].style.width).toBe("60%");
-    expect(screen.getAllByText(talks[0].talkId)).toHaveLength(2);
+    expect(screen.getAllByText(talks[0].talkId)).toHaveLength(4);
     expect(screen.getByText("4.3", { selector: ".dashboard-bar-average" })).toBeTruthy();
     expect(screen.getByText("20 responses")).toBeTruthy();
     const firstBar = bars[0];
@@ -156,4 +156,15 @@ describe("TalkResults", () => {
     expect(html).toContain("<caption");
     expect(html).toContain("&lt;Workshop&gt;");
   });
+});
+
+it("offers a talk selector and actual response totals without an invented overall mean", () => {
+  render(<TalkResults talks={[{ talkId: "First", average: 4.3, count: 4 }, { talkId: "Second", average: 2, count: 2 }]} />);
+  expect(screen.getByLabelText("Explore a talk")).toBeTruthy();
+  expect(screen.getByText("Most reviewed talk")).toBeTruthy();
+  expect(Boolean(screen.getByLabelText("Explore a talk").compareDocumentPosition(screen.getByRole("button", { name: "First" })) & Node.DOCUMENT_POSITION_FOLLOWING)).toBe(true);
+  expect(screen.getByText("6", { selector: ".results-total" })).toBeTruthy();
+  fireEvent.change(screen.getByLabelText("Explore a talk"), { target: { value: "Second" } });
+  expect(screen.getByRole("heading", { name: "Second", level: 3 })).toBeTruthy();
+  expect(screen.queryByText(/overall average|trending/i)).toBeNull();
 });

@@ -27,3 +27,9 @@ for (const reducedMotion of ["no-preference", "reduce"] as const) {
     }
   });
 }
+
+// These pre-existing scenarios provide aggregate-only fixtures. Explicitly
+// isolate the new detail read too; no request should reach a real database.
+test.beforeEach(async ({ page }) => {
+  await page.route("**/api/feedback/insights?*", route => route.fulfill({ status: 503, body: "Details outside this aggregate-only fixture" }));
+});

@@ -11,6 +11,7 @@ const boundary = vi.hoisted(() => ({ getDb: vi.fn() }));
 vi.mock("@/db", () => boundary);
 import { GET, POST } from "@/app/api/feedback/route";
 import * as schema from "./schema";
+import { GET as insights } from "@/app/api/feedback/insights/route";
 
 let directory: string;
 let client: PGlite | undefined;
@@ -37,6 +38,17 @@ afterEach(async () => {
 });
 
 describe("durable isolated PostgreSQL adapter integration", () => {
+  it("reads actual stored rating distribution and comments without exposing authors", async () => {
+    await post(valid);
+    await post({ ...valid, rating: 3, comment: "" });
+    const response = await insights(new Request("http://localhost/api/feedback/insights?talkId=T1"));
+    const data = await response.json();
+    expect(data).toMatchObject({ count: 2, average: 4, distribution: [0, 0, 1, 0, 1] });
+    expect(data.comments).toHaveLength(1);
+    expect(data.comments[0].text).toBe("Great");
+    expect(JSON.stringify(data)).not.toContain("Ana");
+    expect(await (await GET()).json()).toEqual([{ talkId: "t1", average: 4, count: 2 }]);
+  });
   it("starts empty", async () => {
     expect(await (await GET()).json()).toEqual([]);
   });
