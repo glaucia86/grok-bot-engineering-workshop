@@ -57,12 +57,12 @@ BLOCKS = [
   cut="se vier FAIL, não corrija ao vivo. Mostre o FAIL como exemplo e diga que a correção fica para depois.",
   check=("You said the decision out loud. With all required criteria PASS and WARN reviewed, you merged on the exercise target. With FAIL or BLOCKED, you did not call the MVP accepted.",
          "Você disse a decisão em voz alta. Com todos os critérios obrigatórios em PASS e os WARN avaliados, você fez o merge no destino do exercício. Com FAIL ou BLOCKED, você não apresentou o MVP como aceito.")),
- dict(name="Routine", t="12:10–12:22", et="10:10–10:22", slides=(18, 18),
-  goal=("Mostrar um bot com rotina: um rascunho desativado e uma preview offline. Nada é ativado ou agendado.",
-        "Show a bot with a routine: a disabled draft and an offline preview. Nothing is enabled or scheduled."),
-  cut="mostre apenas o rascunho desativado e a preview offline. Não ative a rotina.",
-  check=("The draft is saved as disabled (or kept in the document) and the offline preview ran. Nothing was scheduled.",
-         "O rascunho está desativado (ou mantido no documento) e a preview offline rodou. Nada foi agendado.")),
+ dict(name="Recovery", t="12:10–12:22", et="10:10–10:22", slides=(18, 18),
+  goal=("Recuperar o núcleo: concluir verificação, testes independentes e revisão humana do formulário e dashboard, ou declarar BLOCKED com a evidência que falta. Rotina apenas se tudo estiver concluído e sobrar tempo.",
+        "Recover the core: complete verification, independent tests, and human review of the form and dashboard, or declare BLOCKED with the missing evidence. Show the routine only if everything is complete and time remains."),
+  cut="a rotina já está omitida; use o tempo para recuperar o núcleo, sem passar de 12:22 BRT; ao entrar no recap, diga os bloqueios em voz alta; as perguntas abrem às 12:26 BRT.",
+  check=("Core verification, independent tests, and human review are complete, or each remaining gap is BLOCKED with missing evidence named aloud when recap starts at 12:22 BRT. Recovery did not extend past 12:22; questions opened at 12:26 BRT. The routine appeared only if everything was complete and time remained.",
+         "Verificação do núcleo, testes independentes e revisão humana estão concluídos, ou cada lacuna restante está BLOCKED com a evidência ausente dita em voz alta quando o recap começa às 12:22 BRT. A recuperação não passou de 12:22; as perguntas abriram às 12:26 BRT. A rotina apareceu somente se tudo estava concluído e sobrou tempo.")),
  dict(name="Q&A", t="12:22–12:30", et="10:22–10:30", slides=(19, 22),
   goal=("Recapitular em três frases, abrir perguntas e encerrar às 12:30.",
         "Recap in three sentences, open questions, and finish at 12:30."),
@@ -324,21 +324,22 @@ slide(title="Live: read three things, then merge", t="11:58–12:10", m=12, clic
      Q("Is CI green enough to merge?", "No. CI green means tests ran. Acceptance means the agreed rules passed, with evidence.", "CI verde basta para fazer merge?", "Não. CI verde significa que os testes rodaram. Aceite significa que as regras combinadas passaram, com evidência.")],
  nxt=("Last step: let the bot work without me asking.", "Último passo: deixar o bot trabalhar sem eu pedir."))
 
-slide(title="Block 6: Routine", t="12:10–12:22", m=12, clicks=1, live=True,
- do=[D("Open the native routines feature in Grok Bot (not any third-party tool; exact screen: confirm in rehearsal). Click once to show the daily triage card (mock).", "Abra o recurso de rotinas nativo do Grok Bot (nenhuma ferramenta de terceiros; tela exata: conferir no ensaio). Clique uma vez para mostrar o cartão de triagem diária (mock).",
-       fail=("If routines cannot be saved as disabled, keep the draft in the document and show only the offline preview.", "Se não for possível salvar a rotina desativada, mantenha o rascunho no documento e mostre só a preview offline.")),
-     D("Draft only: Monday to Friday, 09:00, time zone America/Sao_Paulo, Enabled: No. Read-only GitHub access, private delivery. Use the full prompt from docs/routines/daily-triage.md. Do NOT enable or schedule anything.", "Só rascunho: segunda a sexta, 09:00, fuso America/Sao_Paulo, Enabled: No. Acesso GitHub somente leitura, entrega privada. Use o prompt completo de docs/routines/daily-triage.md. NÃO ative nem agende nada.",
+slide(title="Block 6: Recovery first", t="12:10–12:22", m=12, clicks=1, live=True,
+ do=[D("Check core implementation, independent tests, and human review of the form and dashboard. Use this time to finish them, or declare BLOCKED and name the missing evidence.", "Confira implementação do núcleo, testes independentes e revisão humana do formulário e dashboard. Use este tempo para concluí-los, ou declare BLOCKED e diga qual evidência falta.",
+       ok=("The core, tests, and human review are complete, with evidence.", "Núcleo, testes e revisão humana estão concluídos, com evidência."),
+       fail=("Any missing evidence remains BLOCKED and is named aloud before Q&A.", "Toda evidência ausente continua BLOCKED e é dita em voz alta antes do Q&A.")),
+     D("OPTIONAL — only if the core, tests, and human review are complete and time remains: open the native routines feature in Grok Bot and show a disabled draft. Monday to Friday, 09:00, America/Sao_Paulo, Enabled: No, read-only GitHub access, private delivery. Do NOT enable or schedule anything.", "OPCIONAL — somente se núcleo, testes e revisão humana estiverem concluídos e sobrar tempo: abra o recurso nativo de rotinas do Grok Bot e mostre um rascunho desativado. Segunda a sexta, 09:00, America/Sao_Paulo, Enabled: No, acesso GitHub somente leitura, entrega privada. NÃO ative nem agende nada.",
        ok=("The draft shows Enabled: No.", "O rascunho mostra Enabled: No.")),
-     D("Run only the offline preview prompt (below) on the three local sample files.", "Execute só o prompt da preview offline (abaixo) nos três arquivos de exemplo locais.", prompt=9,
+     D("OPTIONAL — only if everything is complete and time remains: run the offline preview prompt below on the three local sample files.", "OPCIONAL — somente se tudo estiver concluído e sobrar tempo: execute o prompt da preview offline abaixo nos três arquivos de exemplo locais.", prompt=9,
        ok=("The bot proposes one label per sample (bug, feature or unclear) and applies nothing.", "O bot propõe um label por exemplo (bug, feature ou unclear) e não aplica nada."),
        fail=("If it tries to touch real issues, stop it and say: 'This is preview only.'", "Se tentar mexer em issues reais, pare e diga: 'This is preview only.'"))],
- say=[S("A bot with a routine is a teammate.", "Um bot com rotina é um colega de time.", "routine → ru-TIIN; teammate → TIIM-mêit"),
-      S("Once a day. If nothing is new, one line.", "Uma vez por dia. Se não houver nada novo, uma linha.", "once → UÂNS; nothing → NÂ-thin"),
-      S("This is a draft, and it is disabled. I do not schedule anything today.", "Este é um rascunho e está desativado. Hoje eu não agendo nada.", "draft → DRÉFT; disabled → dis-ÊI-bold; schedule → SKÉ-djul"),
-      S("Routines can also start from a Linear issue.", "As rotinas também podem começar a partir de uma issue do Linear.", "Linear → LÍ-ni-er; issue → Í-shu")],
- cut=("Show only the disabled draft and the offline preview. Do not enable the routine.", "Mostre só o rascunho desativado e a preview offline. Não ative a rotina."),
- qa=[Q("Will it run now?", "No. It is a disabled draft. Enabling it needs an explicit decision later.", "Vai rodar agora?", "Não. É um rascunho desativado. Ativar exige uma decisão explícita depois."),
-     Q("What does it cost?", "Run it rarely and stay quiet when nothing is new. That keeps the cost low. I do not quote prices.", "Quanto custa?", "Rode poucas vezes e fique quieto quando não houver nada novo. Isso mantém o custo baixo. Eu não cito preços.")],
+ say=[S("First we recover. The routine comes only after the core is done.", "Primeiro recuperamos. A rotina vem somente depois que o núcleo estiver concluído.", "first → FÂRST; recover → ri-CÂ-ver; routine → ru-TIIN"),
+      S("If the form, the tests, or the human review are unfinished, I skip the routine. I do not shorten it.", "Se o formulário, os testes ou a revisão humana estiverem inacabados, eu pulo a rotina. Não a encurto.", "unfinished → an-FÍ-nisht; skip → SKÍP; shorten → SHÓR-ten"),
+      S("If everything is done and time remains, here is a draft. It is disabled.", "Se tudo estiver concluído e sobrar tempo, aqui está um rascunho. Ele está desativado.", "everything → É-vri-thin; remains → ri-MÊINS; disabled → dis-ÊI-bold"),
+      S("Recovery ends at 12:22 BRT. Then recap starts, and I say every blocker out loud. Questions open at 12:26 BRT.", "A recuperação termina às 12:22 BRT. Então começa o recap, e eu digo cada bloqueio em voz alta. As perguntas abrem às 12:26 BRT.", "recovery → ri-CÂ-ve-ri; ends → ÉNDS; recap → RÍ-cap; blocker → BLÓ-ker; questions → KUÉS-tchans; open → ÔU-pen; out loud → AUT LÁUD")],
+ cut=("The routine is already omitted. Use the time to recover the core, but never past 12:22 BRT. As recap starts, say the blockers aloud. Questions open at 12:26 BRT.", "A rotina já está omitida. Use o tempo para recuperar o núcleo, mas nunca passe de 12:22 BRT. Ao entrar no recap, diga os bloqueios em voz alta. As perguntas abrem às 12:26 BRT."),
+ qa=[Q("What if the core is still incomplete at 12:22 BRT?", "Stop recovery, start recap, and state what remains BLOCKED and which evidence is missing. Open questions at 12:26 BRT.", "E se o núcleo ainda estiver incompleto às 12:22 BRT?", "Encerre a recuperação, comece o recap e diga o que continua BLOCKED e qual evidência falta. Abra as perguntas às 12:26 BRT."),
+     Q("Can I shorten the routine to fit?", "No. Skip it completely unless the core, tests, and human review are complete and time remains.", "Posso encurtar a rotina para caber?", "Não. Pule-a por completo, a menos que núcleo, testes e revisão humana estejam concluídos e sobre tempo.")],
  nxt=("Let us recap, then your questions.", "Vamos recapitular e depois ouvir as perguntas de vocês."))
 
 slide(title="Recap", t="12:22–12:23", m=1, clicks=3,
@@ -512,13 +513,13 @@ def guide_blocks():
 def run_sheet():
     rows = ["| Brasília | ET | Slide | O que acontece (cliques e telas) | Tela compartilhada | Se atrasar |", "|---|---|---|---|---|---|"]
     rows.append("| 10:45 | 8:45 | 1 | Abrir deck (F), notas (S), abas prontas: GitHub, Grok Bot, instruções QA/DevOps, preview | Slide 1 | — |")
-    shared = {3:"GitHub", 8:"Grok Bot", 9:"Grok Bot", 10:"Grok Bot → Deck", 13:"Grok Bot", 14:"Grok Bot / GitHub", 15:"Preview", 17:"GitHub", 18:"Grok Bot"}
+    shared = {3:"GitHub", 8:"Grok Bot", 9:"Grok Bot", 10:"Grok Bot → Deck", 13:"Grok Bot", 14:"Grok Bot / GitHub", 15:"Preview", 17:"GitHub", 18:"Formulário / dashboard / evidências; Grok Bot só se opcional"}
     acts = {1:"Boas-vindas", 2:"Agenda em 8 passos (1 clique)", 3:"Tour do repo: README → `mvp/` → `docs/inception.md` (3 cliques)", 4:"Arquitetura do MVP (5 cliques)",
         5:f"A regra: quem constrói não julga, nenhum bot faz merge ({SL[4]['clicks']} {'clique' if SL[4]['clicks'] == 1 else 'cliques'})", 6:"Fluxo do time (6 cliques)", 7:"Charter: owns · good output · stops (3 cliques)",
         8:"**Ao vivo:** criar FDE TypeScript, depois QA e DevOps, skills, grupo", 9:"**Ao vivo:** prompt de design para o FDE", 10:"Aprovar design (prompt FDE) e **prova do FDE**; \"Green CI is not acceptance\"",
         11:"Loop PR → verify → approve (5 cliques)", 12:"Regra de todo bot: **prove it works** (3 cliques)", 13:"**Ao vivo:** prompt do QA, **prova do QA**, PASS/FAIL/WARN/BLOCKED", 14:"**Ao vivo:** prompt do DevOps e **prova do DevOps**, status do CI e preview",
         15:"**Ao vivo:** enviar feedback, ver a barra no dashboard", 16:"Quem decide sou eu: desfaz em 1 min × humano decide", 17:"**Ao vivo:** ler o PR (mudou, QA, CI) e fazer o merge",
-        18:"**Ao vivo:** preview da triagem diária, rascunho desativado", 19:"Recap: três frases (3 cliques)", 20:"Economizar uso", 21:"**OPCIONAL:** pstack (`/poteto-mode`, `/poteto-help`)", 22:"Perguntas e frase de encerramento (12:29)"}
+        18:"**Recuperação:** concluir núcleo, testes e revisão humana ou declarar BLOCKED; rotina só se tudo estiver concluído", 19:"Recap: três frases (3 cliques)", 20:"Economizar uso", 21:"**OPCIONAL:** pstack (`/poteto-mode`, `/poteto-help`)", 22:"Perguntas e frase de encerramento (12:29)"}
     for n, s in enumerate(SL, 1):
         st = s["t"].split("–")[0]; h, m = map(int, st.split(":"))
         rows.append(f'| {st} | {h-2}:{m:02d} | {n} | {acts[n]} | {shared.get(n, "Deck")} | {s["cut"][1]} |')

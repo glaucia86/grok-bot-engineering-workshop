@@ -45,9 +45,9 @@ As of October 16, PRs [#9](https://github.com/glaucia86/grok-bot-engineering-wor
 | 70–82 | Recovery first; optional routine afterward | Complete core verification/review or explain blockers; routine only if core is complete |
 | 82–90 | Q&A | Review lessons and optional extra practice |
 
-Follow the [core/optional boundary](spec.md#90-minute-teaching-boundary) and [budget and cut line](docs/inception.md#90-minute-budget-and-cut-line). Minutes 70–82 (12:10–12:22 Brasília) are reserved for recovery first; 82–90 remains Q&A. This is a planning budget, **not a timed rehearsal result**. Infrastructure preparation happens **before** the event, not in these 90 minutes.
+Follow the [core/optional boundary](spec.md#90-minute-teaching-boundary) and [budget and cut line](docs/inception.md#90-minute-budget-and-cut-line). Minutes 70–82 (12:10–12:22 Brasília) are reserved for recovery first; recovery never extends past 12:22 BRT. The recap/Q&A block starts at 12:22 BRT (10:22 ET), blockers are stated aloud on entry, and questions open at 12:26 BRT. This is a planning budget, **not a timed rehearsal result**. Infrastructure preparation happens **before** the event, not in these 90 minutes.
 
-The [presenter guide](docs/speaker/guia-glaucia.md) and deck still need the same recovery-first rule under [#17](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/17) and [#20](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/20). Until aligned, follow this cut line rather than their unconditional routine slot; the run sheets are not yet synchronized.
+The [presenter guide](docs/speaker/guia-glaucia.md) and deck were aligned with the same recovery-first rule in this change under [#17](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/17) and [#20](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/20). Human review is still pending, and there is still no timed rehearsal or human visual validation.
 
 ## Before the event
 
