@@ -38,6 +38,29 @@ afterEach(async () => {
 });
 
 describe("durable isolated PostgreSQL adapter integration", () => {
+  it("keeps aggregate and insights consistent across talk ID case variants", async () => {
+    for (const [talkId, rating, comment] of [
+      ["Talk A", 5, "First A"],
+      ["talk a", 4, "Second A"],
+      ["TALK A", 4, "Third A"],
+      ["Talk B", 2, "Only B"],
+    ] as const) {
+      expect((await post({ talkId, rating, comment, author: "Ana" })).status).toBe(201);
+    }
+
+    const aggregate = await (await GET()).json();
+    const talkAAggregate = aggregate.find((row: { talkId: string }) => row.talkId.toLowerCase() === "talk a");
+    const talkAInsights = await (await insights(new Request("http://localhost/api/feedback/insights?talkId=talk%20a"))).json();
+    const talkBInsights = await (await insights(new Request("http://localhost/api/feedback/insights?talkId=Talk%20B"))).json();
+
+    expect(talkAAggregate).toMatchObject({ average: 4.3, count: 3 });
+    expect(talkAInsights).toMatchObject({ average: talkAAggregate.average, count: talkAAggregate.count });
+    expect(["Talk A", "talk a", "TALK A"]).toContain(talkAInsights.talkId);
+    expect(talkAInsights.talkId).not.toBe("Talk B");
+    expect(talkAInsights.comments.map((comment: { text: string }) => comment.text).sort()).toEqual(["First A", "Second A", "Third A"]);
+    expect(talkBInsights).toMatchObject({ talkId: "Talk B", average: 2, count: 1 });
+  });
+
   it("reads actual stored rating distribution and comments without exposing authors", async () => {
     await post(valid);
     await post({ ...valid, rating: 3, comment: "" });
