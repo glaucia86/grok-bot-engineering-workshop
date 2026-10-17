@@ -1,5 +1,7 @@
 # Talk Feedback MVP reference application
 
+See the [starter-versus-reference checkpoint guide](../docs/workshop/starter-vs-reference.md).
+
 Main contains the complete reference form, accessible five-star rating and talk dashboard, merged through PRs #26/#27. The separate `checkpoint/mvp-base` is the exercise starter: its homepage deliberately omits the form and dashboard. Follow the README at the instructor-approved checkpoint SHA for its supported base and pinned requirements. This reference implementation is available for comparison; remote acceptance still needs commit-specific isolated-preview evidence.
 
 ## Two independent applications
