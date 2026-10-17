@@ -5,11 +5,13 @@ on:
     paths:
       - "mvp/**"
       - ".github/workflows/mvp.yml"
+      - ".github/workflows/mvp-preview-qa.yml"
   push:
     branches: [main]
     paths:
       - "mvp/**"
       - ".github/workflows/mvp.yml"
+      - ".github/workflows/mvp-preview-qa.yml"
   workflow_dispatch:
 
 permissions:

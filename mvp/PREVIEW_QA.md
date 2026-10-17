@@ -69,8 +69,67 @@ Do not introduce credentials
 into URLs, test data, reporter configuration or artifacts. Review failure output
 before sharing it; never upload provider responses or environment dumps.
 
+## Manually dispatched CI (disabled until approved configuration exists)
+
+`.github/workflows/mvp-preview-qa.yml` is separate from automatic local CI. It
+has only `workflow_dispatch`, runs on main, queues runs serially without canceling
+an active journey, and uses the named GitHub environment `mvp-preview-qa`.
+Its runner reuses the same guarded Playwright harness; it does not provision a
+database, migrate it, change deployments or supply a protection bypass.
+
+Before enabling or dispatching, an authorized operator must prove the provider
+isolation/binding, immutable deployment SHA, empty migrated QA dataset and write
+authorization listed above. Configure environment protection with required human
+reviewers and deployment branches restricted to main. If the repository/plan
+cannot enforce that protection, keep this workflow disabled and report BLOCKED.
+This change does not create/configure that environment, protection or credentials.
+
+Only after verification, set these **non-secret environment-scoped variables**:
+
+| Variable | Meaning |
+| --- | --- |
+| `MVP_PREVIEW_QA_ENABLED` | Exact `true`; leave absent until prerequisites are proven |
+| `MVP_PREVIEW_APPROVED_URL` | Independently verified immutable preview origin |
+| `MVP_PREVIEW_APPROVED_COMMIT` | Full deployed SHA verified for that origin |
+| `MVP_PREVIEW_APPROVED_QA_DATABASE_ID` | Non-secret resource ID of its isolated QA database |
+
+Do not put these in repository-wide variables as a substitute for the protected
+environment. Do not enter a connection string, token or credential into inputs,
+variables, source or logs. No `DATABASE_URL` or provider secret is needed by the
+runner, because the deployed preview owns its already verified database binding.
+
+Dispatch inputs are read inside the runner from `GITHUB_EVENT_PATH`, validated
+without printing them, and passed to Playwright only after approval matching.
+They are never interpolated into workflow `env`/`run` or exported to `GITHUB_ENV`.
+This avoids step-header disclosure; dispatch inputs are still not a secret store.
+
+Dispatch **from main** with the matching non-secret preview URL, full deployed
+SHA and QA resource ID, and explicitly confirm `isolated_authorized`. Missing,
+disabled or mismatched approved configuration fails before browser installation
+and before any preview request. Non-main dispatches skip the job; the runner also
+rejects non-main/non-manual contexts. The environment reviewer must independently
+check the dispatch and target before approving. The gate compares attestations;
+it cannot inspect Neon/Vercel or prove isolation, plan protection or deployed SHA.
+Changing the target needs fresh external verification and environment approval.
+
+The job checks out its trusted main workflow revision, not the input deployment
+SHA. The latter identifies the externally verified preview under test; it is not
+executed as workflow source. The run records both through normal GitHub run
+metadata and the curated target manifest. Gate tests run offline in normal CI;
+passing them is not authorization to dispatch the remote job.
+
+The artifact step runs even after journey failure and uploads **only**
+`preview-evidence/*/manifest.json` and `outcome.json`, using a run/attempt-specific
+artifact name and seven-day retention. It does not upload traces, screenshots,
+raw Playwright output directories or provider responses. Download and retain the
+curated cleanup IDs before expiry until authorized cleanup is complete. Timeout
+or abrupt runner loss can prevent upload; a green deployment or missing artifact
+is not successful acceptance. No retries or cleanup operations are added.
+
 Still **BLOCKED / not implemented here**: provider provisioning and isolation
 verification, secure protected-preview access, actual remote execution and
 commit verification, fresh application instance against the same QA database,
-authorized cleanup, and a protected opt-in remote CI job. Reload is not fresh
-instance proof. Issue #16 remains open; this patch provides safer preparation only.
+authorized cleanup, and configuration/approval of the protected CI environment.
+Reload is not fresh instance proof. No remote workflow was dispatched while
+implementing this integration. Issue #16 remains open; local tests and a workflow
+definition are preparation, not remote acceptance.
