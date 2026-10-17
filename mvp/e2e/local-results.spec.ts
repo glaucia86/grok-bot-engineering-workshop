@@ -17,21 +17,22 @@ for (const [width, height] of sizes) {
       await expect(results.getByRole(count ? "table" : "heading", { name: count ? "Talk feedback summary" : "No feedback yet" })).toBeVisible();
       await expect(page.getByLabel("Talk", { exact: true })).toHaveCount(0);
       if (count) {
-        await expect(results.locator(".dashboard-bar-fill")).toHaveCount(count);
+        await expect(results.getByRole("table", { name: "Talk feedback summary" })).toHaveCount(1);
+        await expect(results.locator("tbody tr")).toHaveCount(count);
+        await expect(results.locator(".dashboard-bar-fill")).toHaveCount(0);
         await expect(results.getByRole("rowheader", { name: rows[0].talkId, exact: true })).toBeVisible();
-        await expect(results.locator(".dashboard-bar-average").first()).toHaveText("4.3");
-        await expect.poll(async () => {
-          const fill = await results.locator(".dashboard-bar-fill").first().boundingBox();
-          const track = await results.locator(".dashboard-bar-track").first().boundingBox();
-          return fill!.width / track!.width;
-        }).toBeCloseTo(4.3 / 5, 2);
+        await expect(results.locator(".dashboard-average").first()).toHaveText(/^4\.3\s*\/ 5$/);
+        await expect(results.locator(".dashboard-count")).toHaveText(rows.map(row => String(row.count)));
+        for (const row of rows) {
+          await expect(results.getByRole("button", { name: row.talkId, exact: true })).toHaveAttribute("aria-pressed", String(row === rows[0]));
+        }
       } else {
         await expect(results.getByRole("link", { name: /Leave feedback/i })).toHaveAttribute("href", "/feedback");
         await expect(results.getByRole("table")).toHaveCount(0);
         await expect(results.locator(".dashboard-bar-fill")).toHaveCount(0);
       }
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-      await expect.poll(() => results.locator(".dashboard-bar-fill").evaluateAll(nodes => nodes.flatMap(node => node.getAnimations()).filter(animation => animation.playState === "running").length)).toBe(0);
+      await expect.poll(() => results.evaluate(node => node.getAnimations({ subtree: true }).filter(animation => animation.playState === "running").length)).toBe(0);
       await page.screenshot({ path: info.outputPath(`${count}-talks-${width}-local-fixture.png`), fullPage: true });
     });
   }
@@ -59,8 +60,9 @@ test("local results fixture: pending retrieval, reduced motion and 320px reflow"
   await expect.poll(() => Boolean(release)).toBe(true);
   release!();
   await expect(results.getByRole("rowheader", { name: "Talk A", exact: true })).toBeVisible();
-  await expect(results.locator(".dashboard-bar-average")).toHaveText("4.3");
-  expect(await results.locator(".dashboard-bar-fill").evaluate(node => node.getAnimations().length)).toBe(0);
+  await expect(results.locator(".dashboard-average")).toHaveText(/^4\.3\s*\/ 5$/);
+  await expect(results.locator(".dashboard-count")).toHaveText("4");
+  expect(await results.evaluate(node => node.getAnimations({ subtree: true }).length)).toBe(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({ path: info.outputPath("320-reflow-local-fixture.png"), fullPage: true });
   await page.setViewportSize({ width: 640, height: 900 });
@@ -95,17 +97,16 @@ test("local results fixture: initial retrieval failure has no fabricated results
   await expect(results.getByRole("rowheader", { name: "Recovered talk" })).toBeVisible();
 });
 
-test("local results fixture: normal motion runs once and stops after settling on route entry", async ({ page }) => {
+test("local results fixture: normal-motion panels settle without a looping animation on route entry", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.route("**/api/feedback", route => route.fulfill({ json: [{ talkId: "A talk", average: 3, count: 1 }] }));
   await page.goto("/results");
-  const bar = page.locator(".dashboard-bar-fill");
-  await expect(bar).toBeVisible();
-  await expect(bar).toHaveCSS("animation-duration", "0.24s");
-  await expect(page.locator(".dashboard-figure")).toHaveCSS("animation-duration", "0.16s");
-  await expect.poll(() => bar.evaluate(node => node.getAnimations().filter(animation => animation.playState === "running").length)).toBe(0);
-  const animation = await bar.evaluate(node => getComputedStyle(node).animationIterationCount);
-  expect(animation).toBe("1");
+  const results = page.locator("#results");
+  await expect(results.getByRole("table", { name: "Talk feedback summary" })).toBeVisible();
+  await expect(results.locator(".results-analytics")).toBeVisible();
+  await expect.poll(() => results.evaluate(node => node.getAnimations({ subtree: true }).filter(animation => animation.playState === "running").length)).toBe(0);
+  const iterations = await results.evaluate(node => node.getAnimations({ subtree: true }).map(animation => animation.effect?.getTiming().iterations ?? 1));
+  expect(iterations.every(count => count <= 1)).toBe(true);
 });
 
 // These pre-existing scenarios provide aggregate-only fixtures. Explicitly

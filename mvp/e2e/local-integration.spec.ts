@@ -46,7 +46,9 @@ for (const width of [390, 1440]) {
     const results = page.locator("#results");
     await expect(results.getByRole("rowheader", { name: longName, exact: true })).toBeVisible();
     await expect(results.locator(".dashboard-count")).toHaveText("1");
-    await expect(results.locator(".dashboard-bar-average")).toHaveText("4.0");
+    await expect(results.locator(".dashboard-average")).toHaveText(/^4\.0\s*\/ 5$/);
+    await expect(results.getByRole("table", { name: "Talk feedback summary" })).toHaveCount(1);
+    await expect(results.getByRole("button", { name: longName, exact: true })).toHaveAttribute("aria-pressed", "true");
     await expect(page.getByLabel("Talk", { exact: true })).toHaveCount(0);
     await page.reload();
     await expect(results.getByRole("rowheader", { name: longName, exact: true })).toBeVisible();
@@ -54,8 +56,8 @@ for (const width of [390, 1440]) {
     expect(gets).toBeGreaterThanOrEqual(2);
     expect(posts).toBe(1);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    if (width === 390) expect(await results.locator(".dashboard-bar-fill").evaluate(node => node.getAnimations().length)).toBe(0);
-    await expect.poll(() => results.locator(".dashboard-bar-fill").evaluateAll(nodes => nodes.flatMap(node => node.getAnimations()).filter(animation => animation.playState === "running").length)).toBe(0);
+    if (width === 390) expect(await results.evaluate(node => node.getAnimations({ subtree: true }).length)).toBe(0);
+    await expect.poll(() => results.evaluate(node => node.getAnimations({ subtree: true }).filter(animation => animation.playState === "running").length)).toBe(0);
     await page.screenshot({ path: info.outputPath(`journey-results-${width}-local-fixture.png`), fullPage: true });
     await page.goBack();
     await expect(page).toHaveURL(/\/feedback$/);

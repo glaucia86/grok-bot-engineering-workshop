@@ -1,9 +1,70 @@
 "use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { BarChart3, ChevronRight, Home, MessageSquare, RefreshCw } from "lucide-react";
 import type { ReactNode } from "react";
-const navigation = [{ href: "/", label: "Home" }, { href: "/feedback", label: "Leave feedback" }, { href: "/results", label: "Results" }];
+
+const navigation = [
+  { href: "/", label: "Home", icon: Home },
+  { href: "/feedback", label: "Leave feedback", icon: MessageSquare },
+  { href: "/results", label: "Results", icon: BarChart3 },
+];
+
 export function WorkshopShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  return <div className="loop-site"><a className="skip-link" href="#main-content">Skip to content</a><header className="loop-header"><Link href="/" className="wordmark loop-wordmark" aria-label="Talk Feedback home">Talk<span>Feedback</span><span className="wordmark-square" aria-hidden="true" /></Link><nav aria-label="Main navigation">{navigation.map(({ href, label }) => <Link key={href} href={href} aria-current={pathname === href ? "page" : undefined}>{label}</Link>)}</nav></header><main id="main-content" className="loop-main" tabIndex={-1}>{children}</main><footer className="loop-footer"><Link href="/">Talk Feedback</Link><p>Build something. Learn from people. Make it better.</p><span>Packt workshop</span></footer></div>;
+  const currentPage = navigation.find(item => item.href === pathname)?.label ?? "Workshop";
+
+  if (pathname === "/") {
+    return (
+      <div className="loop-site loop-site-home">
+        <a className="skip-link" href="#main-content">Skip to content</a>
+        <header className="company-header">
+          <div className="company-header-inner">
+            <Link href="/" className="wordmark loop-wordmark" aria-label="Talk Feedback home">
+              <span className="loop-brand-icon" aria-hidden="true"><RefreshCw size={21} strokeWidth={2.2} /></span>
+              <span>Talk<span className="wordmark-light">Feedback</span></span>
+            </Link>
+            <nav aria-label="Main navigation">
+              {navigation.map(({ href, label }) => (
+                <Link key={href} href={href} aria-current={pathname === href ? "page" : undefined}>{label}</Link>
+              ))}
+            </nav>
+          </div>
+        </header>
+        <main id="main-content" className="company-main" tabIndex={-1}>{children}</main>
+        <footer className="company-footer"><span>Talk Feedback</span><p>Packt workshop · Participant feedback</p></footer>
+      </div>
+    );
+  }
+
+  return (
+    <div className="loop-site">
+      <a className="skip-link" href="#main-content">Skip to content</a>
+      <aside className="loop-sidebar" aria-label="Workshop sidebar">
+        <Link href="/" className="wordmark loop-wordmark" aria-label="Talk Feedback home">
+          <span className="loop-brand-icon" aria-hidden="true"><RefreshCw size={21} strokeWidth={2.2} /></span>
+          <span>Talk<span className="wordmark-light">Feedback</span></span>
+        </Link>
+        <div className="sidebar-section-label">Workshop</div>
+        <nav aria-label="Main navigation">
+          {navigation.map(({ href, label, icon: Icon }) => (
+            <Link key={href} href={href} aria-current={pathname === href ? "page" : undefined}>
+              <Icon size={19} aria-hidden="true" />{label}
+              {pathname === href && <span className="nav-active-mark" aria-hidden="true" />}
+            </Link>
+          ))}
+        </nav>
+        <div className="sidebar-workshop"><span className="workshop-monogram" aria-hidden="true">P</span><div><strong>Packt workshop</strong><span>Participant feedback</span></div></div>
+      </aside>
+      <div className="loop-workspace">
+        <header className="loop-topbar">
+          <p className="loop-breadcrumb" aria-label="Current page"><span>Workshop</span><ChevronRight size={15} aria-hidden="true" /><strong>{currentPage}</strong></p>
+          <span className="loop-topbar-note">Learn. Share. Improve.</span>
+        </header>
+        <main id="main-content" className="loop-main" tabIndex={-1}>{children}</main>
+        <footer className="loop-footer"><span>Talk Feedback</span><p>Packt workshop</p></footer>
+      </div>
+    </div>
+  );
 }

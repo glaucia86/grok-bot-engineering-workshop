@@ -1,7 +1,8 @@
 // @vitest-environment happy-dom
 import React from "react";
+import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { FeedbackDashboard, TalkResults } from "./feedback-dashboard";
 
@@ -105,24 +106,16 @@ it("hides an outdated empty prompt while the first saved response is refreshing 
 });
 
 describe("TalkResults", () => {
-  it("renders twenty full labels, readable values and proportional horizontal bars without growing the chart width", () => {
-    const talks = Array.from({ length: 20 }, (_, index) => ({
-      talkId: `${index}-${"unbroken".repeat(20)}`, average: index === 0 ? 4.3 : 3, count: index + 1,
-    }));
-    const { container, rerender } = render(<TalkResults talks={talks} />);
-    const bars = container.querySelectorAll<HTMLElement>(".dashboard-bar-fill");
-    expect(bars).toHaveLength(20);
-    expect(bars[0].style.width).toBe("86%");
-    expect(bars[1].style.width).toBe("60%");
-    expect(screen.getAllByText(talks[0].talkId)).toHaveLength(4);
-    expect(screen.getByText("4.3", { selector: ".dashboard-bar-average" })).toBeTruthy();
-    expect(screen.getByText("20 responses")).toBeTruthy();
-    const firstBar = bars[0];
-    rerender(<TalkResults talks={talks.map((talk) => ({ ...talk }))} />);
-    expect(container.querySelector(".dashboard-bar-fill")).toBe(firstBar);
-    rerender(<TalkResults talks={talks.map((talk, index) => index ? talk : { ...talk, average: 5 })} />);
-    expect(container.querySelector(".dashboard-bar-fill")).not.toBe(firstBar);
-    expect(container.querySelector<HTMLElement>(".dashboard-bar-fill")?.style.width).toBe("100%");
+  it("renders one interactive comparison table with full labels and exact values", () => {
+    const talks = Array.from({ length: 20 }, (_, index) => ({ talkId: `${index}-${"unbroken".repeat(20)}`, average: index === 0 ? 4.3 : 3, count: index + 1 }));
+    const { container } = render(<TalkResults talks={talks} />);
+    expect(screen.getAllByRole("table")).toHaveLength(1);
+    expect(screen.getAllByRole("rowheader")).toHaveLength(20);
+    expect(screen.getByRole("button", { name: talks[0].talkId }).textContent).toBe(talks[0].talkId);
+    expect(screen.getByText("4.3", { selector: "td" })).toBeTruthy();
+    expect(screen.getByText("20", { selector: ".dashboard-count" })).toBeTruthy();
+    expect(container.querySelector(".dashboard-bars")).toBeNull();
+    expect(screen.queryByRole("figure", { name: /Average ratings by talk/ })).toBeNull();
   });
   it("explains how to populate the empty dashboard", () => {
     const html = renderToStaticMarkup(<TalkResults talks={[]} />);
@@ -130,41 +123,113 @@ describe("TalkResults", () => {
     expect(html).toContain("first review");
     expect(html).not.toContain("<table");
   });
-
-  it("lists every talk with its count and one-decimal average", () => {
-    const html = renderToStaticMarkup(<TalkResults talks={[
-      { talkId: "Engineering with bots", average: 4.3, count: 4 },
-      { talkId: "Ship thoughtfully", average: 3, count: 1 },
-    ]} />);
-    expect(html).toContain("Engineering with bots");
-    expect(html).toContain("Ship thoughtfully");
-    expect(html).toContain("4.3");
-    expect(html).toContain("3.0");
-    expect(html).toContain('<td class="dashboard-count">4</td>');
-    expect(html).toContain('<td class="dashboard-count">1</td>');
-    expect(html).toContain('scope="col">Average');
-    expect(html).toContain('scope="col">Responses');
-    expect(html).toContain('scope="row">Engineering with bots');
-  });
-
-  it("gives the chart a description and an accessible data counterpart", () => {
-    const html = renderToStaticMarkup(<TalkResults talks={[
-      { talkId: "<Workshop>", average: 5, count: 2 },
-    ]} />);
-    expect(html).toContain("Average ratings by talk, from 0 to 5");
-    expect(html).toContain("Exact values are listed in the table below");
-    expect(html).toContain("<caption");
-    expect(html).toContain("&lt;Workshop&gt;");
+  it("preserves the table's accessible headers and escapes talk labels", () => {
+    render(<TalkResults talks={[{ talkId: "<Workshop>", average: 4.3, count: 4 }]} />);
+    const table = screen.getByRole("table", { name: "Talk feedback summary" });
+    expect(within(table).getAllByRole("columnheader").map(node => node.textContent)).toEqual(["Talk", "Average", "Responses"]);
+    expect(within(table).getByRole("rowheader", { name: "<Workshop>" })).toBeTruthy();
+    expect(screen.getByText("4.3", { selector: "td" })).toBeTruthy();
   });
 });
 
-it("offers a talk selector and actual response totals without an invented overall mean", () => {
+it("pairs the compact factual summary with its labels without inventing an overall mean", () => {
   render(<TalkResults talks={[{ talkId: "First", average: 4.3, count: 4 }, { talkId: "Second", average: 2, count: 2 }]} />);
-  expect(screen.getByLabelText("Explore a talk")).toBeTruthy();
-  expect(screen.getByText("Most reviewed talk")).toBeTruthy();
-  expect(Boolean(screen.getByLabelText("Explore a talk").compareDocumentPosition(screen.getByRole("button", { name: "First" })) & Node.DOCUMENT_POSITION_FOLLOWING)).toBe(true);
-  expect(screen.getByText("6", { selector: ".results-total" })).toBeTruthy();
-  fireEvent.change(screen.getByLabelText("Explore a talk"), { target: { value: "Second" } });
-  expect(screen.getByRole("heading", { name: "Second", level: 3 })).toBeTruthy();
-  expect(screen.queryByText(/overall average|trending/i)).toBeNull();
+  const overview = screen.getByLabelText("Workshop response summary");
+  expect(overview.tagName).toBe("DL");
+  expect(within(overview).getAllByRole("term").map(node => node.textContent)).toEqual(["Responses received", "Talks reviewed", "Most reviewed talk"]);
+  expect(within(overview).getAllByRole("definition").map(node => node.textContent)).toEqual(["6", "2", "First4 ratings received"]);
+  expect(screen.queryByText(/overall average|trending|anonymous/i)).toBeNull();
+});
+
+it("keeps keyboard-native table selection before returning focus to the selected analytics", () => {
+  render(<TalkResults talks={[{ talkId: "First", average: 4.3, count: 4 }, { talkId: "Second", average: 2, count: 2 }]} />);
+  const button = screen.getByRole("button", { name: "Second" });
+  expect(button.tagName).toBe("BUTTON");
+  expect(button.getAttribute("aria-pressed")).toBe("false");
+  fireEvent.click(button);
+  expect(screen.getByLabelText("Explore a talk")).toBe(document.activeElement);
+  expect(screen.getByRole("region", { name: "Selected talk feedback" }).contains(screen.getByRole("heading", { name: "Second", level: 3 }))).toBe(true);
+  expect(button.getAttribute("aria-pressed")).toBe("true");
+  expect(button.closest("tr")?.getAttribute("data-selected")).toBe("true");
+});
+
+it("bounds large comparison tables and leaves short tables out of the scroll tab order", () => {
+  const styles = readFileSync("src/components/feedback-dashboard.css", "utf8");
+  const talks = Array.from({ length: 7 }, (_, index) => ({ talkId: `Talk ${index + 1}`, average: 4, count: 1 }));
+  const { rerender } = render(<><style>{styles}</style><section className="dashboard-root"><TalkResults talks={talks} /></section></>);
+  const scroll = screen.getByRole("region", { name: "Talk comparison rows" });
+  expect(scroll.tabIndex).toBe(0);
+  expect(scroll.getAttribute("data-scroll")).toBe("true");
+  expect(getComputedStyle(scroll).overflowY).toBe("auto");
+  expect(getComputedStyle(scroll).maxHeight).toBe("480px");
+  rerender(<><style>{styles}</style><section className="dashboard-root"><TalkResults talks={talks.slice(0, 2)} /></section></>);
+  expect(screen.getByRole("region", { name: "Talk comparison rows" }).hasAttribute("tabindex")).toBe(false);
+});
+
+it("uses one dominant analytics card followed by comparison and selected comments", async () => {
+  vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({ talkId: "Talk A", count: 1, average: 5, distribution: [0,0,0,0,1], comments: [{ text: "A useful beginning", date: "2026-10-17T10:00:00Z" }] }))));
+  const { container } = render(<TalkResults talks={[{ talkId: "Talk A", average: 5, count: 1 }, { talkId: "Talk B", average: 4, count: 1 }]} insights />);
+  await screen.findByText("A useful beginning");
+  const analytics = screen.getByRole("region", { name: "Selected talk feedback" });
+  expect(within(analytics).getByRole("list", { name: "Rating distribution" })).toBeTruthy();
+  expect(within(analytics).getByText("Based on 1 response. This is an early signal.")).toBeTruthy();
+  expect(analytics.querySelector(".talk-comments")).toBeNull();
+  const bottom = container.querySelector(".results-bottom-grid")!;
+  expect(bottom.contains(screen.getByRole("table"))).toBe(true);
+  expect(bottom.contains(screen.getByRole("list", { name: "Written feedback comments" }))).toBe(true);
+  expect(container.querySelectorAll(".results-analytics")).toHaveLength(1);
+});
+
+it("keeps supporting labels at AA contrast and the selector boundary identifiable", async () => {
+  const styles = readFileSync("src/components/feedback-dashboard.css", "utf8");
+  let refreshPending = false;
+  vi.stubGlobal("fetch", vi.fn((url: string) => {
+    if (url === "/api/feedback") return refreshPending ? new Promise(() => {}) : Promise.resolve(new Response('[{"talkId":"Talk A","average":4,"count":1}]'));
+    return Promise.resolve(new Response(JSON.stringify({ talkId: "Talk A", count: 1, average: 4, distribution: [0,0,0,1,0], comments: [{ text: "Useful feedback", date: "2026-10-17T10:00:00Z" }] })));
+  }));
+  const { container, rerender } = render(<><style>{styles}</style><FeedbackDashboard insights /></>);
+  await screen.findByText("Useful feedback");
+  const luminance = (color: string) => {
+    const hex = color.length === 4 ? color.slice(1).split("").map(value => value + value).join("") : color.slice(1);
+    const values = color.startsWith("#") ? hex.match(/.{2}/g)!.map(value => parseInt(value, 16)) : color.match(/\d+/g)!.slice(0, 3).map(Number);
+    const [red, green, blue] = values.map(value => { const channel = value / 255; return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4; });
+    return red * 0.2126 + green * 0.7152 + blue * 0.0722;
+  };
+  for (const [textSelector, surfaceSelector] of [[".insight-sample", ".results-analytics"], [".distribution-percentage", ".results-analytics"], [".dashboard-table thead th", ".results-comparison"], [".dashboard-average span", ".results-comparison"], [".rating-distribution > p", ".results-analytics"], [".talk-comments time", ".talk-comments li"], [".talk-comments header > span", ".talk-comments header > span"]]) {
+    const foreground = luminance(getComputedStyle(container.querySelector(textSelector)!).color);
+    const background = luminance(getComputedStyle(container.querySelector(surfaceSelector)!).backgroundColor);
+    expect((Math.max(foreground, background) + 0.05) / (Math.min(foreground, background) + 0.05), `${textSelector} text contrast`).toBeGreaterThanOrEqual(4.5);
+  }
+  const selector = getComputedStyle(screen.getByLabelText("Explore a talk"));
+  expect((luminance(selector.backgroundColor) + 0.05) / (luminance(selector.borderTopColor) + 0.05)).toBeGreaterThanOrEqual(3);
+  refreshPending = true;
+  rerender(<><style>{styles}</style><FeedbackDashboard insights revision={1} /></>);
+  const notice = screen.getByText(/Previously loaded results/);
+  expect((luminance(getComputedStyle(notice).backgroundColor) + 0.05) / (luminance(getComputedStyle(notice).color) + 0.05)).toBeGreaterThanOrEqual(4.5);
+});
+
+it.each([
+  { leadingCount: 2, ratingCount: 1, expectedCount: "1 rating each" },
+  { leadingCount: 3, ratingCount: 4, expectedCount: "4 ratings each" },
+])("reports $leadingCount tied leaders with $ratingCount ratings rather than choosing a sole leader", ({ leadingCount, ratingCount, expectedCount }) => {
+  const talks = Array.from({ length: leadingCount }, (_, index) => ({ talkId: `Leading talk ${index + 1}`, average: 4, count: ratingCount }));
+  if (ratingCount > 1) talks.push({ talkId: "Less reviewed talk", average: 5, count: 1 });
+  render(<TalkResults talks={talks} />);
+  const summary = screen.getByLabelText("Workshop response summary");
+  expect(within(summary).getAllByRole("term")[2].textContent).toBe("Most reviewed talks");
+  const leader = within(summary).getAllByRole("definition")[2];
+  expect(within(leader).getByText(`${leadingCount} tied`, { exact: true })).toBeTruthy();
+  expect(within(leader).getByText(expectedCount, { exact: true })).toBeTruthy();
+  expect(within(leader).queryByText("Leading talk 1", { exact: true })).toBeNull();
+});
+
+it("keeps the unique leader label for a single reviewed talk and omits leaders from the empty state", () => {
+  const { rerender } = render(<TalkResults talks={[{ talkId: "Only talk", average: 5, count: 1 }]} />);
+  const summary = screen.getByLabelText("Workshop response summary");
+  expect(within(summary).getAllByRole("term")[2].textContent).toBe("Most reviewed talk");
+  expect(within(summary).getAllByRole("definition")[2].textContent).toBe("Only talk1 rating received");
+  rerender(<TalkResults talks={[]} />);
+  expect(screen.getByRole("heading", { name: "No feedback yet" })).toBeTruthy();
+  expect(screen.queryByLabelText("Workshop response summary")).toBeNull();
+  expect(screen.queryByText(/Most reviewed/)).toBeNull();
 });

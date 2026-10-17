@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, type FormEvent } from "react";
-import { ArrowUpRight, Check, Star } from "lucide-react";
+import { ArrowRight, Check, MessageSquareText, Star } from "lucide-react";
 import { feedbackSchema, fieldErrors } from "@/lib/feedback-schema";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -20,7 +20,7 @@ export function FeedbackForm({ onSaved, resultsHref = "#results" }: { onSaved: (
   const form = useRef<HTMLFormElement>(null);
 
   function focusError(next: Record<string, string>) {
-    const name = ["talkId", "author", "comment", "rating"].find((key) => next[key]);
+    const name = ["talkId", "author", "rating", "comment"].find((key) => next[key]);
     requestAnimationFrame(() => form.current?.querySelector<HTMLElement>(`[name="${name}"]`)?.focus());
   }
 
@@ -64,13 +64,31 @@ export function FeedbackForm({ onSaved, resultsHref = "#results" }: { onSaved: (
 
   return (
     <section id="feedback" className="feedback-panel" aria-labelledby="feedback-title">
-      <header className="panel-heading"><h2 id="feedback-title">How was the talk?</h2><p>A useful detail makes the next session better.</p></header>
-      <form ref={form} onSubmit={submit} noValidate aria-busy={status === "saving"}>
-        <p className="form-note">Talk, your name and a rating are required. Comments are optional.</p>
-        {([ ["talkId", "Talk", "The talk you attended"], ["author", "Your name", "How should we call you?"] ] as const).map(([key, label, placeholder]) => (
+      <header className="panel-heading">
+        <div className="feedback-heading-icon" aria-hidden="true"><MessageSquareText size={22} /></div>
+        <div><h2 id="feedback-title">How was the talk?</h2><p>A useful detail makes the next session better.</p></div>
+      </header>
+      <form ref={form} onSubmit={submit} noValidate aria-labelledby="feedback-title" aria-describedby="feedback-requirements" aria-busy={status === "saving"}>
+        <p id="feedback-requirements" className="form-note">Talk, your name and a rating are required. Comments are optional.</p>
+        {([
+          ["talkId", "Talk", "The talk you attended", "Use the talk title so your feedback reaches the right session."],
+          ["author", "Your name", "Enter your name", "Your name is required, but it won’t be shown in results."],
+        ] as const).map(([key, label, placeholder, hint]) => (
           <div className="form-field" key={key}>
             <Label htmlFor={key}>{label}</Label>
-            <Input id={key} name={key} value={values[key]} placeholder={placeholder} required disabled={status === "saving"} aria-invalid={!!errors[key]} aria-describedby={errors[key] ? `${key}-error` : undefined} onChange={(event) => update(key, event.target.value)} />
+            <Input
+              id={key}
+              name={key}
+              value={values[key]}
+              placeholder={placeholder}
+              autoComplete={key === "author" ? "name" : "off"}
+              required
+              disabled={status === "saving"}
+              aria-invalid={!!errors[key]}
+              aria-describedby={`${key}-hint${errors[key] ? ` ${key}-error` : ""}`}
+              onChange={(event) => update(key, event.target.value)}
+            />
+            <p id={`${key}-hint`} className="field-hint">{hint}</p>
             {errors[key] && <p id={`${key}-error`} className="field-error">{errors[key]}</p>}
           </div>
         ))}
@@ -102,10 +120,39 @@ export function FeedbackForm({ onSaved, resultsHref = "#results" }: { onSaved: (
           {errors.rating && <p id="rating-error" className="field-error">{errors.rating}</p>}
           <p className="rating-preview" aria-hidden="true">{previewRating ? `Preview: ${previewRating} of 5 stars` : "\u00a0"}</p>
         </fieldset>
-        <div className="form-field"><Label htmlFor="comment">Comment (optional)</Label><Textarea id="comment" name="comment" rows={4} value={values.comment} placeholder="What clicked? What could be clearer?" disabled={status === "saving"} aria-invalid={!!errors.comment} aria-describedby={`comment-hint${errors.comment ? " comment-error" : ""}`} onChange={(event) => update("comment", event.target.value)} /><p id="comment-hint" className="field-hint">{values.comment.trim().length} / 1000 characters after trimming. Written comments appear in results; names are not shown.</p>{errors.comment && <p id="comment-error" className="field-error">{errors.comment}</p>}</div>
+        <div className="form-field comment-field">
+          <Label htmlFor="comment">Comment (optional)</Label>
+          <Textarea
+            id="comment"
+            name="comment"
+            rows={4}
+            value={values.comment}
+            placeholder="What clicked? What could be clearer?"
+            disabled={status === "saving"}
+            aria-invalid={!!errors.comment}
+            aria-describedby={`comment-hint${errors.comment ? " comment-error" : ""}`}
+            onChange={(event) => update("comment", event.target.value)}
+          />
+          <p id="comment-hint" className="field-hint comment-hint">
+            <span>Written comments appear in results; names are not shown.</span>
+            <span className="comment-count">{values.comment.trim().length} / 1000 characters after trimming.</span>
+          </p>
+          {errors.comment && <p id="comment-error" className="field-error">{errors.comment}</p>}
+        </div>
         {failure && <p role="alert" className="save-error">{failure}</p>}
-        <Button type="submit" className="submit-button" disabled={status === "saving"}>{status === "saving" ? "Saving…" : failure ? "Try again" : "Send feedback"}<ArrowUpRight aria-hidden="true" /></Button>
-        <div aria-live="polite" aria-atomic="true">{status === "saved" && <div className="save-success"><Check aria-hidden="true" size={18} /><div><p>Feedback saved. Thank you for helping the next talk.</p><a href={resultsHref}>View results</a></div></div>}</div>
+        <div className="form-actions">
+          <Button type="submit" className="submit-button" disabled={status === "saving"}>
+            {status === "saving" ? "Saving…" : failure ? "Try again" : "Send feedback"}<ArrowRight aria-hidden="true" />
+          </Button>
+        </div>
+        <div aria-live="polite" aria-atomic="true">
+          {status === "saved" && (
+            <div className="save-success">
+              <Check aria-hidden="true" size={18} />
+              <div><p>Feedback saved. Thank you for helping the next talk.</p><a href={resultsHref}>View results<ArrowRight size={15} aria-hidden="true" /></a></div>
+            </div>
+          )}
+        </div>
       </form>
     </section>
   );

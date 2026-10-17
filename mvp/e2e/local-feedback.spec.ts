@@ -78,34 +78,30 @@ test("local fixture: shared errors, retained input, normalized creation, reset a
   await page.screenshot({ path: testInfo.outputPath("mobile-local-fixture.png"), fullPage: true });
 });
 
-test("local fixture: chart and table show the same one-decimal aggregates", async ({ page }, testInfo) => {
+test("local fixture: one comparison table shows exact one-decimal aggregates and selects a talk", async ({ page }, testInfo) => {
   await page.route("**/api/feedback", (route) => route.fulfill({ json: [
     { talkId: "Engineering bots", average: 4.3, count: 4 },
     { talkId: "Reliable tests", average: 3, count: 2 },
   ] }));
   await page.goto("/results");
   const table = page.getByRole("table", { name: "Talk feedback summary" });
+  await expect(page.getByRole("table")).toHaveCount(1);
+  await expect(table.getByRole("columnheader")).toHaveText(["Talk", "Average", "Responses"]);
   const first = table.getByRole("row").filter({ hasText: "Engineering bots" });
   await expect(first.getByRole("cell", { name: /^4\.3\s*\/ 5$/ })).toBeVisible();
   await expect(first.getByRole("cell", { name: "4", exact: true })).toBeVisible();
   await expect(table.getByRole("row").filter({ hasText: "Reliable tests" }).getByRole("cell", { name: /^3\.0\s*\/ 5$/ })).toBeVisible();
-  const chart = page.getByRole("figure", { name: "Average ratings by talk, from 0 to 5" });
-  await expect(chart).toBeVisible();
-  await expect(chart.getByText("4.3", { exact: true })).toBeVisible();
-  await expect(chart.getByText("3.0", { exact: true })).toBeVisible();
-  // Verify the rendered horizontal encoding against the fixed 0–5 scale.
-  const bars = chart.locator(".dashboard-bar-fill");
-  await expect(bars).toHaveCount(2);
-  await expect.poll(async () => {
-    const longer = await bars.nth(0).boundingBox();
-    const shorter = await bars.nth(1).boundingBox();
-    return longer!.width / shorter!.width;
-  }).toBeCloseTo(4.3 / 3, 2);
-  await expect.poll(async () => {
-    const track = await chart.locator(".dashboard-bar-track").first().boundingBox();
-    const longer = await bars.nth(0).boundingBox();
-    return longer!.width / track!.width;
-  }).toBeCloseTo(4.3 / 5, 2);
+  await expect(page.locator(".results-total")).toHaveText("6");
+  await expect(page.locator(".dashboard-bar-fill")).toHaveCount(0);
+  await expect(page.getByRole("figure", { name: "Average ratings by talk, from 0 to 5" })).toHaveCount(0);
+  await expect(table.getByRole("button", { name: "Engineering bots", exact: true })).toHaveAttribute("aria-pressed", "true");
+  const second = table.getByRole("button", { name: "Reliable tests", exact: true });
+  await expect(second).toHaveAttribute("aria-pressed", "false");
+  await second.click();
+  await expect(second).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByLabel("Explore a talk")).toHaveValue("Reliable tests");
+  await expect(page.getByLabel("Explore a talk")).toBeFocused();
+  await expect(page.getByRole("heading", { name: "Reliable tests", exact: true })).toBeVisible();
   await page.screenshot({ path: testInfo.outputPath("two-talks-local-fixture.png"), fullPage: true });
 });
 
