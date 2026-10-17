@@ -12,6 +12,7 @@
     "db:migrate": "drizzle-kit migrate",
     "typecheck": "next typegen && tsc --noEmit",
     "verify:http": "node scripts/verify-http.mjs",
+    "compare:checkpoint": "node scripts/compare-checkpoint.mjs . --expect reference",
     "test:e2e": "playwright test --config=playwright.config.ts",
     "test:e2e:preview": "playwright test --config=playwright.preview.config.ts"
   },
