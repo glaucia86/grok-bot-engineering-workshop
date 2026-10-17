@@ -1,0 +1,29 @@
+{
+  "sourceRevision": "2d4e89c5c5f27fcf76d4d148d4481ca7a87ed3cb",
+  "unitTests": 166,
+  "priorFullBrowserSuite": 53,
+  "finalBrowserTests": 26,
+  "finalCobaltTests": 7,
+  "finalResultsStates": 19,
+  "httpChecks": 4,
+  "lintErrors": 0,
+  "preexistingLintWarnings": 1,
+  "scope": "Final build. The seven cobalt tests share the same fixture of 41 responses and test details, save/reload and viewport/focus. The nineteen legacy result scenarios use aggregate-only fixtures and explicitly return 503 for details; their screenshots prove states and containment, not populated-comment examples.",
+  "additionalCaptures": [
+    "0-talks-390-local-fixture.png",
+    "0-talks-1440-local-fixture.png",
+    "20-talks-390-local-fixture.png",
+    "20-talks-1440-local-fixture.png",
+    "slow-loading-reduced-local-fixture.png",
+    "initial-error-local-fixture.png",
+    "200-percent-zoom-local-fixture.png",
+    "results-cobalt-320.png",
+    "results-cobalt-390.png",
+    "results-cobalt-768.png",
+    "results-cobalt-1440.png",
+    "details-error.png",
+    "details-loading.png",
+    "mobile-selected-talk-focus.png"
+  ]
+}
+

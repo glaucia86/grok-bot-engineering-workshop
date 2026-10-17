@@ -1,0 +1,108 @@
+{
+  "sha": "85523fef23ec525987177a6087fa848dd19bf7bf",
+  "fixture": "Local intercepted GET only; synthetic aggregates; no persistence or remote access",
+  "device": {
+    "platform": "win32",
+    "architecture": "x64",
+    "osType": "Windows_NT",
+    "osRelease": "10.0.26200",
+    "browserVersion": "156.0.8078.4",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.8078.4 Safari/537.36",
+    "deviceScaleFactor": 1,
+    "cpuThrottling": "none",
+    "networkThrottling": "none",
+    "requestProfile": "sequential warm requests"
+  },
+  "metrics": [
+    {
+      "route": "/",
+      "file": "home-1440.png",
+      "overflow": false,
+      "active": "Home",
+      "headings": [
+        "Build.Listen.Improve."
+      ],
+      "width": 1440
+    },
+    {
+      "route": "/feedback",
+      "file": "feedback-1440.png",
+      "overflow": false,
+      "active": "Leave feedback",
+      "headings": [
+        "Leave feedback"
+      ],
+      "width": 1440
+    },
+    {
+      "route": "/results",
+      "file": "results-1440.png",
+      "overflow": false,
+      "active": "Results",
+      "headings": [
+        "Workshop results"
+      ],
+      "width": 1440
+    },
+    {
+      "route": "/",
+      "file": "home-390.png",
+      "overflow": false,
+      "active": "Home",
+      "headings": [
+        "Build.Listen.Improve."
+      ],
+      "width": 390
+    },
+    {
+      "route": "/feedback",
+      "file": "feedback-390.png",
+      "overflow": false,
+      "active": "Leave feedback",
+      "headings": [
+        "Leave feedback"
+      ],
+      "width": 390
+    },
+    {
+      "route": "/results",
+      "file": "results-390.png",
+      "overflow": false,
+      "active": "Results",
+      "headings": [
+        "Workshop results"
+      ],
+      "width": 390
+    },
+    {
+      "route": "/",
+      "file": "home-320.png",
+      "overflow": false,
+      "active": "Home",
+      "headings": [
+        "Build.Listen.Improve."
+      ],
+      "width": 320
+    },
+    {
+      "route": "/feedback",
+      "file": "feedback-320.png",
+      "overflow": false,
+      "active": "Leave feedback",
+      "headings": [
+        "Leave feedback"
+      ],
+      "width": 320
+    },
+    {
+      "route": "/results",
+      "file": "results-320.png",
+      "overflow": false,
+      "active": "Results",
+      "headings": [
+        "Workshop results"
+      ],
+      "width": 320
+    }
+  ]
+}

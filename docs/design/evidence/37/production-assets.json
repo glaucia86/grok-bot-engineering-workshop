@@ -1,0 +1,68 @@
+{
+  "revision": "fdb227f",
+  "scope": "all .next/static JS/CSS disk and per-file gzip bytes; same routes; local production build; no runtime speed or CWV claim",
+  "total": 784187,
+  "gzip": 239101,
+  "files": [
+    {
+      "path": ".next/static/-4BipFhqjjgK33l4yU3aJ/_buildManifest.js",
+      "bytes": 219,
+      "gzip": 154
+    },
+    {
+      "path": ".next/static/-4BipFhqjjgK33l4yU3aJ/_clientMiddlewareManifest.js",
+      "bytes": 96,
+      "gzip": 66
+    },
+    {
+      "path": ".next/static/-4BipFhqjjgK33l4yU3aJ/_ssgManifest.js",
+      "bytes": 80,
+      "gzip": 64
+    },
+    {
+      "path": ".next/static/chunks/06bs-nf19b2js.js",
+      "bytes": 29512,
+      "gzip": 7705
+    },
+    {
+      "path": ".next/static/chunks/0cz1d0mv5g_q7.js",
+      "bytes": 112594,
+      "gzip": 39627
+    },
+    {
+      "path": ".next/static/chunks/0s92qwbwn-h4j.js",
+      "bytes": 169222,
+      "gzip": 54336
+    },
+    {
+      "path": ".next/static/chunks/1tq6ppe__m8m-.js",
+      "bytes": 14090,
+      "gzip": 3602
+    },
+    {
+      "path": ".next/static/chunks/1x6obpmlu1_c2.js",
+      "bytes": 5361,
+      "gzip": 1975
+    },
+    {
+      "path": ".next/static/chunks/21czei0hna638.js",
+      "bytes": 229850,
+      "gzip": 71991
+    },
+    {
+      "path": ".next/static/chunks/3l_qmp-61z4yc.js",
+      "bytes": 168793,
+      "gzip": 46576
+    },
+    {
+      "path": ".next/static/chunks/3q0mzgq3vkqbj.css",
+      "bytes": 44340,
+      "gzip": 9065
+    },
+    {
+      "path": ".next/static/chunks/turbopack-3-ry682tkyiqk.js",
+      "bytes": 10030,
+      "gzip": 3940
+    }
+  ]
+}

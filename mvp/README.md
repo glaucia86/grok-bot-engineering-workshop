@@ -46,7 +46,7 @@ they do **not** validate the production Neon HTTP transport, remote Neon schema,
 or deployed Vercel environment. Mocked route tests do not prove persistence.
 
 - `npm run verify:http` starts its own production server after a build, checks
-  the homepage, Next.js `/feedback` 404, and invalid `/api/feedback` 400 over real
+  the homepage, `/feedback` and `/results` 200, and invalid `/api/feedback` 400 over real
   HTTP with DATABASE_URL explicitly blanked, then stops only its owned process. It does not
   submit valid data or test remote persistence.
 

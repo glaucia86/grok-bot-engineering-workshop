@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "../components/feedback-dashboard.css";
+@import "../components/feedback-form.css";
+@import "./loop.css";
+@import "./bots.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -128,13 +132,13 @@
     @apply font-sans;
   }
 }
-/* Compact workshop workspace. System fonts require no network downloads. */
-:root { --background: #f5f6f8; --foreground: #172126; --card: #ffffff; --card-foreground: #172126; --primary: #16604f; --primary-foreground: #ffffff; --muted: #e9edef; --muted-foreground: #53616a; --border: #cbd2d7; --input: #87959e; --ring: #16604f; --destructive: #a52c22; --font-sans: "Segoe UI", "Helvetica Neue", Arial, sans-serif; --font-geist-mono: Consolas, monospace; --radius: .4rem; }
+/* Workshop typography is self-hosted; no font-provider request at runtime. */
+:root { --background: #f4f6fb; --foreground: #182239; --card: #ffffff; --card-foreground: #182239; --primary: #244be8; --primary-foreground: #ffffff; --muted: #e9edef; --muted-foreground: #59657c; --border: #d5dce9; --input: #87959e; --ring: #244be8; --destructive: #a52c22; --font-sans: "Manrope", "Segoe UI", sans-serif; --font-geist-mono: Consolas, monospace; --radius: .4rem; }
 html { scroll-padding-top: 2rem; }
-body { font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif; }
+body { font-family: "Manrope", "Segoe UI", sans-serif; }
 a, button, input, textarea, [tabindex] { outline-offset: 4px; }
-a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible { outline: 2px solid #16604f; }
-.skip-link { position: absolute; left: 1rem; top: -5rem; padding: .75rem; background: #172126; color: white; z-index: 20; }
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible { outline: 2px solid #244be8; }
+.skip-link { position: absolute; left: 1rem; top: -5rem; padding: .75rem; background: #182239; color: white; z-index: 20; }
 .skip-link:focus { top: 1rem; }
 .site-header, .site-main, .site-footer { width: min(1264px, calc(100% - 96px)); margin-inline: auto; }
 .site-header { min-height: 76px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); gap: 24px; flex-wrap: wrap; }
@@ -166,10 +170,10 @@ h1 { font-size: clamp(28px, 3vw, 36px); font-weight: 650; line-height: 1.15; let
 .rating-options { display: flex; gap: 6px; margin-top: 12px; }
 .rating-option { position: relative; flex: 1; min-width: 44px; max-width: 52px; }
 .rating-option input { position: absolute; inset: 0; opacity: 0; margin: 0; width: 100%; height: 100%; cursor: pointer; }
-.rating-option span { display: grid; place-items: center; border: 1px solid var(--input); min-height: 48px; border-radius: 4px; background: #ffffff; color: #16604f; }
+.rating-option span { display: grid; place-items: center; border: 1px solid var(--input); min-height: 48px; border-radius: 4px; background: #ffffff; color: #244be8; }
 .rating-option input:checked + span { border: 2px solid currentColor; }
-.rating-option input:focus-visible + span { outline: 2px solid #16604f; outline-offset: 3px; }
-.rating-option input:hover:not(:disabled) + span { border-color: #16604f; }
+.rating-option input:focus-visible + span { outline: 2px solid #244be8; outline-offset: 3px; }
+.rating-option input:hover:not(:disabled) + span { border-color: #244be8; }
 .rating-option input:disabled { cursor: not-allowed; }
 .rating-option input:disabled + span { opacity: .6; }
 .rating-selection { min-height: 18px; }
@@ -180,7 +184,7 @@ h1 { font-size: clamp(28px, 3vw, 36px); font-weight: 650; line-height: 1.15; let
 }
 .submit-button { min-height: 48px; padding: 12px 20px; font-size: 15px; border-radius: 4px; width: 100%; justify-content: space-between; }
 .save-success, .save-error { font-size: 14px; line-height: 1.6; padding: 14px 0 0; }
-.save-success { display: flex; gap: 8px; align-items: flex-start; color: #16604f; }
+.save-success { display: flex; gap: 8px; align-items: flex-start; color: #244be8; }
 .save-success svg { flex-shrink: 0; margin-top: 2px; }
 .save-error { color: var(--destructive); margin-bottom: 16px; }
 .dashboard-empty { min-height: 420px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }

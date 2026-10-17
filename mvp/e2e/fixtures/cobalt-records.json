@@ -1,0 +1,251 @@
+{
+  "scope": "Synthetic local workshop ratings; no real attendee data",
+  "records": [
+    {
+      "talkId": "Engineering reliable bots",
+      "rating": 5,
+      "comment": "The live examples made the engineering loop click. I can use this approach with my team.",
+      "createdAt": "2026-10-16T14:00:00.000Z"
+    },
+    {
+      "talkId": "Engineering reliable bots",
+      "rating": 5,
+      "comment": "More time on failure recovery would help. The test-first workflow was especially useful.",
+      "createdAt": "2026-10-16T14:01:00.000Z"
+    },
+    {
+      "talkId": "Engineering reliable bots",
+      "rating": 4,
+      "comment": "Clear explanations and a practical exercise. A great starting point for building reliable agents.",
+      "createdAt": "2026-10-16T14:02:00.000Z"
+    },
+    {
+      "talkId": "Engineering reliable bots",
+      "rating": 4,
+      "comment": "",
+      "createdAt": "2026-10-16T14:03:00.000Z"
+    },
+    {
+      "talkId": "Engineering reliable bots",
+      "rating": 4,
+      "comment": "",
+      "createdAt": "2026-10-16T14:04:00.000Z"
+    },
+    {
+      "talkId": "Engineering reliable bots",
+      "rating": 5,
+      "comment": "",
+      "createdAt": "2026-10-16T14:05:00.000Z"
+    },
+    {
+      "talkId": "Engineering reliable bots",
+      "rating": 3,
+      "comment": "",
+      "createdAt": "2026-10-16T14:06:00.000Z"
+    },
+    {
+      "talkId": "Engineering reliable bots",
+      "rating": 5,
+      "comment": "",
+      "createdAt": "2026-10-16T14:07:00.000Z"
+    },
+    {
+      "talkId": "Engineering reliable bots",
+      "rating": 4,
+      "comment": "",
+      "createdAt": "2026-10-16T14:08:00.000Z"
+    },
+    {
+      "talkId": "Engineering reliable bots",
+      "rating": 5,
+      "comment": "",
+      "createdAt": "2026-10-16T14:09:00.000Z"
+    },
+    {
+      "talkId": "Engineering reliable bots",
+      "rating": 4,
+      "comment": "",
+      "createdAt": "2026-10-16T14:10:00.000Z"
+    },
+    {
+      "talkId": "Engineering reliable bots",
+      "rating": 5,
+      "comment": "",
+      "createdAt": "2026-10-16T14:11:00.000Z"
+    },
+    {
+      "talkId": "Testing what matters",
+      "rating": 5,
+      "comment": "The examples showed exactly what a good assertion should prove.",
+      "createdAt": "2026-10-16T14:00:00.000Z"
+    },
+    {
+      "talkId": "Testing what matters",
+      "rating": 5,
+      "comment": "The keyboard testing walkthrough was useful.",
+      "createdAt": "2026-10-16T14:01:00.000Z"
+    },
+    {
+      "talkId": "Testing what matters",
+      "rating": 5,
+      "comment": "",
+      "createdAt": "2026-10-16T14:02:00.000Z"
+    },
+    {
+      "talkId": "Testing what matters",
+      "rating": 4,
+      "comment": "",
+      "createdAt": "2026-10-16T14:03:00.000Z"
+    },
+    {
+      "talkId": "Testing what matters",
+      "rating": 5,
+      "comment": "",
+      "createdAt": "2026-10-16T14:04:00.000Z"
+    },
+    {
+      "talkId": "Testing what matters",
+      "rating": 4,
+      "comment": "",
+      "createdAt": "2026-10-16T14:05:00.000Z"
+    },
+    {
+      "talkId": "Testing what matters",
+      "rating": 5,
+      "comment": "",
+      "createdAt": "2026-10-16T14:06:00.000Z"
+    },
+    {
+      "talkId": "Testing what matters",
+      "rating": 5,
+      "comment": "",
+      "createdAt": "2026-10-16T14:07:00.000Z"
+    },
+    {
+      "talkId": "From local to production",
+      "rating": 4,
+      "comment": "A concrete deployment checklist would help me repeat this later.",
+      "createdAt": "2026-10-16T14:00:00.000Z"
+    },
+    {
+      "talkId": "From local to production",
+      "rating": 3,
+      "comment": "",
+      "createdAt": "2026-10-16T14:01:00.000Z"
+    },
+    {
+      "talkId": "From local to production",
+      "rating": 4,
+      "comment": "",
+      "createdAt": "2026-10-16T14:02:00.000Z"
+    },
+    {
+      "talkId": "From local to production",
+      "rating": 4,
+      "comment": "",
+      "createdAt": "2026-10-16T14:03:00.000Z"
+    },
+    {
+      "talkId": "From local to production",
+      "rating": 5,
+      "comment": "",
+      "createdAt": "2026-10-16T14:04:00.000Z"
+    },
+    {
+      "talkId": "From local to production",
+      "rating": 4,
+      "comment": "",
+      "createdAt": "2026-10-16T14:05:00.000Z"
+    },
+    {
+      "talkId": "Designing for everyone",
+      "rating": 5,
+      "comment": "The accessible form examples were immediately useful.",
+      "createdAt": "2026-10-16T14:00:00.000Z"
+    },
+    {
+      "talkId": "Designing for everyone",
+      "rating": 4,
+      "comment": "I appreciated seeing the mobile workflow as well.",
+      "createdAt": "2026-10-16T14:01:00.000Z"
+    },
+    {
+      "talkId": "Designing for everyone",
+      "rating": 5,
+      "comment": "",
+      "createdAt": "2026-10-16T14:02:00.000Z"
+    },
+    {
+      "talkId": "Designing for everyone",
+      "rating": 5,
+      "comment": "",
+      "createdAt": "2026-10-16T14:03:00.000Z"
+    },
+    {
+      "talkId": "Designing for everyone",
+      "rating": 4,
+      "comment": "",
+      "createdAt": "2026-10-16T14:04:00.000Z"
+    },
+    {
+      "talkId": "Designing for everyone",
+      "rating": 5,
+      "comment": "",
+      "createdAt": "2026-10-16T14:05:00.000Z"
+    },
+    {
+      "talkId": "Designing for everyone",
+      "rating": 4,
+      "comment": "",
+      "createdAt": "2026-10-16T14:06:00.000Z"
+    },
+    {
+      "talkId": "Designing for everyone",
+      "rating": 5,
+      "comment": "",
+      "createdAt": "2026-10-16T14:07:00.000Z"
+    },
+    {
+      "talkId": "Designing for everyone",
+      "rating": 4,
+      "comment": "",
+      "createdAt": "2026-10-16T14:08:00.000Z"
+    },
+    {
+      "talkId": "Designing for everyone",
+      "rating": 5,
+      "comment": "",
+      "createdAt": "2026-10-16T14:09:00.000Z"
+    },
+    {
+      "talkId": "A human in the loop",
+      "rating": 3,
+      "comment": "",
+      "createdAt": "2026-10-16T14:00:00.000Z"
+    },
+    {
+      "talkId": "A human in the loop",
+      "rating": 4,
+      "comment": "",
+      "createdAt": "2026-10-16T14:01:00.000Z"
+    },
+    {
+      "talkId": "A human in the loop",
+      "rating": 4,
+      "comment": "",
+      "createdAt": "2026-10-16T14:02:00.000Z"
+    },
+    {
+      "talkId": "A human in the loop",
+      "rating": 3,
+      "comment": "",
+      "createdAt": "2026-10-16T14:03:00.000Z"
+    },
+    {
+      "talkId": "A human in the loop",
+      "rating": 5,
+      "comment": "",
+      "createdAt": "2026-10-16T14:04:00.000Z"
+    }
+  ]
+}

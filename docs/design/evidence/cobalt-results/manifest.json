@@ -1,0 +1,129 @@
+{
+  "sourceRevision": "2d4e89c5c5f27fcf76d4d148d4481ca7a87ed3cb",
+  "utc": "2026-10-17T01:29:38.177Z",
+  "scope": "Synthetic local workshop ratings; no real attendee data",
+  "fixtureResponses": 41,
+  "remotePostCount": 0,
+  "ownedOrigin": "http://127.0.0.1:49397",
+  "ownedPid": 36272,
+  "device": {
+    "platform": "win32",
+    "architecture": "x64",
+    "osType": "Windows_NT",
+    "osRelease": "10.0.26200",
+    "browserVersion": "156.0.8078.4",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.8078.4 Safari/537.36",
+    "deviceScaleFactor": 1,
+    "cpuThrottling": "none",
+    "networkThrottling": "none",
+    "requestProfile": "sequential warm requests"
+  },
+  "hashFormat": "SHA-256 over UTF-8 source normalized CRLF to LF; binary font files hashed as bytes",
+  "filesSha256": {
+    "mvp/src/app/globals.css": "140672b76ccd3237a50a5799328cbceb7283993c241f179be5a4debfac9a5322",
+    "mvp/src/app/loop.css": "515c1d271ed787f7a4624d55084caf84024f8c89322356deba6e44769e5c0f91",
+    "mvp/src/components/feedback-dashboard.css": "15283113a1e67da479170fac8f749ba9a5a69d4a84e03378c4d4fb8135232e67",
+    "mvp/src/components/feedback-form.css": "53a98e0819d2d57721c33dd74c618b54452fa0d62714af6b2700802460bfdd75",
+    "mvp/src/components/feedback-dashboard.tsx": "9f3c3f3f4fa046c8db18e01a8a15365917de3139f8363a07fc434f62062dc9d3",
+    "mvp/src/components/talk-insights.tsx": "24bf0aa8418135cb90ce6b36992b7f2a882be39dae1cc77915423d54a7843842",
+    "mvp/src/app/api/feedback/insights/route.ts": "90ae0356350de1ca8a05446df30ff0b10199b2f649824e05f7d880a773d40308",
+    "mvp/e2e/fixtures/cobalt-records.json": "9351c6800f616c78f14db72138202d2f9e02155c8bc0d0a0018a76cc5eca9ab9"
+  },
+  "fontHashes": {
+    "mvp/public/fonts/OFL-Manrope.txt": "58172e0c0fac2cda8a37b348164bb55e44b0e69051e557e92b1d3f6910141f7b",
+    "mvp/public/fonts/README.txt": "1d54533747c2d1b23ff66c688b458db4a417960b0f7ee52008daee2c8c829356",
+    "mvp/public/fonts/manrope-variable.ttf": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6"
+  },
+  "captures": [
+    {
+      "file": "home-390.png",
+      "route": "/",
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": false,
+      "font": "Manrope, \"Segoe UI\", sans-serif"
+    },
+    {
+      "file": "feedback-390.png",
+      "route": "/feedback",
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": false,
+      "font": "Manrope, \"Segoe UI\", sans-serif"
+    },
+    {
+      "file": "results-390.png",
+      "route": "/results",
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": false,
+      "font": "Manrope, \"Segoe UI\", sans-serif"
+    },
+    {
+      "file": "home-768.png",
+      "route": "/",
+      "viewport": [
+        768,
+        1024
+      ],
+      "overflow": false,
+      "font": "Manrope, \"Segoe UI\", sans-serif"
+    },
+    {
+      "file": "feedback-768.png",
+      "route": "/feedback",
+      "viewport": [
+        768,
+        1024
+      ],
+      "overflow": false,
+      "font": "Manrope, \"Segoe UI\", sans-serif"
+    },
+    {
+      "file": "results-768.png",
+      "route": "/results",
+      "viewport": [
+        768,
+        1024
+      ],
+      "overflow": false,
+      "font": "Manrope, \"Segoe UI\", sans-serif"
+    },
+    {
+      "file": "home-1440.png",
+      "route": "/",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "overflow": false,
+      "font": "Manrope, \"Segoe UI\", sans-serif"
+    },
+    {
+      "file": "feedback-1440.png",
+      "route": "/feedback",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "overflow": false,
+      "font": "Manrope, \"Segoe UI\", sans-serif"
+    },
+    {
+      "file": "results-1440.png",
+      "route": "/results",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "overflow": false,
+      "font": "Manrope, \"Segoe UI\", sans-serif"
+    }
+  ]
+}

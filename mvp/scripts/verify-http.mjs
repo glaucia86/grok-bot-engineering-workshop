@@ -44,10 +44,13 @@ try {
   }
   assert.ok(healthy, `Server did not become healthy: ${output}`);
   console.log(`Target: ${target}; owned PID: ${server.pid}; GET /: 200`);
-  const old = await request("/feedback", { method: "POST", body: "{}" });
-  await old.text();
-  assert.equal(old.status, 404);
-  console.log("POST /feedback: 404 (separate Next.js app; Fastify unchanged)");
+  for (const path of ["/feedback", "/results"]) {
+    const response = await request(path);
+    const html = await response.text();
+    assert.equal(response.status, 200);
+    assert.ok(html.includes('id="main-content"'));
+    console.log(`GET ${path}: 200 with shared main content target`);
+  }
   const invalid = await request("/api/feedback", {
     method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ talkId: " ", author: "Ana", comment: "hello", rating: "5" }),
@@ -57,7 +60,7 @@ try {
   assert.equal(errors.errors.talkId, "talkId is required");
   assert.equal(errors.errors.rating, "rating must be a number");
   console.log(`POST /api/feedback: 400 ${JSON.stringify(errors)}`);
-  console.log("Result: 3/3 HTTP checks PASS; no valid submission or remote DB access");
+  console.log("Result: 4/4 HTTP checks PASS; no valid submission or remote DB access");
 } finally {
   if (server.exitCode === null && !spawnError) {
     server.kill("SIGTERM");

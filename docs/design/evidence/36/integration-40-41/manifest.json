@@ -1,0 +1,34 @@
+{
+  "scope": "Actual combined local production app; intercepted synthetic API fixtures only; no persistence or remote acceptance",
+  "baseShell": "0d10c3152e92582790959acb3104015a15c28f3f",
+  "dashboardHead": "c6eed3845691d4bd0cd6c079719289abebaf5a6c",
+  "formBeforeFixHead": "883e3cefdfe431b0882928718e1ee0012be0c852",
+  "cleanCombinedTreeBeforeFix": "cc756693c56781bb7321eefe4cfdaafb25d11513",
+  "fix": "Only form CSS narrow-screen gap8to6 atmax360px, plus containment regression; runtime source hashes bind the corrected combined capture",
+  "checks": {
+    "vitest": 123,
+    "productionBrowser": 32,
+    "lintErrors": 0,
+    "existingAriaWarning": 1,
+    "build": "PASS",
+    "typecheck": "PASS",
+    "localHttp": "3/3PASS"
+  },
+  "p3BeforeMeasured": {
+    "formContentWidth": 246,
+    "formRight": 283,
+    "lastRadioRight": 289,
+    "overflowIntoPadding": 6
+  },
+  "filesSha256": {
+    "mvp/src/app/globals.css": "23f35442ce9690a4fb7a41b3298deb0eb9a6f6d9b76e85ce739f6cf8a62fda72",
+    "mvp/src/components/feedback-form.tsx": "c636021a002e7dbf7218b7e1bfe267d821e020bcda8577f153f00436d49272ac",
+    "mvp/src/components/feedback-form.css": "fd32b9e9be8454d95934c56c25dd4707d856b9032cc8de01b125a601bd810726",
+    "mvp/src/components/feedback-dashboard.tsx": "42a5b037f62b002217e70eca31fb26de78a974e6b8a14dbe68a370e0863904f1",
+    "mvp/src/components/feedback-dashboard.css": "872ba54884a7c7bf0b490cdeba49e75c60e9ab3b89df6d4836c89a1561692ce3",
+    "mvp/e2e/local-feedback.spec.ts": "28d6e72221f4e37373a0e99cb5eb40ef97cc9cfb3c7b7a5b8f24d2615bc39ad2",
+    "mvp/e2e/local-form-polish.spec.ts": "be4a09aeb7ca4972bb3cffc17628e0ef54b0d264adce8c239a430cb5ba4992e5",
+    "mvp/e2e/local-results.spec.ts": "cdb9ac39ef1104e7c3fe25c0e02f21eece63fa55be0772d730ae9f4c6a34ccdd"
+  },
+  "provenanceCorrection": "Historical evidence only: the recorded globals.css digest does not match the committed stylesheet import order. Do not use this manifest to certify current runtime CSS. A new cobalt-dashboard evidence manifest binds fresh captures to committed source with UTF-8/LF hashes; original historical fields are retained."
+}

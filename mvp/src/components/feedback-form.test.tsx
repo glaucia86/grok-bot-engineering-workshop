@@ -57,6 +57,66 @@ it("blocks duplicate submissions while saving", async () => {
   expect((await screen.findByRole("button", { name: /Saving/ }) as HTMLButtonElement).disabled).toBe(true);
 });
 
+it("previews pointer stars without committing and restores the selected rating on leave", () => {
+  render(<FeedbackForm onSaved={() => {}} />);
+  fireEvent.click(screen.getByRole("radio", { name: "2 stars" }));
+  const fifth = screen.getByRole("radio", { name: "5 stars" });
+  fireEvent.pointerEnter(fifth.closest("label")!);
+  expect(screen.getByText("Preview: 5 of 5 stars")).toBeTruthy();
+  expect((screen.getByRole("radio", { name: "2 stars" }) as HTMLInputElement).checked).toBe(true);
+  expect((fifth as HTMLInputElement).checked).toBe(false);
+  fireEvent.pointerLeave(fifth.closest(".rating-options")!);
+  expect(screen.queryByText("Preview: 5 of 5 stars")).toBeNull();
+  expect(screen.getByText("2 of 5 stars selected")).toBeTruthy();
+});
+
+it.each([true, false])("clears a hovered star preview when submitting from another field (rating committed: %s)", async (hasRating) => {
+  const fetcher = vi.fn<typeof fetch>(() => new Promise(() => {}));
+  vi.stubGlobal("fetch", fetcher);
+  render(<FeedbackForm onSaved={() => {}} />);
+  fireEvent.change(screen.getByLabelText("Talk"), { target: { value: "Engineering bots" } });
+  const author = screen.getByLabelText("Your name");
+  fireEvent.change(author, { target: { value: "Ana" } });
+  if (hasRating) fireEvent.click(screen.getByRole("radio", { name: "2 stars" }));
+  fireEvent.pointerEnter(screen.getByRole("radio", { name: "5 stars" }).closest("label")!);
+  expect(screen.getByText("Preview: 5 of 5 stars")).toBeTruthy();
+  author.focus();
+  fireEvent.keyDown(author, { key: "Enter" });
+  fireEvent.submit(author.closest("form")!);
+  expect(screen.queryByText("Preview: 5 of 5 stars")).toBeNull();
+  expect(document.querySelectorAll('.rating-option svg[fill="currentColor"]')).toHaveLength(hasRating ? 2 : 0);
+  if (hasRating) {
+    expect(screen.getByText("2 of 5 stars selected")).toBeTruthy();
+    expect(JSON.parse(String(fetcher.mock.calls[0][1]?.body)).rating).toBe(2);
+    expect((screen.getByRole("button", { name: /Saving/ }) as HTMLButtonElement).disabled).toBe(true);
+  } else {
+    expect(screen.getByText("No rating selected")).toBeTruthy();
+    expect(screen.getByText("rating must be a number")).toBeTruthy();
+    await waitFor(() => expect(document.activeElement).toBe(screen.getByRole("radio", { name: "1 star" })));
+    expect(fetcher).not.toHaveBeenCalled();
+  }
+});
+
+it("offers retry with retained input, blocks rapid retries and keeps confirmation while editing", async () => {
+  let resolveSave!: (response: Response) => void;
+  const fetcher = vi.fn().mockResolvedValueOnce(new Response("Unavailable", { status: 503 }))
+    .mockImplementationOnce(() => new Promise<Response>((resolve) => { resolveSave = resolve; }));
+  vi.stubGlobal("fetch", fetcher);
+  render(<FeedbackForm onSaved={() => {}} />); fill();
+  fireEvent.click(screen.getByRole("button", { name: /Send feedback/ }));
+  const retry = await screen.findByRole("button", { name: /Try again/ });
+  expect((screen.getByLabelText("Comment (optional)") as HTMLTextAreaElement).value).toBe("  Useful workshop  ");
+  expect((screen.getByRole("radio", { name: "5 stars" }) as HTMLInputElement).checked).toBe(true);
+  fireEvent.click(retry);
+  const form = retry.closest("form")!;
+  fireEvent.submit(form); fireEvent.submit(form);
+  expect(fetcher).toHaveBeenCalledTimes(2);
+  resolveSave(new Response(JSON.stringify({ id: 1, talkId: "Engineering bots", author: "Ana", comment: "Useful workshop", rating: 5, createdAt: "2026-01-01T00:00:00.000Z" }), { status: 201 }));
+  expect(await screen.findByRole("link", { name: "View results" })).toHaveProperty("hash", "#results");
+  fireEvent.change(screen.getByLabelText("Talk"), { target: { value: "Another talk" } });
+  expect(screen.getByText(/Feedback saved/)).toBeTruthy();
+});
+
 it("labels optional comments and exposes five required native star radios", () => {
   render(<FeedbackForm onSaved={() => {}} />);
   expect(screen.getByText("Talk, your name and a rating are required. Comments are optional.")).toBeTruthy();

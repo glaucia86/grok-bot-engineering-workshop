@@ -52,7 +52,78 @@ it("announces the initial loading state before fetching results", () => {
   expect(html).toContain("Loading feedback");
 });
 
+it("keeps saved feedback distinct from a failed refresh and retries the results", async () => {
+  const talks = [{ talkId: "Saved talk", average: 4, count: 1 }];
+  vi.stubGlobal("fetch", vi.fn()
+    .mockResolvedValueOnce(new Response(JSON.stringify(talks)))
+    .mockResolvedValueOnce(new Response("Unavailable", { status: 503 }))
+    .mockResolvedValueOnce(new Response(JSON.stringify([{ ...talks[0], count: 2 }]))));
+  const { rerender } = render(<FeedbackDashboard />);
+  await screen.findByRole("rowheader", { name: "Saved talk" });
+  rerender(<FeedbackDashboard revision={1} />);
+  expect((await screen.findByRole("alert")).textContent).toContain("Feedback saved. Results could not refresh");
+  expect(screen.getByText(/Previously loaded results/)).toBeTruthy();
+  expect(screen.getByRole("rowheader", { name: "Saved talk" })).toBeTruthy();
+  fireEvent.click(screen.getByRole("button", { name: "Try again" }));
+  await waitFor(() => expect(screen.getByText("2", { selector: "td" })).toBeTruthy());
+  expect(screen.queryByRole("alert")).toBeNull();
+  expect(screen.queryByText(/Previously loaded results/)).toBeNull();
+});
+
+it("keeps the previous results visible while a real refresh is pending", async () => {
+  vi.stubGlobal("fetch", vi.fn()
+    .mockResolvedValueOnce(new Response('[{"talkId":"Existing talk","average":3,"count":1}]'))
+    .mockImplementationOnce(() => new Promise(() => {})));
+  const { rerender } = render(<FeedbackDashboard />);
+  await screen.findByRole("rowheader", { name: "Existing talk" });
+  rerender(<FeedbackDashboard revision={1} />);
+  expect(screen.getByRole("status").textContent).toContain("Refreshing results");
+  expect(screen.getByRole("rowheader", { name: "Existing talk" })).toBeTruthy();
+});
+
+it("hides an outdated empty prompt while the first saved response is refreshing or fails", async () => {
+  let settleRefresh: ((response: Response) => void) | undefined;
+  vi.stubGlobal("fetch", vi.fn()
+    .mockResolvedValueOnce(new Response("[]"))
+    .mockImplementationOnce(() => new Promise<Response>(resolve => { settleRefresh = resolve; }))
+    .mockResolvedValueOnce(new Response("[]")));
+  const { rerender } = render(<FeedbackDashboard />);
+  expect(await screen.findByRole("heading", { name: "No feedback yet" })).toBeTruthy();
+  rerender(<FeedbackDashboard revision={1} />);
+  expect(screen.getByRole("status").textContent).toContain("Refreshing results");
+  expect(screen.queryByRole("heading", { name: "No feedback yet" })).toBeNull();
+  expect(screen.queryByText(/Leave the first review/)).toBeNull();
+  expect(screen.queryByText(/Previously loaded results/)).toBeNull();
+  await waitFor(() => expect(settleRefresh).toBeDefined());
+  settleRefresh!(new Response("Unavailable", { status: 503 }));
+  expect((await screen.findByRole("alert")).textContent).toContain("Feedback saved. Results could not refresh");
+  expect(screen.queryByRole("heading", { name: "No feedback yet" })).toBeNull();
+  expect(screen.queryByText(/Leave the first review/)).toBeNull();
+  expect(screen.queryByText(/Previously loaded results/)).toBeNull();
+  fireEvent.click(screen.getByRole("button", { name: "Try again" }));
+  expect(await screen.findByRole("heading", { name: "No feedback yet" })).toBeTruthy();
+});
+
 describe("TalkResults", () => {
+  it("renders twenty full labels, readable values and proportional horizontal bars without growing the chart width", () => {
+    const talks = Array.from({ length: 20 }, (_, index) => ({
+      talkId: `${index}-${"unbroken".repeat(20)}`, average: index === 0 ? 4.3 : 3, count: index + 1,
+    }));
+    const { container, rerender } = render(<TalkResults talks={talks} />);
+    const bars = container.querySelectorAll<HTMLElement>(".dashboard-bar-fill");
+    expect(bars).toHaveLength(20);
+    expect(bars[0].style.width).toBe("86%");
+    expect(bars[1].style.width).toBe("60%");
+    expect(screen.getAllByText(talks[0].talkId)).toHaveLength(4);
+    expect(screen.getByText("4.3", { selector: ".dashboard-bar-average" })).toBeTruthy();
+    expect(screen.getByText("20 responses")).toBeTruthy();
+    const firstBar = bars[0];
+    rerender(<TalkResults talks={talks.map((talk) => ({ ...talk }))} />);
+    expect(container.querySelector(".dashboard-bar-fill")).toBe(firstBar);
+    rerender(<TalkResults talks={talks.map((talk, index) => index ? talk : { ...talk, average: 5 })} />);
+    expect(container.querySelector(".dashboard-bar-fill")).not.toBe(firstBar);
+    expect(container.querySelector<HTMLElement>(".dashboard-bar-fill")?.style.width).toBe("100%");
+  });
   it("explains how to populate the empty dashboard", () => {
     const html = renderToStaticMarkup(<TalkResults talks={[]} />);
     expect(html).toContain("No feedback yet");
@@ -85,4 +156,15 @@ describe("TalkResults", () => {
     expect(html).toContain("<caption");
     expect(html).toContain("&lt;Workshop&gt;");
   });
+});
+
+it("offers a talk selector and actual response totals without an invented overall mean", () => {
+  render(<TalkResults talks={[{ talkId: "First", average: 4.3, count: 4 }, { talkId: "Second", average: 2, count: 2 }]} />);
+  expect(screen.getByLabelText("Explore a talk")).toBeTruthy();
+  expect(screen.getByText("Most reviewed talk")).toBeTruthy();
+  expect(Boolean(screen.getByLabelText("Explore a talk").compareDocumentPosition(screen.getByRole("button", { name: "First" })) & Node.DOCUMENT_POSITION_FOLLOWING)).toBe(true);
+  expect(screen.getByText("6", { selector: ".results-total" })).toBeTruthy();
+  fireEvent.change(screen.getByLabelText("Explore a talk"), { target: { value: "Second" } });
+  expect(screen.getByRole("heading", { name: "Second", level: 3 })).toBeTruthy();
+  expect(screen.queryByText(/overall average|trending/i)).toBeNull();
 });

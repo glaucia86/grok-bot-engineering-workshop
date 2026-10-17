@@ -1,0 +1,21 @@
+{
+  "captureSourceCommit": "c80e7e766bc347a4f40a1ca047b432bef276a8ab",
+  "scope": "Owned local Chromium production build; 3 routes x390/768/1440, pointer-left/right, reduced-motion, touch, native eyes open/closed",
+  "data": "Synthetic intercepted GET results; no remote POST or Neon write",
+  "artwork": "Original SVG body and ellipse geometry; no PNG, image element, canvas, black occlusion mask, reference-site paths or bundles",
+  "closedPose": "Paused timer clock asserts140ms closed state; finite native CSS eye transitions are finished with Web Animations API for deterministic endpoint capture",
+  "validation": {
+    "build": "passed",
+    "types": "passed",
+    "chromium": 47,
+    "lint": "0 errors, 1 pre-existing radio aria-invalid warning",
+    "unitApiPGlite": 156,
+    "http": "4/4"
+  },
+  "referenceLimits": [
+    "Official x.ai/bot HTTP403 in browser and public HTTP; mechanism unobserved",
+    "Normal browser CDP9222unreachable; own temporary9223usedandclosed",
+    "REAsetupnotapplied; autoReviewrejectedpersistentMCPpossibility; CLIinspectionworked"
+  ],
+  "review": "Independent source and desktop native open/closed review: no blockers; mobile/route comparison checked before publishing"
+}
