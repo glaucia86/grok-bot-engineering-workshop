@@ -73,10 +73,19 @@ export function TalkResults({ talks, feedbackHref = "#feedback", insights = fals
 
   const selected = talks.find(talk => talk.talkId === selection) ?? talks[0];
   const mostReviewed = talks.reduce((most, talk) => talk.count > most.count ? talk : most);
+  const topRated = talks.reduce((top, talk) => talk.average > top.average ? talk : top);
   const responses = talks.reduce((total, talk) => total + talk.count, 0);
+  const overallAverage = talks.reduce((total, talk) => total + talk.average * talk.count, 0) / responses;
+  const rankedTalks = [...talks].sort((a, b) => b.average - a.average || b.count - a.count || a.talkId.localeCompare(b.talkId));
   return (
     <>
-      <div className="results-overview"><div><strong className="results-total">{responses}</strong><span>Responses received</span></div><div><strong>{talks.length}</strong><span>{talks.length === 1 ? "Talk reviewed" : "Talks reviewed"}</span></div><div className="results-leading"><span>Most reviewed talk</span><p>{mostReviewed.talkId}</p><span>{mostReviewed.count} ratings received</span></div></div>
+      <div className="results-overview">
+        <div><strong className="results-total">{responses}</strong><span>Responses</span></div>
+        <div><strong>{talks.length}</strong><span>{talks.length === 1 ? "Talk" : "Talks"}</span></div>
+        <div><strong className="results-average">{overallAverage.toFixed(1)}</strong><span>Overall average</span></div>
+        <div className="results-leader"><span>Most reviewed talk</span><p>{mostReviewed.talkId}</p><small>{mostReviewed.count} ratings</small></div>
+        <div className="results-leader results-top-rated"><span>Top-rated talk</span><p>{topRated.talkId === mostReviewed.talkId ? "Also the most reviewed" : topRated.talkId}</p><small>{topRated.average.toFixed(1)} / 5</small></div>
+      </div>
       <div className="results-workspace">
       <aside className="results-detail" aria-label="Selected talk feedback">
         <label htmlFor="talk-explorer">Explore a talk</label>
@@ -91,7 +100,7 @@ export function TalkResults({ talks, feedbackHref = "#feedback", insights = fals
         </figcaption>
         <div className="dashboard-scale" aria-hidden="true">{[0, 1, 2, 3, 4, 5].map(value => <span key={value}>{value}</span>)}</div>
         <ul className="dashboard-bars" data-scroll={talks.length > 6 ? "true" : undefined} tabIndex={talks.length > 6 ? 0 : undefined} aria-label="Average ratings and response counts">
-          {talks.map(talk => <li key={talk.talkId} className="dashboard-bar-row">
+          {rankedTalks.map((talk, index) => <li key={talk.talkId} className="dashboard-bar-row" data-accent={index % 5}>
             <button type="button" className="dashboard-bar-name" aria-pressed={selected.talkId === talk.talkId} onClick={() => { setSelection(talk.talkId); explorer.current?.focus(); }}>{talk.talkId}<ArrowUpRight size={16} aria-hidden="true" /></button>
             <p className="dashboard-bar-values"><span><strong className="dashboard-bar-average">{talk.average.toFixed(1)}</strong> / 5</span><span>{talk.count} {talk.count === 1 ? "response" : "responses"}</span></p>
             <div className="dashboard-bar-track" aria-hidden="true">
