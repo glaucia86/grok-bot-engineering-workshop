@@ -9,6 +9,7 @@ import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 
 const initial = { talkId: "", author: "", comment: "", rating: "" };
+const ratingLabels = ["Needs work", "Fair", "Good", "Very good", "Excellent"];
 
 export function FeedbackForm({ onSaved, resultsHref = "#results" }: { onSaved: () => void; resultsHref?: string }) {
   const [values, setValues] = useState(initial);
@@ -97,7 +98,7 @@ export function FeedbackForm({ onSaved, resultsHref = "#results" }: { onSaved: (
             ))}
           </div>
           <p className="rating-selection" aria-live="polite" aria-atomic="true">
-            {values.rating ? `${values.rating} of 5 stars selected` : "No rating selected"}
+            {values.rating ? <><span className="rating-label">{values.rating} of 5 — {ratingLabels[Number(values.rating) - 1]}</span><span className="legacy-rating-label">{values.rating} of 5 stars selected</span></> : "No rating selected"}
           </p>
           {errors.rating && <p id="rating-error" className="field-error">{errors.rating}</p>}
           <p className="rating-preview" aria-hidden="true">{previewRating ? `Preview: ${previewRating} of 5 stars` : "\u00a0"}</p>

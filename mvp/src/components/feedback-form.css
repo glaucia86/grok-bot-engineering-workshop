@@ -1,38 +1,39 @@
 /* Form-only refinement; shell geometry belongs to the shared visual direction. */
-.feedback-panel { min-width: 0; color: #182239; }
+.feedback-panel { min-width: 0; color: var(--ink); }
 .feedback-panel .panel-heading h2 { margin-top: 0; }
-.feedback-panel .form-note { font-size: 13px; line-height: 1.6; margin-block: 12px; color: #59657c; }
+.feedback-panel .form-note { font-size: 13px; line-height: 1.6; margin-block: 12px 28px; color: var(--ink-2); }
 .feedback-panel .form-field { margin-bottom: 24px; }
-.feedback-panel .form-field label, .feedback-panel .rating-field legend { color: #182239; line-height: 1.5; }
-.feedback-panel .form-field input, .feedback-panel .form-field textarea { background: #fff; color: #182239; border: 1px solid #7a8790; border-radius: 6px; font-size: 16px; padding: 12px; transition: border-color var(--motion-control, 160ms) var(--motion-ease, ease); }
+.feedback-panel .form-field label, .feedback-panel .rating-field legend { color: var(--ink); line-height: 1.5; font-weight: 600; }
+.feedback-panel .form-field input, .feedback-panel .form-field textarea { background: var(--surface); color: var(--ink); border: 1px solid var(--input); border-radius: 8px; font-size: 16px; padding: 12px; transition: border-color var(--motion-fast) var(--motion-ease); }
 .feedback-panel .form-field input { min-height: 48px; }
 .feedback-panel .form-field textarea { min-height: 112px; }
-.feedback-panel .form-field input::placeholder, .feedback-panel .form-field textarea::placeholder { color: #59657c; }
-.feedback-panel .form-field :is(input, textarea):focus-visible { outline: 2px solid #244be8; outline-offset: 3px; box-shadow: none; border-color: #244be8; }
-.feedback-panel .form-field [aria-invalid="true"] { border-color: #a12b25; }
-.feedback-panel .field-hint, .feedback-panel .rating-field > p:not(.field-error) { font-size: 13px; line-height: 1.5; color: #59657c; }
-.feedback-panel .field-error { color: #a12b25; font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
-.feedback-panel .rating-options { gap: 8px; }
-.feedback-panel .rating-option span { pointer-events: none; }
-.feedback-panel .rating-option { min-width: 44px; max-width: 52px; min-height: 48px; }
-.feedback-panel .rating-option span { height: 48px; border-radius: 6px; border: 1px solid #7a8790; background: #fff; color: #244be8; transition: background-color var(--motion-control, 160ms) var(--motion-ease, ease), border-color var(--motion-control, 160ms) var(--motion-ease, ease), transform var(--motion-control, 160ms) var(--motion-ease, ease); }
-.feedback-panel .rating-option input:checked + span { border: 2px solid #244be8; background: #edf1ff; }
-.feedback-panel .rating-option[data-preview] span { background: #edf1ff; }
-.feedback-panel .rating-option input:hover:not(:disabled) + span { border-color: #244be8; transform: scale(1.04); }
+.feedback-panel .form-field input::placeholder, .feedback-panel .form-field textarea::placeholder { color: var(--ink-2); }
+.feedback-panel .form-field :is(input, textarea):focus-visible { border-color: var(--ink); }
+.feedback-panel .form-field [aria-invalid="true"] { border-color: var(--red-text); }
+.feedback-panel .field-hint, .feedback-panel .rating-field > p:not(.field-error) { font-size: 13px; line-height: 1.5; color: var(--ink-2); }
+.feedback-panel .field-error { color: var(--red-text); font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
+.feedback-panel .rating-options { display: grid; grid-template-columns: repeat(5, minmax(48px, 60px)); gap: 8px; width: 100%; margin-top: 12px; }
+.feedback-panel .rating-option { position: relative; display: block; min-width: 0; min-height: 56px; cursor: pointer; }
+.feedback-panel .rating-option input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.feedback-panel .rating-option span { pointer-events: none; display: grid; place-items: center; width: 100%; height: 56px; border-radius: 8px; border: 1px solid var(--input); background: var(--surface); color: var(--ink); transition: background-color var(--motion-fast) var(--motion-ease), border-color var(--motion-fast) var(--motion-ease), transform var(--motion-fast) var(--motion-ease); }
+.feedback-panel .rating-option svg { width: 32px; height: 32px; }
+.feedback-panel .rating-option input:checked + span { border: 2px solid var(--ink); background: var(--green); }
+.feedback-panel .rating-option[data-preview] span { background: #dff8e9; }
+.feedback-panel .rating-option input:hover:not(:disabled) + span { border-color: var(--ink); transform: translateY(-2px); }
 .feedback-panel .rating-option input:active:not(:disabled) + span { transform: scale(.98); }
-.feedback-panel .rating-option input:focus-visible + span { outline: 2px solid #244be8; outline-offset: 3px; }
+.feedback-panel .rating-option input:focus-visible + span { outline: 2px solid var(--ink); outline-offset: 4px; box-shadow: var(--focus-inner); }
+.feedback-panel .rating-option input:disabled { cursor: not-allowed; }
 .feedback-panel .rating-selection { margin-top: 12px; }
 .feedback-panel .rating-preview { min-height: 20px; margin-top: 0; }
-.feedback-panel .form-field :is(input, textarea):disabled, .feedback-panel .rating-option input:disabled + span { background: #f4f6fb; opacity: 1; color: #59657c; cursor: not-allowed; }
-.feedback-panel .submit-button { width: 100%; height: 48px; min-height: 48px; border-radius: 6px; background: #244be8; color: #fff; padding: 12px 16px; transition: background-color var(--motion-control, 160ms) var(--motion-ease, ease); transform: none; }
-.feedback-panel .submit-button:hover:not(:disabled) { background: #1739c4; }
-.feedback-panel .submit-button:active:not(:disabled) { background: #102b9b; }
-.feedback-panel .submit-button:focus-visible { outline: 2px solid #244be8; outline-offset: 4px; box-shadow: none; }
-.feedback-panel .submit-button:disabled { background: #59657c; color: #fff; opacity: 1; cursor: wait; }
-.feedback-panel .save-error { padding: 12px; margin-block: 0 16px; border: 1px solid #a12b25; border-radius: 6px; color: #a12b25; background: #fff; overflow-wrap: anywhere; }
-.feedback-panel .save-success { color: #244be8; padding: 16px; margin-top: 16px; border: 1px solid #244be8; border-radius: 6px; background: #fff; line-height: 1.6; }
+.feedback-panel .form-field :is(input, textarea):disabled, .feedback-panel .rating-option input:disabled + span { background: var(--paper); opacity: 1; color: var(--ink-2); cursor: not-allowed; }
+.feedback-panel .submit-button { width: 100%; height: 52px; min-height: 52px; border-radius: 999px; background: var(--ink); color: var(--surface); padding: 12px 18px; transition: background-color var(--motion-fast) var(--motion-ease); transform: none; }
+.feedback-panel .submit-button:hover:not(:disabled) { background: var(--ink-2); }
+.feedback-panel .submit-button:active:not(:disabled) { background: var(--ink); }
+.feedback-panel .submit-button:disabled { background: var(--ink-2); color: var(--surface); opacity: 1; cursor: wait; }
+.feedback-panel .save-error { padding: 12px; margin-block: 0 16px; border: 1px solid var(--red-text); border-radius: 8px; color: var(--red-text); background: var(--surface); overflow-wrap: anywhere; }
+.feedback-panel .save-success { color: var(--ink); padding: 16px; margin-top: 16px; border-radius: 8px; background: #dff8e9; line-height: 1.6; }
 .feedback-panel .save-success a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: underline; text-underline-offset: 3px; font-weight: 600; }
-.feedback-panel .save-success a:focus-visible { outline: 2px solid #244be8; outline-offset: 3px; }
+.feedback-panel .save-success a:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) {
   .feedback-panel *, .feedback-panel *::before, .feedback-panel *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
   .feedback-panel .rating-option input:hover:not(:disabled) + span, .feedback-panel .rating-option input:active:not(:disabled) + span { transform: none; }
@@ -44,5 +45,6 @@
 }
 
 @media (max-width: 360px) {
-  .feedback-panel .rating-options { gap: 6px; }
+  .feedback-panel .rating-options { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+  .feedback-panel .rating-option svg { width: 28px; height: 28px; }
 }
