@@ -24,12 +24,38 @@ Set these non-secret environment variables through the runner environment:
 | `MVP_PREVIEW_QA_DATABASE_ID` | Non-secret QA resource ID (letters, numbers, `_`, `-`; never a connection string) |
 | `MVP_PREVIEW_ISOLATED_AUTHORIZED` | `true`, only after the checks and write authorization above |
 
-Only this project's immutable host shape is supported:
+The full project-name host shape remains supported:
 `grok-bot-workshop-mvp-<9 lowercase letters/digits>-glaucia86s-projects.vercel.app`.
-Known production aliases/custom domains, moving branch aliases, localhost/IPs and URLs carrying
-credentials are rejected. Supporting another host requires a reviewed policy
-change, not disabling the check. The ID, SHA and authorization flag are operator
-attestations; the harness cannot prove the Vercel-to-Neon binding or deployed SHA.
+Vercel also emits shortened `grok-bot-workshop-...` hosts for this project.
+That prefix is **not** wildcarded: production deployments use it too, and a
+shortened name alone cannot establish project identity. Instead, the shared local/CI
+validator has this exact reviewed host/SHA routing exception:
+
+| Immutable hostname | Required commit |
+| --- | --- |
+| `grok-bot-workshop-bpxtrs2fd-glaucia86s-projects.vercel.app` | `70c732f6ea070cc413e1cb1fc91fb352d705e835` |
+
+Read-only [Vercel deployment metadata](https://vercel.com/glaucia86s-projects/grok-bot-workshop-mvp/E5tF5ShZckYVw88n8xuhNzGXAVS1)
+was checked on 2026-10-17: project `prj_Q2YoezuOHO6ctl8NCdoHn3DcWqDS`
+(`grok-bot-workshop-mvp`), deployment `dpl_E5tF5ShZckYVw88n8xuhNzGXAVS1`,
+repository `glaucia86/grok-bot-engineering-workshop`, the SHA above and a non-production
+target (`null`). The pin does not prove current preview status or database isolation
+and does not authorize running against that deployment. Recheck the prerequisites
+above before every run, including whether a previously reviewed deployment was promoted.
+
+An unlisted shortened host or a different SHA is blocked, even when CI dispatch
+and approved configuration agree. For a future shortened deployment, independently
+read its provider metadata and verify the exact project ID, repository, deployment
+hostname, commit and non-production target; then add its exact host/SHA pair to
+`reviewedDeploymentCommits` with regression tests in a reviewed policy change.
+Do not replace this bounded list with a prefix wildcard or disable the check.
+
+Known production aliases/custom domains, moving branch aliases, localhost/IPs and URLs
+carrying credentials are rejected. Supply the canonical lowercase HTTPS origin with
+at most one trailing `/`; whitespace, encoded hostnames, dot paths, backslashes and
+explicit ports (including `:443`) are rejected instead of silently normalized.
+The ID, SHA and authorization flag remain operator attestations; the harness cannot
+prove the Vercel-to-Neon binding or deployed SHA.
 
 The journey confines browser traffic (including popups) to that origin and disables
 service workers and WebSockets. Browser transport and API requests do not follow HTTP redirects.

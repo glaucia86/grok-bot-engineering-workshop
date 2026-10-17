@@ -23,6 +23,16 @@ describe("manually dispatched preview CI gate, offline", () => {
   it("permits a matching approved configuration on main only", () => {
     expect(previewCiTarget(valid)).toEqual({ origin, commit, databaseId: "qa-isolated-branch" });
   });
+  it("enforces the reviewed shortened-host SHA even when dispatch and approval agree", () => {
+    const reviewedOrigin = "https://grok-bot-workshop-bpxtrs2fd-glaucia86s-projects.vercel.app";
+    const reviewedCommit = "70c732f6ea070cc413e1cb1fc91fb352d705e835";
+    const reviewed = { ...valid, MVP_PREVIEW_URL: reviewedOrigin, MVP_PREVIEW_APPROVED_URL: reviewedOrigin,
+      MVP_PREVIEW_COMMIT: reviewedCommit, MVP_PREVIEW_APPROVED_COMMIT: reviewedCommit };
+    expect(previewCiTarget(reviewed)).toEqual({ origin: reviewedOrigin, commit: reviewedCommit, databaseId: "qa-isolated-branch" });
+    expect(() => previewCiTarget({ ...reviewed, MVP_PREVIEW_COMMIT: commit, MVP_PREVIEW_APPROVED_COMMIT: commit })).toThrow("BLOCKED");
+    const unreviewedOrigin = reviewedOrigin.replace("bpxtrs2fd", "abc123xyz");
+    expect(() => previewCiTarget({ ...reviewed, MVP_PREVIEW_URL: unreviewedOrigin, MVP_PREVIEW_APPROVED_URL: unreviewedOrigin })).toThrow("BLOCKED");
+  });
   it.each(Object.keys(valid))("fails closed when %s is missing", (key) => {
     expect(() => previewCiTarget({ ...valid, [key]: undefined })).toThrow("BLOCKED");
   });
