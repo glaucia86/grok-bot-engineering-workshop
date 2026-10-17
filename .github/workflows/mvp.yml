@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   validate:
-    name: validate (${{ matrix.target }})
+    name: ${{ matrix.target == 'head' && 'validate' || 'validate (merge)' }}
     strategy:
       fail-fast: false
       matrix:
