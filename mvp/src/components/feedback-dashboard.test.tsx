@@ -1,7 +1,8 @@
 // @vitest-environment happy-dom
 import React from "react";
+import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { FeedbackDashboard, TalkResults } from "./feedback-dashboard";
 
@@ -167,4 +168,93 @@ it("offers a talk selector and actual response totals without an invented overal
   fireEvent.change(screen.getByLabelText("Explore a talk"), { target: { value: "Second" } });
   expect(screen.getByRole("heading", { name: "Second", level: 3 })).toBeTruthy();
   expect(screen.queryByText(/overall average|trending/i)).toBeNull();
+});
+
+
+it("pairs each factual summary with its label in a summary-card definition list", () => {
+  render(<TalkResults talks={[
+    { talkId: "Engineering with bots", average: 4.3, count: 4 },
+    { talkId: "Ship thoughtfully", average: 3, count: 1 },
+  ]} />);
+  const overview = screen.getByLabelText("Workshop response summary");
+  expect(overview.tagName).toBe("DL");
+  expect(within(overview).getAllByRole("term").map(term => term.textContent)).toEqual([
+    "Responses received", "Talks reviewed", "Most reviewed talk",
+  ]);
+  expect(within(overview).getAllByRole("definition").map(definition => definition.textContent)).toEqual([
+    "5", "2", "Engineering with bots4 ratings received",
+  ]);
+  expect(screen.queryByText(/overall average|trending|anonymous/i)).toBeNull();
+});
+
+it("names the comparison panel and keeps selection buttons and scroll access for larger workshops", () => {
+  const talks = Array.from({ length: 7 }, (_, index) => ({ talkId: `Talk ${index + 1}`, average: 4, count: 1 }));
+  render(<TalkResults talks={talks} />);
+  const comparison = screen.getByRole("region", { name: "Across the workshop" });
+  const ratings = within(comparison).getByRole("list", { name: "Average ratings and response counts" });
+  expect(ratings.getAttribute("data-scroll")).toBe("true");
+  expect(ratings.tabIndex).toBe(0);
+  fireEvent.click(within(comparison).getByRole("button", { name: "Talk 7" }));
+  expect(screen.getByLabelText("Explore a talk")).toBe(document.activeElement);
+  expect(within(comparison).getByRole("button", { name: "Talk 7" }).getAttribute("aria-pressed")).toBe("true");
+});
+
+
+it("gives summary cards a clean surface and bounds the large comparison scroll area", () => {
+  const styles = readFileSync("src/components/feedback-dashboard.css", "utf8");
+  const talks = Array.from({ length: 7 }, (_, index) => ({ talkId: `Talk ${index + 1}`, average: 4, count: 1 }));
+  const { container } = render(<><style>{styles}</style><section className="dashboard-root"><TalkResults talks={talks} /></section></>);
+  const card = container.querySelector(".results-metric")!;
+  expect(getComputedStyle(card).backgroundColor).toBe("rgb(255, 255, 255)");
+  expect(getComputedStyle(card).borderRadius).toBe("12px");
+  const chart = screen.getByRole("list", { name: "Average ratings and response counts" });
+  expect(getComputedStyle(chart).overflowY).toBe("auto");
+  expect(getComputedStyle(chart).maxHeight).toBe("560px");
+});
+
+it("keeps secondary results labels at AA contrast against their actual card surfaces", async () => {
+  const styles = readFileSync("src/components/feedback-dashboard.css", "utf8");
+  let refreshPending = false;
+  vi.stubGlobal("fetch", vi.fn((url: string) => {
+    if (url === "/api/feedback") return refreshPending ? new Promise(() => {}) : Promise.resolve(new Response('[{"talkId":"Talk A","average":4,"count":1}]'));
+    return Promise.resolve(new Response(JSON.stringify({
+      talkId: "Talk A", count: 1, average: 4, distribution: [0, 0, 0, 1, 0],
+      comments: [{ text: "Useful feedback", date: "2026-10-17T10:00:00Z" }],
+    })));
+  }));
+  const { container, rerender } = render(<><style>{styles}</style><FeedbackDashboard insights /></>);
+  await screen.findByText("Useful feedback");
+  const luminance = (color: string) => {
+    const hex = color.length === 4 ? color.slice(1).split("").map(value => value + value).join("") : color.slice(1);
+    const values = color.startsWith("#")
+      ? hex.match(/.{2}/g)!.map(value => parseInt(value, 16))
+      : color.match(/\d+/g)!.slice(0, 3).map(Number);
+    const [red, green, blue] = values.map(value => {
+      const channel = value / 255;
+      return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+    });
+    return red * 0.2126 + green * 0.7152 + blue * 0.0722;
+  };
+  for (const [textSelector, surfaceSelector] of [
+    [".dashboard-scale", ".results-comparison"],
+    [".dashboard-bar-values", ".results-comparison"],
+    [".dashboard-table thead th", ".dashboard-table-wrap"],
+    [".dashboard-average span", ".dashboard-table-wrap"],
+    [".rating-distribution > p", ".results-detail"],
+    [".talk-comments time", ".talk-comments li"],
+    [".talk-comments header > span", ".talk-comments header > span"],
+  ]) {
+    const foreground = luminance(getComputedStyle(container.querySelector(textSelector)!).color);
+    const background = luminance(getComputedStyle(container.querySelector(surfaceSelector)!).backgroundColor);
+    const contrast = (Math.max(foreground, background) + 0.05) / (Math.min(foreground, background) + 0.05);
+    expect(contrast, `${textSelector} text contrast`).toBeGreaterThanOrEqual(4.5);
+  }
+  const selector = getComputedStyle(screen.getByLabelText("Explore a talk"));
+  expect((luminance(selector.backgroundColor) + 0.05) / (luminance(selector.borderTopColor) + 0.05), "talk selector boundary contrast").toBeGreaterThanOrEqual(3);
+  refreshPending = true;
+  rerender(<><style>{styles}</style><FeedbackDashboard insights revision={1} /></>);
+  const notice = screen.getByText(/Previously loaded results/);
+  const foreground = luminance(getComputedStyle(notice).color);
+  const background = luminance(getComputedStyle(notice).backgroundColor);
+  expect((background + 0.05) / (foreground + 0.05), "stale notice text contrast").toBeGreaterThanOrEqual(4.5);
 });

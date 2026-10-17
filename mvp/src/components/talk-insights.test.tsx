@@ -28,3 +28,22 @@ it("aborts old details on talk change and never displays the previous talk's com
   expect(await screen.findByText("No written comments yet.")).toBeTruthy();
   expect(screen.queryByText("Useful examples")).toBeNull();
 });
+
+
+it("labels the comment collection and explains its real count", async () => {
+  vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify(data))));
+  render(<TalkInsights talkId="Talk A" />);
+  const comments = await screen.findByRole("list", { name: "Written feedback comments" });
+  expect(comments.querySelectorAll("li")).toHaveLength(1);
+  expect(screen.getByText("1 comment", { exact: true })).toBeTruthy();
+  expect(comments.querySelector("time")?.getAttribute("datetime")).toBe(data.comments[0].date);
+});
+
+it("shows an honest zero-response detail without invalid percentages", async () => {
+  vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({ ...data, count: 0, average: 0, distribution: [0, 0, 0, 0, 0], comments: [] }))));
+  const { container } = render(<TalkInsights talkId="Talk A" />);
+  expect(await screen.findByText("No written comments yet.")).toBeTruthy();
+  expect(screen.getByText("No ratings yet", { exact: true })).toBeTruthy();
+  expect(container.textContent).not.toMatch(/NaN|Infinity|0% rated/);
+  for (const fill of container.querySelectorAll<HTMLElement>(".distribution-track span")) expect(fill.style.width).toBe("0%");
+});

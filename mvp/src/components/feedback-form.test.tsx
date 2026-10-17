@@ -1,8 +1,10 @@
 // @vitest-environment happy-dom
 import React from "react";
+import { readFileSync } from "node:fs";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, expect, it, vi } from "vitest";
 import { FeedbackForm } from "./feedback-form";
+import { FeedbackPage } from "./feedback-page";
 
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 function fill() {
@@ -196,4 +198,82 @@ it("rejects an overlong comment without sending and accepts 1000 trimmed charact
   fireEvent.click(screen.getByRole("button", { name: /Send feedback/ }));
   expect(await screen.findByText(/Feedback saved/)).toBeTruthy();
   expect(JSON.parse(fetcher.mock.calls[0][1].body).comment).toBe("x".repeat(1000));
+});
+
+
+it("gives the focused form an accessible name and explains required name visibility", () => {
+  render(<FeedbackForm onSaved={() => {}} />);
+  const form = screen.getByRole("form", { name: "How was the talk?" });
+  expect(form.getAttribute("aria-describedby")).toBe("feedback-requirements");
+  expect(screen.getByLabelText("Talk").getAttribute("aria-describedby")).toBe("talkId-hint");
+  const author = screen.getByLabelText("Your name");
+  expect(author.getAttribute("autocomplete")).toBe("name");
+  expect(author.getAttribute("aria-describedby")).toBe("author-hint");
+  expect(document.getElementById("author-hint")?.textContent).toBe("Your name is required, but it won’t be shown in results.");
+  expect(Array.from(form.querySelectorAll("input, textarea")).map((field) => field.getAttribute("name"))).toEqual([
+    "talkId", "author", "rating", "rating", "rating", "rating", "rating", "comment",
+  ]);
+});
+
+it("keeps field guidance associated when validation errors are added", async () => {
+  vi.stubGlobal("fetch", vi.fn());
+  render(<FeedbackForm onSaved={() => {}} />);
+  fireEvent.click(screen.getByRole("button", { name: /Send feedback/ }));
+  expect(await screen.findByText("author is required")).toBeTruthy();
+  expect(screen.getByLabelText("Your name").getAttribute("aria-describedby")).toBe("author-hint author-error");
+  expect(screen.getByLabelText("Talk").getAttribute("aria-describedby")).toBe("talkId-hint talkId-error");
+  expect(document.querySelectorAll('.rating-selection[aria-live="polite"]')).toHaveLength(1);
+  expect(document.querySelector(".rating-preview")?.getAttribute("aria-hidden")).toBe("true");
+});
+
+it("gives the feedback route a named guidance panel with specific review prompts", () => {
+  render(<FeedbackPage />);
+  expect(screen.getByRole("heading", { name: "Leave feedback", level: 1 })).toBeTruthy();
+  const guidance = screen.getByRole("complementary", { name: "Make your feedback count" });
+  expect(guidance.querySelectorAll("ol > li")).toHaveLength(3);
+  expect(guidance.textContent).toContain("Be specific");
+  expect(guidance.textContent).toContain("Keep it constructive");
+  expect(guidance.textContent).toContain("Share what helped");
+  expect(guidance.textContent).toContain("Names are not shown in results.");
+  expect(guidance.textContent).not.toMatch(/anonymous/i);
+});
+
+it("focuses the first invalid field in visual order when rating and comment both fail", async () => {
+  const fetcher = vi.fn();
+  vi.stubGlobal("fetch", fetcher);
+  render(<FeedbackForm onSaved={() => {}} />);
+  fireEvent.change(screen.getByLabelText("Talk"), { target: { value: "Long input test" } });
+  fireEvent.change(screen.getByLabelText("Your name"), { target: { value: "Fixture attendee" } });
+  fireEvent.change(screen.getByLabelText("Comment (optional)"), { target: { value: "x".repeat(1001) } });
+  fireEvent.click(screen.getByRole("button", { name: "Send feedback" }));
+  expect(await screen.findByText("comment must be at most 1000 characters")).toBeTruthy();
+  expect(screen.getByText("rating must be a number")).toBeTruthy();
+  await waitFor(() => expect(document.activeElement).toBe(screen.getByRole("radio", { name: "1 star" })));
+  expect(fetcher).not.toHaveBeenCalled();
+});
+
+
+it("keeps visible input, textarea and star boundaries above 3 to 1 contrast", () => {
+  const styles = readFileSync("src/components/feedback-form.css", "utf8");
+  render(<><style>{styles}</style><FeedbackForm onSaved={() => {}} /></>);
+  const luminance = (color: string) => {
+    const hex = color.startsWith("#") ? color.slice(1) : undefined;
+    const expandedHex = hex?.length === 3 ? hex.split("").map(channel => channel + channel).join("") : hex;
+    const rgb = expandedHex
+      ? [0, 2, 4].map(offset => Number.parseInt(expandedHex.slice(offset, offset + 2), 16))
+      : color.match(/[\d.]+/g)!.slice(0, 3).map(Number);
+    const channels = rgb.map(value => {
+      const channel = value / 255;
+      return channel <= .04045 ? channel / 12.92 : ((channel + .055) / 1.055) ** 2.4;
+    });
+    return channels[0] * .2126 + channels[1] * .7152 + channels[2] * .0722;
+  };
+  const surface = luminance(getComputedStyle(document.querySelector(".feedback-panel")!).backgroundColor);
+  const controls = document.querySelectorAll('.form-field input, .form-field textarea, .rating-option > span');
+  expect(controls).toHaveLength(8);
+  for (const control of controls) {
+    const border = luminance(getComputedStyle(control).borderTopColor);
+    const contrast = (Math.max(border, surface) + .05) / (Math.min(border, surface) + .05);
+    expect(contrast, `${control.getAttribute("name") ?? "rating star"} boundary contrast`).toBeGreaterThanOrEqual(3);
+  }
 });
