@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { feedbackSchema } from "../feedback-schema";
-import { summarize } from "../stats";
+import { roundedMean, summarize, talkKey } from "../stats";
 
 const valid = { talkId: "t1", author: "Ana", comment: "Great", rating: 5 };
 
@@ -73,5 +73,20 @@ describe("summarize", () => {
       { talkId: "a", average: 4.3, count: 3 },
       { talkId: "b", average: 3, count: 1 },
     ]);
+  });
+});
+
+describe("stats helpers", () => {
+  it.each([
+    [17, 4, 4.3],
+    [10, 3, 3.3],
+    [5, 1, 5],
+  ])("rounds the mean of %s / %s to one decimal", (sum, count, expected) => {
+    expect(roundedMean(sum, count)).toBe(expected);
+  });
+
+  it("creates a case-insensitive talk grouping key", () => {
+    expect(talkKey("Talk A")).toBe(talkKey("TALK A"));
+    expect(talkKey("Talk A")).not.toBe(talkKey("Talk B"));
   });
 });
