@@ -7,7 +7,7 @@ export default function Home() {
       <a className="skip-link" href="#feedback">Skip to feedback</a>
       <header className="site-header"><Link href="/" className="wordmark">Talk<span>Feedback</span><span className="wordmark-square" aria-hidden="true" /></Link><nav aria-label="Main navigation"><a href="#feedback">Leave feedback</a><a href="#results">See results ↗</a></nav></header>
       <main className="site-main">
-        <div className="workshop-intro"><div><p className="workshop-label">PACKT WORKSHOP / ENGINEERING BOTS</p><h1>Better talks start<br />with a conversation.</h1><p className="intro-copy">Share what you learned. Tell us what could improve.<br className="desktop-break" /> Every response helps shape what comes next.</p></div><p className="intro-aside">Your perspective,<br /><em>part of the picture.</em></p></div>
+        <div className="workshop-intro"><p className="workshop-label">PACKT WORKSHOP / ENGINEERING BOTS</p><h1>Workshop feedback</h1><p className="intro-copy">Leave feedback on a talk and explore the room&apos;s results.</p></div>
         <FeedbackWorkspace />
       </main>
       <footer className="site-footer"><span>Talk Feedback</span><p>Built to learn. Improved together.</p></footer>
