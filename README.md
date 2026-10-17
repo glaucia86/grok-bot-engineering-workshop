@@ -42,10 +42,12 @@ As of October 16, PRs [#9](https://github.com/glaucia86/grok-bot-engineering-wor
 | 20–40 | Build and verify | Form/dashboard implementation and criterion evidence |
 | 40–55 | Inspect PR and preview | Submit feedback and inspect the dashboard |
 | 55–70 | Human review and decision | Approve/merge personally or request changes |
-| 70–82 | Draft native daily triage | Disabled definition and private sample output |
+| 70–82 | Recovery first; optional routine afterward | Complete core verification/review or explain blockers; routine only if core is complete |
 | 82–90 | Q&A | Review lessons and optional extra practice |
 
-The [presenter guide](docs/speaker/guia-glaucia.md) gives the corresponding 11:00–12:30 Brasília run sheet. Infrastructure preparation happens **before** the event, not in these 90 minutes.
+Follow the [core/optional boundary](spec.md#90-minute-teaching-boundary) and [budget and cut line](docs/inception.md#90-minute-budget-and-cut-line). Minutes 70–82 (12:10–12:22 Brasília) are reserved for recovery first; 82–90 remains Q&A. This is a planning budget, **not a timed rehearsal result**. Infrastructure preparation happens **before** the event, not in these 90 minutes.
+
+The [presenter guide](docs/speaker/guia-glaucia.md) and deck still need the same recovery-first rule under [#17](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/17) and [#20](https://github.com/glaucia86/grok-bot-engineering-workshop/issues/20). Until aligned, follow this cut line rather than their unconditional routine slot; the run sheets are not yet synchronized.
 
 ## Before the event
 
@@ -136,9 +138,14 @@ Clean up only authorized run-owned data/processes, keeping evidence. Never merge
 
 Read the change, independent QA evidence and checks for the same commit. Green CI is not acceptance. Only the human approves and merges. Record advisory coverage gaps without converting failures or missing evidence into passes.
 
-### 5. Native routine draft (70–82 min)
+### 5. Recovery first; routine only after the core is complete (70–82 min)
+
+Use this interval to finish the core feedback/results implementation, independent tests and human review. Skip the routine entirely while any of that work is unfinished; do not merely shorten it. If a blocker cannot be cleared, record the unfinished work and use an identified, previously verified reference to explain the result. Missing preview/isolation/persistence evidence stays BLOCKED, and no rushed merge is required. End this interval at minute 82 for Q&A.
+
+Only if the core implementation, tests and review are complete and time remains, use the optional prompt below for a disabled draft. Detailed reference insights/layout are also optional; they do not displace core recovery.
 
 ```text
+Only use this optional prompt after the core implementation, tests and human review are complete.
 Read docs/routines/daily-triage.md. Draft a native Grok Bot routine for weekdays at 9 AM America/Sao_Paulo.
 Use its private delivery and read-only rules. Propose labels; do not apply them.
 Show a disabled definition and sample summary. Do not create or enable a scheduled task in this exercise.
