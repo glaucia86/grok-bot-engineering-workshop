@@ -23,6 +23,7 @@ html, body, .reveal-viewport { background: var(--bg) !important; }
 .reveal .slides > section.present > aside.notes { display: none; }
 .reveal h1, .reveal h2, .reveal h3 { font-family: var(--sans); color: var(--text); margin: 0 0 .35em; letter-spacing: -0.025em; line-height: 1.05; text-transform: none; }
 .reveal h1 { font-size: 112px; font-weight: 850; }
+html[lang="pt-BR"] .reveal h1 { font-size: 100px; }
 .reveal h2 { font-size: 68px; font-weight: 800; }
 .reveal h3 { font-size: 40px; font-weight: 750; }
 .reveal p { margin: 0 0 .5em; line-height: 1.3; }
