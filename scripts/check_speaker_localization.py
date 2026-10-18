@@ -45,6 +45,15 @@ OVERFLOW = """() => {
       }
     }
   }
+  for (const kicker of slide.querySelectorAll('.kicker')) {
+    const title = kicker.getBoundingClientRect();
+    for (const card of slide.querySelectorAll('.card')) {
+      if (card.closest('.fragment:not(.visible)')) continue;
+      const box = card.getBoundingClientRect();
+      if (Math.min(box.right,title.right)-Math.max(box.left,title.left)>3 && Math.min(box.bottom,title.bottom)-Math.max(box.top,title.top)>3)
+        bad.push({text:kicker.textContent,kind:'title-obscured-by-card'});
+    }
+  }
   return bad;
 }"""
 server = http.server.ThreadingHTTPServer(('127.0.0.1', 0), functools.partial(Handler, directory=str(ROOT)))
