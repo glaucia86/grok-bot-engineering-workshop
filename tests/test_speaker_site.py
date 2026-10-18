@@ -22,8 +22,8 @@ class SpeakerSite(unittest.TestCase):
         self.assertIn('OPCIONAL', slide['do'][1]['pt'])
         self.assertIn('OPTIONAL', slide['do'][2]['en'])
         self.assertIn('OPCIONAL', slide['do'][2]['pt'])
-        self.assertIn('Recovery ends at 12:22 BRT', ' '.join(line['en'] for line in slide['say']))
-        self.assertIn('Questions open at 12:26 BRT', ' '.join(line['en'] for line in slide['say']))
+        self.assertIn('At 12:22, we stop recovery', ' '.join(line['en'] for line in slide['say']))
+        self.assertIn('Questions begin at 12:26.', ' '.join(line['en'] for line in slide['say']))
 
     def test_rule_run_sheet_click_count_uses_slide_source(self):
         from unittest.mock import patch
@@ -75,7 +75,7 @@ class SpeakerSite(unittest.TestCase):
             output = (pathlib.Path(tmp)/'site/guide/index.html').read_text()
             copied = [unescape(x).rstrip() for x in re.findall(r'<pre><code[^>]*>(.*?)</code></pre>',output,re.S)]
             self.assertEqual([x.rstrip() for x in prompts],copied)
-            self.assertEqual(output.count('class="copy-prompt"'),10)
+            self.assertEqual(output.count('class="copy-prompt"'),11)
             self.assertEqual(output.count('class="copy-command"'),1)
             self.assertIn('Copiar comando',output)
             self.assertIn('git ls-remote --exit-code --heads origin refs/heads/checkpoint/mvp-base',output)

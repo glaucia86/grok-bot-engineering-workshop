@@ -100,3 +100,23 @@ remain unchanged. Narrow screens explicitly retain slide mode (Reveal's automati
 scroll view is disabled for this fixed-stage deck). The existing speaker-browser evidence includes mascot checks;
 review the actual screenshots before publishing a layout change.
 
+
+## Slides em português
+
+O build mantém a apresentação inglesa em `/slides/` e gera a versão brasileira
+em `/slides/pt-br/`. O seletor de idioma funciona por teclado e preserva o slide
+e o fragmento atual, inclusive em links diretos. Ambas as versões usam os mesmos
+assets, fontes e mascotes locais; não há serviço de tradução nem pedido externo.
+
+A fonte visual única continua sendo `slides/index.html`. As traduções exatas de
+texto e labels ficam em `scripts/speaker_slides_pt_br.tsv`; texto novo sem tradução
+faz o build falhar. Nomes técnicos, caminhos e identificadores preservados têm uma
+lista explícita em `scripts/speaker_slide_localization.py`. As notas PT usam os
+campos em português de `scripts/speaker_content.py`, e os prompts executáveis são
+preservados em inglês. Não edite os arquivos gerados em `_site/slides/pt-br/`.
+
+Verificação: `python -m unittest discover -s tests -p 'test_speaker*.py'`, build,
+e `python scripts/check_speaker_localization.py` com Chromium instalado. O último
+comando captura os 22 slides e cada fragmento em português, testa alternância,
+links relativos sob prefixo de projeto, notas, modo offline e movimento reduzido.
+As capturas são QA visual do site, não evidência de ensaio nem de aceite do MVP.

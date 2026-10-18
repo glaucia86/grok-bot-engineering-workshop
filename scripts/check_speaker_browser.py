@@ -187,7 +187,7 @@ try:
         page.get_by_role('link', name='Guia da apresentadora').click()
         page.wait_for_load_state('networkidle')
         assert page.url == base+'guide/'
-        assert page.locator('.copy-prompt').count() == 10
+        assert page.locator('.copy-prompt').count() == 11
         assert page.locator('.copy-command').count() == 1
         page.locator('.copy-command').click()
         page.wait_for_function("document.querySelector('.copy-status').textContent === 'Comando copiado.'")
