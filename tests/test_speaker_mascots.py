@@ -35,6 +35,15 @@ class SlideMascots(unittest.TestCase):
         self.assertNotIn('function blink(', js)
         self.assertIn('transform: var(--mascot-eye-initial) !important', (DECK/'assets/mascots.css').read_text())
 
+    def test_contextual_cues_are_limited_to_the_two_chats_and_closing(self):
+        html = (DECK/'index.html').read_text()
+        sections = re.findall(r'<section\b.*?</section>', html, re.S)
+        for index, name, cue in [(7, 'fde-typescript', 'thinking'), (12, 'qa-bot', 'thinking'), (21, 'grok', 'wink')]:
+            visible = sections[index].split('<aside class="notes">')[0]
+            self.assertRegex(visible, rf'<img(?=[^>]*src="assets/avatars/{name}\.svg")(?=[^>]*data-mascot-cue="{cue}")[^>]*>')
+        self.assertEqual(html.count('data-mascot-cue="thinking"'), 2)
+        self.assertEqual(html.count('data-mascot-cue="wink"'), 1)
+
     def test_exports_are_current(self):
         import runpy
         generated = runpy.run_path(str(ROOT/'scripts/sync_speaker_mascots.py'))['generated']

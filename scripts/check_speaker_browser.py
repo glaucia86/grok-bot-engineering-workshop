@@ -100,7 +100,7 @@ def assert_static_mascots(page, selector='.workshop-mascot', standalone=False, r
 def assert_active_mascots(page):
     page.wait_for_function("""() => {
       const bots = [...document.querySelectorAll('section.present .workshop-mascot')];
-      return bots.length && bots.every(svg => svg.dataset.motion === 'active' &&
+      return bots.length && bots.every(svg => svg.dataset.motion === 'active' && svg.dataset.cue !== 'wink' &&
         [...svg.querySelectorAll('.mascot-eye')].every(eye => getComputedStyle(eye).animationName !== 'none'));
     }""")
     states = mascot_state(page, 'section.present .workshop-mascot')
@@ -125,6 +125,71 @@ def assert_active_mascots(page):
         "bots => bots.some(svg => !svg.closest('section.present'))"
     )
     return states
+
+
+def assert_contextual_cues(page, output, base):
+    """Observe actual visible decoration, finite lifetime and mode cancellation."""
+    # Reveal emits slidechanged then ready when resolving an initial hash.
+    # Every directly linked cue slide must still play after initialization.
+    for index, kind in [(7, 'thinking'), (12, 'thinking'), (21, 'wink')]:
+        page.goto('about:blank')
+        page.goto(base+f'slides/#/{index}', wait_until='domcontentloaded')
+        page.wait_for_function("document.querySelector('.reveal')?.classList.contains('ready')")
+        try:
+            page.wait_for_function('(kind)=>!!document.querySelector(`section.present [data-cue="${kind}"]`)', arg=kind, timeout=3000)
+            if kind == 'thinking':
+                page.wait_for_function("document.querySelector('section.present .mascot-thinking')?.style.opacity > 0.8", timeout=3000)
+            else:
+                page.wait_for_function("new DOMMatrix(getComputedStyle(document.querySelector('section.present .mascot-wink')).transform).d < 0.5", timeout=3000)
+        except PlaywrightTimeoutError:
+            print('Direct-link cue failure', index, page.evaluate("({hidden:document.hidden,ready:Reveal.isReady(),slide:Reveal.getIndices(),api:typeof WorkshopMascotCues,bots:[...document.querySelectorAll('section.present .workshop-mascot')].map(s=>({motion:s.dataset.motion,cue:s.dataset.cue,planned:s.dataset.mascotCue}))})"))
+            raise
+        page.wait_for_function('!document.querySelector("section.present [data-cue=thinking],section.present [data-cue=wink]")')
+    page.evaluate('Reveal.slide(0)')
+    for index, ident in [(7, 'fde'), (12, 'qa')]:
+        page.evaluate('(i)=>Reveal.slide(i,0,-1)', index)
+        cue = page.locator(f'section.present .workshop-mascot[data-mascot="{ident}"][data-mascot-cue="thinking"]')
+        cue.wait_for(state='visible')
+        page.wait_for_function("document.querySelector('section.present [data-cue=thinking] .mascot-thinking')?.style.opacity > 0.8")
+        circles = cue.locator('.mascot-thinking circle')
+        assert circles.count() == 3
+        before = circles.evaluate_all('(xs)=>xs.map(x=>x.getAttribute("r"))')
+        page.wait_for_timeout(180)
+        assert circles.evaluate_all('(xs)=>xs.map(x=>x.getAttribute("r"))') != before
+        page.screenshot(path=str(output/f'mascots-thinking-slide-{index+1:02}.png'))
+        page.wait_for_function("!document.querySelector('section.present [data-cue=thinking]')")
+        assert cue.locator('.mascot-thinking').evaluate('(e)=>getComputedStyle(e).display') == 'none'
+    page.evaluate('Reveal.slide(21)')
+    wink = page.locator('section.present [data-mascot-cue="wink"]')
+    page.wait_for_function("document.querySelector('section.present .mascot-wink')?.getAttribute('transform')?.includes('scale')")
+    page.wait_for_timeout(650)
+    assert wink.locator('.mascot-wink').evaluate('(e)=>new DOMMatrix(getComputedStyle(e).transform).d') < .5
+    page.screenshot(path=str(output/'mascots-closing-wink.png'))
+    page.wait_for_function("!document.querySelector('section.present [data-cue=wink]')")
+    assert wink.locator('.mascot-wink').get_attribute('transform') is None
+    page.wait_for_timeout(1700)
+    assert wink.get_attribute('data-cue') == 'idle', 'Cue must not loop'
+    # Overview / reduced motion cancel immediately, and resuming must not replay.
+    for mode in ('overview', 'reduce', 'print'):
+        page.evaluate('Reveal.slide(0)')
+        page.evaluate('Reveal.slide(7)')
+        page.wait_for_function("document.querySelector('section.present [data-cue=thinking]')")
+        if mode == 'overview': page.evaluate('Reveal.toggleOverview(true)')
+        elif mode == 'reduce': page.emulate_media(reduced_motion='reduce')
+        else: page.evaluate("window.dispatchEvent(new Event('beforeprint'))")
+        page.wait_for_function("[...document.querySelectorAll('[data-mascot-cue]')].every(e=>e.dataset.cue==='idle')")
+        assert page.locator('.mascot-thinking').evaluate_all('(xs)=>xs.every(x=>getComputedStyle(x).display==="none")')
+        if mode == 'overview': page.evaluate('Reveal.toggleOverview(false)')
+        elif mode == 'reduce': page.emulate_media(reduced_motion='no-preference')
+        else: page.evaluate("window.dispatchEvent(new Event('afterprint'))")
+        page.wait_for_timeout(550)
+        assert not page.locator('[data-cue="thinking"], [data-cue="wink"]').count()
+    # Leaving the slide must cancel its cue, even before it has finished.
+    page.evaluate('Reveal.slide(0)')
+    page.evaluate('Reveal.slide(7)')
+    page.wait_for_function("document.querySelector('section.present [data-cue=thinking]')")
+    page.evaluate('Reveal.slide(8)')
+    assert not page.locator('[data-cue="thinking"], [data-cue="wink"]').count()
 
 
 ROOT = Path('_site').resolve()
@@ -228,6 +293,17 @@ try:
         page.goto(base+'slides/', wait_until='networkidle')
         page.wait_for_function('window.Reveal && Reveal.isReady()')
         assert page.evaluate('Reveal.getTotalSlides()') == 22
+        cue_context = browser.new_context(viewport={'width':1440,'height':900}, record_video_dir=str(OUT/'clips'), record_video_size={'width':960,'height':600})
+        cue_context.route('**/*', route)
+        cue_page = cue_context.new_page()
+        cue_page.on('pageerror', lambda error: errors.append(str(error)))
+        cue_page.goto(base+'slides/', wait_until='networkidle')
+        cue_page.wait_for_function('Reveal.isReady()')
+        assert_contextual_cues(cue_page, OUT, base)
+        cue_video = cue_page.video
+        cue_context.close()
+        cue_video.save_as(str(OUT/'mascot-cues.webm'))
+        results.append('Contextual cues: visible thinking pulses and one wink, finite lifetime, no replay after overview/reduced-motion/print, offscreen cancellation PASS')
         stepped = 0
         for number in range(22):
             page.evaluate('(i)=>Reveal.slide(i,0,-1)', number)  # -1 = before the first fragment
