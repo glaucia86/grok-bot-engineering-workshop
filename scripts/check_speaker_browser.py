@@ -14,6 +14,17 @@ MASCOT_STATE = r"""selector => [...document.querySelectorAll(selector)].map(svg 
     const m = new DOMMatrix(value || undefined);
     return [m.a, m.b, m.c, m.d, m.e, m.f];
   };
+  // Inspect the rendered SVG root, never mask paths: mask geometry has no
+  // ordinary layout box even when it is painting a visible mascot.
+  const hiddenAncestors = [];
+  for (let element = svg; element; element = element.parentElement) {
+    const style = getComputedStyle(element);
+    if (style.display === 'none' || ['hidden', 'collapse'].includes(style.visibility) || style.contentVisibility === 'hidden') {
+      hiddenAncestors.push({tag: element.localName, class: element.getAttribute('class'), display: style.display, visibility: style.visibility});
+    }
+  }
+  const rendered = [...svg.getClientRects()].some(rect => rect.width > 0 && rect.height > 0) &&
+    !hiddenAncestors.length && (!svg.checkVisibility || svg.checkVisibility({visibilityProperty: true, contentVisibilityAuto: true}));
   const masks = [...svg.querySelectorAll('mask')];
   const refs = [...svg.querySelectorAll('[mask]')].map(e => {
     const match = /^url\(["']?#([^"')]+)["']?\)$/.exec(e.getAttribute('mask'));
@@ -22,7 +33,7 @@ MASCOT_STATE = r"""selector => [...document.querySelectorAll(selector)].map(svg 
   });
   return {
     mascot: svg.dataset.mascot, viewBox: svg.getAttribute('viewBox'), motion: svg.dataset.motion,
-    current: !!svg.closest('section.present'),
+    current: !!svg.closest('section.present'), rendered, hiddenAncestors,
     masks: masks.map(e => e.id), refs,
     hasBodyWrapper: !!svg.querySelector('.mascot-motion .mascot-body'),
     hasMaskedFace: !!svg.querySelector('mask .mascot-face'),
@@ -33,7 +44,7 @@ MASCOT_STATE = r"""selector => [...document.querySelectorAll(selector)].map(svg 
       return {
         tag: eye.localName, classes: [...eye.classList].filter(c => c !== 'mascot-eye'),
         authored: eye.getAttribute('transform'), initial: matrix(eye.getAttribute('transform')),
-        transform: matrix(style.transform), inlineTransform: eye.style.transform,
+        transform: matrix(style.transform), computedTransform: style.transform, inlineTransform: eye.style.transform,
         name: style.animationName, duration: style.animationDuration,
         direction: style.animationDirection, iterations: style.animationIterationCount,
         playState: style.animationPlayState,
@@ -49,26 +60,40 @@ def mascot_state(page, selector='.workshop-mascot'):
     return page.evaluate(MASCOT_STATE, selector)
 
 
-def assert_static_mascots(page, selector='.workshop-mascot', standalone=False):
+def assert_static_mascots(page, selector='.workshop-mascot', standalone=False, require_current_rendered=False):
+    def check(states):
+        assert states, f'No mascots matched {selector}'
+        if standalone or require_current_rendered:
+            required = [svg for svg in states if standalone or svg['current']]
+            assert required and all(svg['rendered'] for svg in required), ('Expected rendered static mascots', states)
+        for svg in states:
+            assert standalone or svg['motion'] == 'static', svg
+            assert len(svg['eyes']) == 2, svg
+            for eye in svg['eyes']:
+                assert eye['authored'] and eye['authored'].startswith('matrix('), eye
+                assert eye['name'] == 'none' and not eye['nativeAnimation'], eye
+                assert eye['initial'] != [1, 0, 0, 1, 0, 0], eye
+                # Chromium reports transform:none for descendants of Reveal's
+                # display:none slides. Only rendered roots provide computed-style
+                # evidence; hidden roots must still retain the authored matrices.
+                if svg['rendered']:
+                    assert all(abs(a - b) < .00001 for a, b in zip(eye['initial'], eye['transform'])), (svg, eye)
+            assert svg['eyes'][0]['initial'] != svg['eyes'][1]['initial'], svg
+            if svg['rendered']:
+                assert svg['eyes'][0]['transform'] != svg['eyes'][1]['transform'], svg
+
     states = mascot_state(page, selector)
-    assert states, f'No mascots matched {selector}'
-    for svg in states:
-        assert standalone or svg['motion'] == 'static', svg
-        assert len(svg['eyes']) == 2, svg
-        matrices = []
-        for eye in svg['eyes']:
-            assert eye['authored'] and eye['authored'].startswith('matrix('), eye
-            assert eye['name'] == 'none' and not eye['nativeAnimation'], eye
-            assert eye['initial'] != [1, 0, 0, 1, 0, 0], eye
-            assert all(abs(a - b) < .00001 for a, b in zip(eye['initial'], eye['transform'])), eye
-            matrices.append(eye['transform'])
-        assert matrices[0] != matrices[1], svg
-    # Static means stable over real elapsed time, including after a former active
-    # animation is cancelled. Do not disable animations or freeze the page clock.
+    check(states)
+    # Recheck both the static policy and actual visible eye geometry over time.
+    # A ready/current-slide test must contain rendered roots on both observations.
     page.wait_for_timeout(220)
-    assert [[eye['transform'] for eye in svg['eyes']] for svg in mascot_state(page, selector)] == [
-        [eye['transform'] for eye in svg['eyes']] for svg in states
-    ]
+    later = mascot_state(page, selector)
+    check(later)
+    assert len(later) == len(states)
+    for before, after in zip(states, later):
+        assert [eye['authored'] for eye in before['eyes']] == [eye['authored'] for eye in after['eyes']]
+        if before['rendered'] and after['rendered']:
+            assert [eye['transform'] for eye in before['eyes']] == [eye['transform'] for eye in after['eyes']]
     return states
 
 
@@ -260,17 +285,17 @@ try:
         page.screenshot(animations='disabled', path=str(OUT/'mascots-gaze-desktop.png'))
         page.emulate_media(reduced_motion='reduce')
         page.wait_for_function("[...document.querySelectorAll('.mascot-motion,.mascot-face')].every(e=>!e.style.transform)")
-        assert_static_mascots(page)
+        assert_static_mascots(page, require_current_rendered=True)
         page.screenshot(animations='disabled', path=str(OUT/'mascots-reduced-motion.png'))
         page.emulate_media(reduced_motion='no-preference')
         assert_active_mascots(page)
         # Reveal presentation modes suspend motion without destroying first-frame eyes.
         page.evaluate('Reveal.toggleOverview(true)')
-        assert_static_mascots(page)
+        assert_static_mascots(page, require_current_rendered=True)
         page.evaluate('Reveal.toggleOverview(false)')
         assert_active_mascots(page)
         page.evaluate('Reveal.togglePause(true)')
-        assert_static_mascots(page)
+        assert_static_mascots(page, require_current_rendered=True)
         page.evaluate('Reveal.togglePause(false)')
         assert_active_mascots(page)
         # Cameos must never intersect actual content or the progress HUD.
@@ -340,14 +365,14 @@ try:
         touch_page.mouse.move(300, 200)
         touch_page.wait_for_timeout(200)
         assert touch_page.evaluate("[...document.querySelectorAll('.mascot-motion,.mascot-face')].every(e=>!e.style.transform)")
-        assert_static_mascots(touch_page)
+        assert_static_mascots(touch_page, require_current_rendered=True)
         touch_page.screenshot(animations='disabled', path=str(OUT/'mascots-touch-cover.png'))
         touch_page.evaluate('Reveal.slide(21)')
         touch_page.wait_for_function('Reveal.getIndices().h === 21 && !Reveal.isScrollView()')
         touch_page.locator('section.present h1').filter(has_text='Questions?').wait_for(state='visible')
         touch_page.wait_for_timeout(800)
         assert touch_page.locator('section.present .workshop-mascot').count() == 5
-        assert_static_mascots(touch_page)
+        assert_static_mascots(touch_page, require_current_rendered=True)
         bounds = touch_page.locator('section.present h1').bounding_box()
         assert bounds and bounds['x'] >= 0 and bounds['y'] >= 0 and bounds['x'] + bounds['width'] <= 390 and bounds['y'] + bounds['height'] <= 844, bounds
         touch_page.screenshot(animations='disabled', path=str(OUT/'mascots-touch-closing.png'))
