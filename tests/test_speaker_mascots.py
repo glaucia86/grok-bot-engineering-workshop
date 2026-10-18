@@ -6,13 +6,32 @@ import xml.etree.ElementTree as ET
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 DECK = ROOT / 'docs/speaker/slides'
 class SlideMascots(unittest.TestCase):
-    def test_five_authored_mascots_match_application_geometry(self):
-        source = (ROOT/'mvp/src/components/workshop-mascot.tsx').read_text()
-        names = {'grok':'grok','fde':'fde-typescript','qa':'qa-bot','devops':'devops','lead':'engineering-lead'}
-        for ident, color, path in re.findall(r'id: "(.*?)", color: "(.*?)".*?path: "(.*?)"', source):
-            svg = ET.fromstring((DECK/f'assets/avatars/{names[ident]}.svg').read_text())
-            body = svg.find('{http://www.w3.org/2000/svg}path')
-            self.assertEqual((body.attrib['d'], body.attrib['fill']), (path,color))
+    def test_uploaded_geometry_colors_and_initial_eyes(self):
+        mapping = {'grok':'bloub-cercle-neutre-encre-anime.svg','fde-typescript':'bloub-triangle-surpris-vert-anime.svg','qa-bot':'qa-bot.svg','devops':'bloub-cercle-attentif-violet-anime.svg','engineering-lead':'bloub-squircle-surpris-rouge-anime.svg'}
+        ns = {'s':'http://www.w3.org/2000/svg'}
+        for name, filename in mapping.items():
+            original = ET.parse(ROOT/'docs/speaker/mascot-sources'/filename).getroot()
+            svg = ET.parse(DECK/f'assets/avatars/{name}.svg').getroot()
+            self.assertEqual(svg.get('viewBox'), '-125 -125 250 250')
+            self.assertEqual([p.get('d') for p in original.findall('.//s:path', ns)], [p.get('d') for p in svg.findall('.//s:path', ns)])
+            self.assertEqual([p.get('fill') for p in original.findall('.//s:rect', ns)], [p.get('fill') for p in svg.findall('.//s:rect', ns)])
+            eyes = [e for e in svg.iter() if 'mascot-eye' in e.get('class','').split()]
+            self.assertEqual(len(eyes),2)
+            self.assertTrue(all(e.get('transform','').startswith('matrix(') for e in eyes))
+            self.assertNotEqual(eyes[0].get('transform'), eyes[1].get('transform'))
+            self.assertNotIn('<style', ET.tostring(svg, encoding='unicode'))
+
+    def test_template_animation_is_namespaced_and_instance_safe(self):
+        html = (DECK/'index.html').read_text()
+        for name in ['grok','fde','qa','devops','lead']:
+            self.assertIn(f'@keyframes mascot-{name}-oeil0',html)
+            self.assertIn(f'class="mascot-eye mascot-{name}-oeil1"',html)
+        self.assertNotIn('@keyframes oeil',html)
+        js = (DECK/'assets/mascots.js').read_text()
+        self.assertIn('instance-',js)
+        self.assertIn("dataset.motion = 'static'", js)
+        self.assertNotIn('function blink(', js)
+
     def test_exports_are_current(self):
         import runpy
         generated = runpy.run_path(str(ROOT/'scripts/sync_speaker_mascots.py'))['generated']
@@ -34,17 +53,17 @@ class SlideMascots(unittest.TestCase):
     def test_authored_descriptions_match_exported_artwork(self):
         for name in ['scripts/speaker_content.py', 'docs/speaker/guia-glaucia.md', 'docs/speaker/slides/index.html']:
             text = (ROOT/name).read_text()
-            for stale in ['blue square', 'quadrado azul', 'orange cloud', 'nuvem laranja']:
+            for stale in ['blue square', 'quadrado azul', 'orange cloud', 'nuvem laranja', 'green square', 'quadrado verde', 'purple drop', 'gota roxa']:
                 self.assertNotIn(stale, text, name)
-            self.assertIn('gota roxa', text)
-            self.assertIn('quadrado verde', text)
+            self.assertIn('círculo roxo', text)
+            self.assertIn('triângulo verde', text)
         builder = (ROOT/'scripts/build_speaker_site.py').read_text()
-        for description in ['FDE TypeScript, green rounded square', 'DevOps, purple teardrop', 'Engineering Lead, red wedge']:
+        for description in ['FDE TypeScript, green triangle', 'DevOps, purple circle', 'Engineering Lead, red rounded square']:
             self.assertIn(description, builder)
 
     def test_standalone_grok_keeps_its_visibility_outline(self):
         svg = ET.fromstring((DECK/'assets/avatars/grok.svg').read_text())
-        body = svg.find('{http://www.w3.org/2000/svg}path')
+        body = next(e for e in svg.iter() if e.get('class') == 'mascot-body')
         self.assertEqual(body.get('stroke'), '#647078')
         self.assertEqual(body.get('stroke-width'), '1.5')
 

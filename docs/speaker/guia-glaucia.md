@@ -367,7 +367,7 @@ A plateia viu o repositório, a arquitetura e a regra principal. O relógio marc
 
 **Slide 6 · The team flow · 11:05–11:06** · 6 clique(s) no slide
 
-1. Clique 6 vezes. 1: você e o chat do grupo. 2: FDE TypeScript (quadrado verde). 3: QA bot (gota rosa). 4: DevOps (gota roxa). 5: PR com evidências. 6: a linha vermelha, eu aprovo e faço o merge.
+1. Clique 6 vezes. 1: você e o chat do grupo. 2: FDE TypeScript (triângulo verde). 3: QA bot (gota rosa). 4: DevOps (círculo roxo). 5: PR com evidências. 6: a linha vermelha, eu aprovo e faço o merge.
    - ✅ **Esperado:** O diagrama completo aparece com a linha vermelha voltando para você.
 
 **Slide 7 · Every bot has a charter · 11:06–11:07** · 3 clique(s) no slide

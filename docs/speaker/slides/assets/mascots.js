@@ -1,17 +1,23 @@
-/* Progressive enhancement of local SVG fallbacks. Geometry is exported by
- * scripts/sync_speaker_mascots.py from the app's WorkshopMascot component.
- * Motion reuses BotBackdrop's bounded 12-unit gaze, 0.14 easing, 3-degree tilt,
- * 0.45 body / 0.65 face depths and BotBlink's independent 140ms blink timing.
- * No keyboard, pointer capture or network dependency is introduced.
- */
+/* User-supplied SVG animation is retained; wrappers add bounded mouse gaze. */
 (() => {
   'use strict';
   const bots = [];
+  let instance = 0;
   document.querySelectorAll('img[src^="assets/avatars/"]').forEach(img => {
     const name = img.getAttribute('src').split('/').pop().replace('.svg', '');
     const template = document.getElementById(`mascot-${name}`);
     if (!template) return; // Keep the human avatar and any unknown assets intact.
     const svg = template.content.firstElementChild.cloneNode(true);
+    // SVG styles are document-global. Isolate every mask, selector and keyframe,
+    // including repeated appearances of the same character on different slides.
+    const original = `mascot-${svg.dataset.mascot}-`;
+    const prefix = `instance-${++instance}-${svg.dataset.mascot}-`;
+    svg.querySelectorAll('*').forEach(element => {
+      for (const attr of [...element.attributes]) {
+        if (attr.value.includes(original)) element.setAttribute(attr.name, attr.value.replaceAll(original, prefix));
+      }
+      if (element.tagName.toLowerCase() === 'style') element.textContent = element.textContent.replaceAll(original, prefix);
+    });
     for (const attr of img.attributes) {
       if (!['src', 'alt'].includes(attr.name)) svg.setAttribute(attr.name, attr.value);
     }
@@ -20,10 +26,10 @@
       svg.setAttribute('role', 'img');
       svg.setAttribute('aria-label', img.alt);
     } else svg.setAttribute('aria-hidden', 'true');
-    svg.dataset.blink = 'open';
+    svg.dataset.motion = 'static';
     img.replaceWith(svg);
     bots.push({ svg, body: svg.querySelector('.mascot-motion'), face: svg.querySelector('.mascot-face'),
-      x: 0, y: 0, tx: 0, ty: 0, timer: null });
+      x: 0, y: 0, tx: 0, ty: 0 });
   });
   if (typeof window.matchMedia !== 'function' || !bots.length) return;
   const media = window.matchMedia('(prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)');
@@ -34,31 +40,17 @@
     if (frame !== null) cancelAnimationFrame(frame);
     frame = null;
     bots.forEach(bot => {
-      clearTimeout(bot.timer);
-      bot.timer = null;
       bot.x = bot.y = bot.tx = bot.ty = 0;
       bot.body.style.removeProperty('transform');
       bot.face.style.removeProperty('transform');
-      bot.svg.dataset.blink = 'open';
+      bot.svg.dataset.motion = 'static';
     });
-  }
-  function blink(bot, phase) {
-    bot.timer = setTimeout(() => {
-      bot.timer = null;
-      if (!allowed()) return;
-      bot.svg.dataset.blink = 'closed';
-      bot.timer = setTimeout(() => {
-        bot.timer = null;
-        bot.svg.dataset.blink = 'open';
-        if (allowed()) blink(bot, phase);
-      }, 140);
-    }, 4000 + Math.random() * 4000 + phase * 600);
   }
   function sync() {
     reset();
     const slide = Reveal.isReady() ? Reveal.getCurrentSlide() : null;
     active = bots.filter(bot => slide && slide.contains(bot.svg));
-    if (allowed()) active.forEach((bot, i) => blink(bot, i % 5));
+    if (allowed()) active.forEach(bot => { bot.svg.dataset.motion = 'active'; });
   }
   function animate() {
     frame = null;

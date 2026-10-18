@@ -1,14 +1,13 @@
-/* Same original vectors as the app; deck layout stays on Reveal's 1600×900 stage. */
+/* User-supplied vectors; deck layout stays on Reveal's 1600×900 stage. */
 .workshop-mascot { overflow: visible; pointer-events: none; flex-shrink: 0; }
 .cardhead .workshop-mascot { width: 96px; height: 96px; }
 .app .msg .workshop-mascot { width: 46px; height: 46px; }
 .bot .workshop-mascot { width: 150px; height: 150px; }
 .app .bot-row .workshop-mascot { width: 56px; height: 56px; }
-.mascot-motion { transform-origin: 80px 80px; }
-.mascot-eye { transform-box: fill-box; transform-origin: center; transition: transform 70ms ease-in-out; }
-[data-blink="closed"] .mascot-eye { transform: scaleY(.08); }
-/* A subtle keyline keeps the black silhouette visible on the black deck. */
-[data-mascot="grok"] .mascot-body { stroke: #647078; stroke-width: 1.5; }
+/* Native eye transforms stay untouched; gaze uses separate wrappers. */
+.mascot-motion, .mascot-face { transform-box: view-box; transform-origin: 0 0; }
+.workshop-mascot[data-motion="static"] .mascot-eye { animation: none !important; }
+.workshop-mascot[data-motion="active"] .mascot-eye { animation-play-state: running; }
 .hero-av { flex-wrap: wrap; }
 .hero-av p { flex-basis: 100%; margin-left: 0 !important; }
 .slide-cameo { position: absolute; bottom: 96px; width: 92px; height: 92px; pointer-events: none; }
@@ -17,8 +16,9 @@
 .cameo-low { bottom: 64px; }
 @media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) {
   .mascot-motion, .mascot-face { transform: none !important; }
-  .mascot-eye { transform: none !important; transition: none !important; }
+  .mascot-eye { animation: none !important; }
 }
 @media print {
-  .mascot-motion, .mascot-face, .mascot-eye { transform: none !important; transition: none !important; }
+  .mascot-motion, .mascot-face { transform: none !important; }
+  .mascot-eye { animation: none !important; }
 }
