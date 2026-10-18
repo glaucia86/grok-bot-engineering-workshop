@@ -31,6 +31,23 @@ class SlideMascots(unittest.TestCase):
             rule = context.strip() + ' .workshop-mascot {' + declarations + '}'
             self.assertIn(rule, mascot_css)
 
+    def test_authored_descriptions_match_exported_artwork(self):
+        for name in ['scripts/speaker_content.py', 'docs/speaker/guia-glaucia.md', 'docs/speaker/slides/index.html']:
+            text = (ROOT/name).read_text()
+            for stale in ['blue square', 'quadrado azul', 'orange cloud', 'nuvem laranja']:
+                self.assertNotIn(stale, text, name)
+            self.assertIn('gota roxa', text)
+            self.assertIn('quadrado verde', text)
+        builder = (ROOT/'scripts/build_speaker_site.py').read_text()
+        for description in ['FDE TypeScript, green rounded square', 'DevOps, purple teardrop', 'Engineering Lead, red wedge']:
+            self.assertIn(description, builder)
+
+    def test_standalone_grok_keeps_its_visibility_outline(self):
+        svg = ET.fromstring((DECK/'assets/avatars/grok.svg').read_text())
+        body = svg.find('{http://www.w3.org/2000/svg}path')
+        self.assertEqual(body.get('stroke'), '#647078')
+        self.assertEqual(body.get('stroke-width'), '1.5')
+
     def test_fixed_stage_disables_automatic_mobile_scroll_view(self):
         self.assertIn('scrollActivationWidth: null', (DECK/'index.html').read_text())
 

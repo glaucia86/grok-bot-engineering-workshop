@@ -20,7 +20,8 @@ def generated():
     for ident, color, shape, eyes, path in characters:
         angle, ink = (-22,'#fff') if ident == 'grok' else (-12,'#101516')
         eye_svg = ''.join(f'<g transform="rotate({angle} {x} {y})"><ellipse class="mascot-eye" cx="{x}" cy="{y}" rx="5" ry="10"/></g>' for x,y in json.loads(eyes))
-        art = f'<path class="mascot-body" d="{path}" fill="{color}"/><g class="mascot-face" fill="{ink}">{eye_svg}</g>'
+        outline = ' stroke="#647078" stroke-width="1.5"' if ident == 'grok' else ''
+        art = f'<path class="mascot-body" d="{path}" fill="{color}"{outline}/><g class="mascot-face" fill="{ink}">{eye_svg}</g>'
         files[DECK/f'assets/avatars/{NAMES[ident]}.svg'] = f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160">{art}</svg>\n'
         templates.append(f'<template id="mascot-{NAMES[ident]}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" focusable="false" data-mascot="{ident}" data-shape="{shape}"><g class="mascot-motion">{art}</g></svg></template>')
     html = (DECK/'index.html').read_text()

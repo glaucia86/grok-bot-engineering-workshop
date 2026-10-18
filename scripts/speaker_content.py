@@ -141,8 +141,8 @@ slide(title="The one rule", t="11:04–11:05", m=1, clicks=1,
  check_block=True, nxt=("Now, let us create our first bot.", "Agora, vamos criar nosso primeiro bot."))
 
 slide(title="The team flow", t="11:05–11:06", m=1, clicks=6,
- do=[D("Click 6 times. 1: you and the group chat. 2: FDE TypeScript (blue square). 3: QA bot (pink drop). 4: DevOps (orange cloud). 5: PR with evidence. 6: the red line, I approve and merge.",
-       "Clique 6 vezes. 1: você e o chat do grupo. 2: FDE TypeScript (quadrado azul). 3: QA bot (gota rosa). 4: DevOps (nuvem laranja). 5: PR com evidências. 6: a linha vermelha, eu aprovo e faço o merge.",
+ do=[D("Click 6 times. 1: you and the group chat. 2: FDE TypeScript (green square). 3: QA bot (pink drop). 4: DevOps (purple drop). 5: PR with evidence. 6: the red line, I approve and merge.",
+       "Clique 6 vezes. 1: você e o chat do grupo. 2: FDE TypeScript (quadrado verde). 3: QA bot (gota rosa). 4: DevOps (gota roxa). 5: PR com evidências. 6: a linha vermelha, eu aprovo e faço o merge.",
        ok=("The full diagram shows with the red loop back to you.", "O diagrama completo aparece com a linha vermelha voltando para você."))],
  say=[S("I am the tech lead. The bots are my team.", "Eu sou a tech lead. Os bots são o meu time.", "lead → LÍID; team → TIIM"),
       S("I ask in one group chat. Each bot takes its part.", "Eu peço num chat de grupo. Cada bot pega a sua parte.", "group → GRUUP; part → PÁRT"),
@@ -571,3 +571,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
