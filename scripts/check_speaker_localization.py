@@ -28,7 +28,7 @@ OVERFLOW = """() => {
   const bad = []; let node;
   while (node = walker.nextNode()) {
     const parent = node.parentElement;
-    if (!node.textContent.trim() || parent.closest('aside,script,style,defs,mask') || parent.closest('.fragment:not(.visible)')) continue;
+    if (!node.textContent.trim() || parent.closest('aside.notes,script,style,defs,mask') || parent.closest('.fragment:not(.visible)')) continue;
     const style = getComputedStyle(parent);
     if (style.display === 'none' || style.visibility === 'hidden') continue;
     const range = document.createRange(); range.selectNodeContents(node);
@@ -59,7 +59,7 @@ try:
         context.on('response', lambda response: bad_http.append(response.url) if response.status >= 400 else None)
         context.route('**/*', lambda route: route.continue_() if route.request.url.startswith(base.split(PREFIX)[0]) else (external.append(route.request.url), route.abort())[-1])
         page = context.new_page()
-        totals = []
+        totals, layout_failures = [], []
         for route, locale in [('', 'en'), ('pt-br/', 'pt-BR')]:
             page.goto(base + route)
             page.wait_for_function('window.Reveal && Reveal.isReady()')
@@ -81,7 +81,8 @@ try:
                     overflow = page.evaluate(OVERFLOW)
                     report['slides'].append({'slide':index+1,'fragment':steps-1,'overflow':overflow})
                     page.screenshot(path=str(OUT/f'pt-slide-{index+1:02}-step-{steps:02}.png'), animations='disabled')
-                    assert not overflow, (index+1, steps-1, overflow)
+                    if overflow:
+                        layout_failures.append({'width':1600,'slide':index+1,'fragment':steps-1,'details':overflow})
                     if not page.evaluate('Reveal.nextFragment()'):
                         break
                     steps += 1
@@ -119,7 +120,10 @@ try:
             for index in range(22):
                 page.evaluate('(i)=>Reveal.slide(i,0,999)', index)
                 page.wait_for_timeout(450)
-                assert not page.evaluate(OVERFLOW), (width,index+1,page.evaluate(OVERFLOW))
+                overflow = page.evaluate(OVERFLOW)
+                if overflow:
+                    layout_failures.append({'width':width,'slide':index+1,'details':overflow})
+                page.screenshot(path=str(OUT/f'pt-slide-{index+1:02}-final-{width}.png'), animations='disabled')
             page.screenshot(path=str(OUT/f'pt-closing-{width}.png'), animations='disabled')
         report['checks'].append('All PT slides fit 1280×720 and 390×844 stages')
         page.emulate_media(reduced_motion='reduce')
@@ -148,6 +152,8 @@ try:
         assert offline_page.evaluate('Reveal.getIndices()') == {'h':5,'v':0,'f':2}
         offline.close()
         report['checks'].append('Cold offline file load and language switch preserve slide and fragment')
+        report['layout_failures'] = layout_failures
+        assert not layout_failures, layout_failures
         browser.close()
 finally:
     (OUT/'results.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))

@@ -76,7 +76,7 @@ html, body, .reveal-viewport { background: var(--bg) !important; }
 .agenda i { display: block; font-style: normal; font-weight: 700; font-size: 30px; color: var(--c); margin-top: 6px; }
 
 /* sketch diagrams (rough.js, Excalidraw style) */
-svg.sketch { width: 100%; height: 560px; display: block; }
+svg.sketch { width: 100%; height: 560px; display: block; overflow: visible; }
 svg.sketch text { font-family: var(--hand); fill: var(--text); }
 
 /* placeholders for real screenshots from the rehearsal */

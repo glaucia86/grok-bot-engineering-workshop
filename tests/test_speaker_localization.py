@@ -3,10 +3,13 @@ import sys
 import tempfile
 import unittest
 import json
+import re
+import html
 import subprocess
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / 'scripts'))
 from build_speaker_site import build
-from speaker_slide_localization import NAV_SCRIPT
+from speaker_slide_localization import NAV_SCRIPT, catalog, render_portuguese, translate, localize_diagrams
+from speaker_content import SL, PROMPTS
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 class SlideLocalizationTest(unittest.TestCase):
@@ -34,6 +37,7 @@ class SlideLocalizationTest(unittest.TestCase):
             notes_ui = output/'slides/pt-br/notes.js'
             self.assertTrue(notes_ui.exists(), 'Presenter controls must also be localized')
             self.assertIn('Próximo slide', notes_ui.read_text())
+            self.assertTrue(r'lang=\"pt-BR\"' in notes_ui.read_text(), 'Presenter view language must be PT-BR')
 
     def test_merge_language_expresses_authority_not_a_promised_outcome(self):
         source = (ROOT/'docs/speaker/slides/index.html').read_text()
@@ -56,5 +60,28 @@ class SlideLocalizationTest(unittest.TestCase):
         """ + script + "\nconsole.log(link.href)"
         run = subprocess.run(['node','-e',harness],capture_output=True,text=True,check=True)
         self.assertEqual(run.stdout.strip(), 'file:///tmp/site/slides/index.html#/5/0/2')
+
+    def test_new_visible_english_text_requires_explicit_translation(self):
+        with self.assertRaisesRegex(ValueError, 'Untranslated slide text'):
+            translate('A new sentence that has not been reviewed.', catalog())
+
+    def test_portuguese_notes_preserve_every_executable_prompt(self):
+        source = (ROOT/'docs/speaker/slides/index.html').read_text()
+        result = render_portuguese(source, catalog())
+        prompts = [html.unescape(p) for p in re.findall(r'<pre lang="en">(.*?)</pre>', result, re.S)]
+        expected = [PROMPTS[step['prompt']] for slide in SL for step in slide['do'] if step['prompt'] is not None]
+        self.assertEqual(prompts, expected)
+        for slide in SL:
+            self.assertEqual(len(slide['say']), 1, 'Each talk track must be one connected paragraph')
+            self.assertIn(html.escape(slide['say'][0]['pt']), result)
+
+    def test_diagrams_keep_geometry_fragments_and_technical_identifiers(self):
+        source = (ROOT/'docs/speaker/slides/assets/diagrams.js').read_text()
+        result = localize_diagrams(source, catalog())
+        pattern = r'(\b(?:text|label):\s*)("(?:[^"\\]|\\.)*")'
+        normalized = lambda text: re.sub(pattern, r'\1""', text).replace('../assets/avatars/', 'assets/avatars/')
+        self.assertEqual(normalized(result), normalized(source))
+        self.assertIn('/api/feedback', result)
+        self.assertIn('DATABASE_URL', result)
 
 if __name__ == '__main__': unittest.main()

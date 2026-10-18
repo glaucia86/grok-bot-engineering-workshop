@@ -186,6 +186,7 @@ def localize_notes_plugin(source):
     # Only presentation strings in the vendored MIT plugin; no third-party code
     # changes or copied source file to maintain. Fail if an upgrade changes them.
     labels = {
+        r'lang=\"en\"': r'lang=\"pt-BR\"',
         'reveal.js - Speaker View': 'reveal.js - Notas da apresentadora',
         '>Loading speaker view...</div>': '>Carregando notas da apresentadora...</div>',
         '>Upcoming</span>': '>Próximo slide</span>',

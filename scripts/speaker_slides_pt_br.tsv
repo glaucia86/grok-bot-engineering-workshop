@@ -246,7 +246,7 @@ Illustrative pull request flow: code and tests, GitHub Actions, Vercel preview, 
 Simulated QA group chat	Chat de grupo simulado do QA
 Simulated workshop group chat	Chat de grupo simulado do workshop
 Skills reminder	Lembrete de skills
-Browser\nform · dashboard	Navegador\nformulário · dashboard
+Browser\nform · dashboard	Navegador\nformulário · painel
 Next.js UI\nshadcn · charts	UI Next.js\nshadcn · gráficos
 API route\n/api/feedback\nZod schema	Rota da API\n/api/feedback\nschema Zod
 Neon Postgres\ntable: feedback	Neon Postgres\ntabela: feedback
