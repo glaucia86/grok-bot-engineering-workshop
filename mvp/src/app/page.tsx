@@ -1,77 +1,46 @@
+"use client";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, BarChart3, Check, MessageSquare, MessageSquareText, Star, Target } from "lucide-react";
-import { BotBackdrop } from "@/components/bot-backdrop";
-import { WorkshopMascot } from "@/components/workshop-mascot";
+import { useEffect, useState } from "react";
+import { ArrowRight, BarChart3, EyeOff, MessageSquareText, MousePointer2, Plus, ShieldCheck, Smartphone, Star } from "lucide-react";
+import { useLocale } from "@/components/locale-provider";
+import type { TalkStats } from "@/lib/stats";
 
 export default function Home() {
-  return (
-    <article className="company-home">
-      <section className="company-hero" aria-labelledby="home-heading">
-        <div className="company-hero-copy">
-          <p className="company-kicker"><MessageSquareText size={17} aria-hidden="true" />Packt workshop</p>
-          <h1 id="home-heading">Better talks.<br /><span>Built together.</span></h1>
-          <p className="company-hero-description">Share what worked, help speakers improve, and discover what resonated across the workshop.</p>
-          <div className="loop-actions">
-            <Link className="loop-primary" href="/feedback">Leave feedback <ArrowRight aria-hidden="true" size={18} /></Link>
-            <Link className="loop-secondary" href="/results">Explore results <ArrowUpRight aria-hidden="true" size={18} /></Link>
-          </div>
-        </div>
-        <div className="company-hero-visual">
-          <div className="company-art-plane" aria-hidden="true" />
-          <div className="company-orbit company-orbit-outer" aria-hidden="true" />
-          <div className="company-orbit company-orbit-inner" aria-hidden="true" />
-          <div className="loop-diagram company-parallax-art" role="img" aria-label="Five original workshop characters bringing different perspectives together">
-            <BotBackdrop><WorkshopMascot /></BotBackdrop>
-          </div>
-          <span className="company-art-symbol company-art-message" aria-hidden="true"><MessageSquareText size={26} strokeWidth={1.7} /></span>
-          <span className="company-art-symbol company-art-star" aria-hidden="true"><Star size={24} strokeWidth={1.7} /></span>
-        </div>
-      </section>
-
-      <section className="company-benefits" aria-labelledby="how-heading">
-        <div className="company-benefits-copy">
-          <h2 id="how-heading">Good feedback<br />goes further.</h2>
-          <p>A clear place for participants to reflect and for speakers to understand the room.</p>
-        </div>
-        <ol className="loop-steps company-benefit-list">
-          <li><MessageSquare size={23} aria-hidden="true" /><div><h3>Make your experience heard</h3><p>Rate the talk you attended. Add a specific thought when you have something more to share.</p></div></li>
-          <li><BarChart3 size={23} aria-hidden="true" /><div><h3>See the room&apos;s perspective</h3><p>Compare ratings across talks and explore each session&apos;s responses and written comments.</p></div></li>
-          <li><Target size={23} aria-hidden="true" /><div><h3>Make the next session stronger</h3><p>Help speakers understand what clicked and where a clearer explanation could make a difference.</p></div></li>
-        </ol>
-      </section>
-
-      <section className="company-showcase" aria-labelledby="showcase-heading">
-        <div className="company-showcase-heading">
-          <h2 id="showcase-heading">One place to share.<br />A clearer way to learn.</h2>
-          <p>A focused form for your perspective. A dedicated view for the feedback behind every talk.</p>
-        </div>
-        <figure className="company-preview" aria-label="An illustration of the feedback experience">
-          <div className="company-preview-bar"><span className="company-preview-brand"><MessageSquareText size={17} aria-hidden="true" />Talk Feedback</span><span>Interface overview</span></div>
-          <div className="company-preview-panels">
-            <div className="company-preview-form">
-              <div className="company-preview-title"><MessageSquare size={19} aria-hidden="true" /><h3>Leave feedback</h3></div>
-              <p>How was the talk?</p>
-              <dl className="company-preview-fields">
-                <div><dt>Talk</dt><dd>The session you attended</dd></div>
-                <div><dt>Your name</dt><dd>Your name is required</dd></div>
-                <div className="company-preview-rating"><dt>Rating</dt><dd><span aria-label="Five-star rating scale">{[1, 2, 3, 4, 5].map(star => <Star key={star} size={22} aria-hidden="true" />)}</span><span>Choose your rating</span></dd></div>
-                <div><dt>Comment <span>(optional)</span></dt><dd>What clicked? What could be clearer?</dd></div>
-              </dl>
-            </div>
-            <div className="company-preview-results">
-              <div className="company-preview-title"><BarChart3 size={19} aria-hidden="true" /><h3>Workshop results</h3></div>
-              <p>Understand the feedback behind each talk.</p>
-              <ul>
-                <li><span className="company-preview-result-icon"><Star size={22} aria-hidden="true" /></span><div><strong>Ratings at a glance</strong><span>Average scores and response counts</span></div><Check size={17} aria-hidden="true" /></li>
-                <li><span className="company-preview-result-icon"><BarChart3 size={22} aria-hidden="true" /></span><div><strong>A closer look at each talk</strong><span>Rating distribution, from one to five stars</span></div><Check size={17} aria-hidden="true" /></li>
-                <li><span className="company-preview-result-icon"><MessageSquareText size={22} aria-hidden="true" /></span><div><strong>The words behind the ratings</strong><span>Written comments, with names hidden</span></div><Check size={17} aria-hidden="true" /></li>
-              </ul>
-              <p className="company-preview-note">Your perspective becomes part of the conversation.</p>
-            </div>
-          </div>
-          <figcaption>Illustrative preview. No live workshop data.</figcaption>
-        </figure>
-      </section>
-    </article>
-  );
+  const { t, number } = useLocale();
+  const [rating, setRating] = useState(0);
+  const [talks, setTalks] = useState<TalkStats[] | null>(null);
+  const [failed, setFailed] = useState(false);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/feedback", { cache: "no-store", signal: controller.signal }).then(async response => {
+      if (!response.ok) throw new Error("Unavailable");
+      const data: TalkStats[] = await response.json();
+      if (!controller.signal.aborted) setTalks(data);
+    }).catch(() => { if (!controller.signal.aborted) setFailed(true); });
+    return () => controller.abort();
+  }, []);
+  const total = talks?.reduce((sum, talk) => sum + talk.count, 0);
+  const steps = [
+    { icon: MousePointer2, title: t("Choose your talk", "Escolha sua talk"), text: t("Open the feedback form and enter the title of the session you attended.", "Abra o formulário e informe o título da sessão que você assistiu.") },
+    { icon: Star, title: t("Make your experience heard", "Conte como foi"), text: t("Choose one to five stars. Add a specific detail or a suggestion if you like.", "Escolha de uma a cinco estrelas. Acrescente um detalhe ou uma sugestão, se quiser.") },
+    { icon: BarChart3, title: t("See the room's perspective", "Veja o olhar da plateia"), text: t("Explore the ratings, their distribution and written comments for each talk.", "Explore as notas, sua distribuição e os comentários de cada talk.") },
+  ];
+  const faq = [
+    [t("Does my name appear in results?", "Meu nome aparece nos resultados?"), t("No. Your name is required to submit feedback, but results show ratings and comments without names.", "Não. Seu nome é obrigatório para enviar a avaliação, mas os resultados mostram notas e comentários sem nomes.")],
+    [t("Who can read the comments?", "Quem pode ler os comentários?"), t("Anyone who can access the results page. Avoid including personal or sensitive information in your comment.", "Quem tiver acesso à página de resultados. Evite incluir informações pessoais ou sensíveis no comentário.")],
+    [t("Do I need an account or an app?", "Preciso criar conta ou instalar algo?"), t("No. Open the form in your browser, enter the talk and your name, select a rating and send.", "Não. Abra o formulário no navegador, informe a talk e seu nome, escolha uma nota e envie.")],
+    [t("When can I see my feedback?", "Quando posso ver meu feedback?"), t("After the save confirmation, open Results. Reload the page to see newer responses.", "Após a confirmação de envio, abra Resultados. Recarregue a página para ver novas respostas.")],
+  ];
+  return <article>
+    <section className="tf-hero" aria-labelledby="home-heading"><div className="tf-hero-inner">
+      <div className="tf-hero-copy"><p className="tf-eyebrow tf-dark-badge"><span className="tf-dot" />{t("Packt workshop · Audience feedback", "Workshop Packt · Feedback da plateia")}</p><h1 id="home-heading">{t("The stage speaks.", "O palco fala.")}<br />{t("The audience ", "A plateia ")}<em>{t("responds.", "responde.")}</em></h1><p className="tf-hero-description">{t("Share what stayed with you. Help speakers discover what worked and what could make the next talk even better.", "Conte o que ficou com você. Ajude quem palestra a descobrir o que funcionou e o que pode deixar a próxima talk ainda melhor.")}</p><div className="tf-actions"><Link className="tf-button tf-button-white" href="/feedback">{t("Rate a talk", "Avaliar uma talk")}<ArrowRight size={19} aria-hidden="true" /></Link><Link className="tf-button tf-button-glass" href="/results"><BarChart3 size={18} aria-hidden="true" />{t("Explore results", "Ver resultados")}</Link></div><ul className="tf-trust"><li><EyeOff size={15} aria-hidden="true" />{t("Names hidden in results", "Nomes ocultos nos resultados")}</li><li><Smartphone size={15} aria-hidden="true" />{t("No account. No app.", "Sem cadastro e sem app")}</li></ul></div>
+      <div className="tf-hero-visual"><div className="tf-floating-label"><MessageSquareText size={22} aria-hidden="true" /><span>{t("Every perspective", "Cada perspectiva")}<strong>{t("makes a difference.", "faz diferença.")}</strong></span></div><div className="tf-rating-card"><p className="tf-card-kicker"><span className="tf-small-icon"><MessageSquareText size={18} aria-hidden="true" /></span>{t("Your next great talk starts here", "A próxima grande talk começa aqui")}</p><h2>{t("How was the talk?", "Como foi a talk?")}</h2><fieldset className="tf-hero-stars"><legend className="sr-only">{t("Choose a rating", "Escolha uma nota")}</legend>{[1,2,3,4,5].map(value => <label key={value} data-selected={rating >= value}><input type="radio" name="hero-rating" value={value} checked={rating===value} onChange={()=>setRating(value)} aria-label={t(value===1?"1 star":`${value} stars`,value===1?"1 estrela":`${value} estrelas`)} /><Star size={29} strokeWidth={1.6} fill={rating>=value?"currentColor":"none"} aria-hidden="true" /></label>)}</fieldset><p className="tf-rating-hint" aria-live="polite">{rating ? t(`${rating} of 5 stars selected`, `${rating} de 5 estrelas selecionadas`) : t("Tap a star to get started", "Toque em uma estrela para começar")}</p><ul className="tf-card-details"><li><Star size={13} aria-hidden="true" />{t("Five-star scale", "Escala de 5 estrelas")}</li><li><MessageSquareText size={13} aria-hidden="true" />{t("Optional comment", "Comentário opcional")}</li></ul><Link className="tf-button" href={rating?`/feedback?rating=${rating}`:"/feedback"}>{t("Continue with my rating", "Continuar minha avaliação")}<ArrowRight size={19} aria-hidden="true" /></Link><p className="tf-card-footnote">{t("Talk, name and rating are required. The comment is optional.", "Talk, nome e nota são obrigatórios. O comentário é opcional.")}</p></div><div className="tf-floating-note"><ShieldCheck size={20} aria-hidden="true" /><span>{t("Your words matter.", "Suas palavras importam.")}<small>{t("Your name stays out of results.", "Seu nome fica fora dos resultados.")}</small></span></div></div>
+    </div></section>
+    <section className="tf-summary" aria-label={t("Workshop feedback", "Feedback do workshop")}><div><span>{t("RESPONSES RECEIVED", "AVALIAÇÕES RECEBIDAS")}</span><strong>{total === undefined ? "—" : number(total)}</strong><p>{failed?t("Results temporarily unavailable", "Resultados temporariamente indisponíveis"):t("From the workshop audience", "Da plateia do workshop")}</p></div><div><span>{t("TALKS REVIEWED", "TALKS AVALIADAS")}</span><strong>{talks===null?"—":number(talks.length)}</strong><p>{t("Each perspective counts", "Cada perspectiva conta")}</p></div><div className="tf-summary-link"><p>{t("A little reflection today. A stronger session tomorrow.", "Uma reflexão hoje. Uma sessão melhor amanhã.")}</p><Link href="/results">{t("Explore the feedback", "Explorar o feedback")}<ArrowRight size={18} aria-hidden="true" /></Link></div></section>
+    <section className="tf-section" id="how-it-works"><div className="tf-section-heading"><p className="tf-eyebrow">{t("HOW IT WORKS", "COMO FUNCIONA")}</p><h2>{t("Good feedback goes ", "Um bom feedback vai ")}<em>{t("further.", "mais longe.")}</em></h2><p>{t("A clear place for the audience to reflect, and for speakers to understand the room.", "Um espaço claro para a plateia refletir e para quem palestra entender a sala.")}</p></div><ol className="tf-steps">{steps.map(({icon:Icon,title,text},index)=><li key={index}><div className={`tf-step-art tf-step-art-${index}`} aria-hidden="true"><Icon size={52} strokeWidth={1.25}/><span/><span/></div><span className="tf-step-number">0{index+1}</span><h3>{title}</h3><p>{text}</p></li>)}</ol></section>
+    {talks && talks.length > 0 && <div className="tf-talk-band"><section className="tf-section tf-talk-section"><div className="tf-section-heading"><p className="tf-eyebrow">{t("THE CONVERSATION", "A CONVERSA")}</p><h2>{t("Every talk has a ", "Cada talk tem uma ")}<em>{t("perspective.", "perspectiva.")}</em></h2><p>{t("Talks with feedback from this workshop. Explore their ratings and comments in Results.", "Talks com feedback neste workshop. Explore as notas e os comentários em Resultados.")}</p></div><ul className="tf-talk-list">{talks.slice(0,6).map(talk=><li key={talk.talkId}><span className="tf-small-icon"><MessageSquareText size={21} aria-hidden="true" /></span><h3>{talk.talkId}</h3><p><Star size={15} aria-hidden="true" />{number(talk.average,1)} <span>· {number(talk.count)} {t(talk.count===1?"response":"responses",talk.count===1?"avaliação":"avaliações")}</span></p></li>)}</ul><Link className="tf-button" href="/results">{t("Explore all results", "Explorar todos os resultados")}<ArrowRight size={18} aria-hidden="true" /></Link></section></div>}
+    <div className="tf-results-band"><section className="tf-section tf-results-callout"><div><p className="tf-eyebrow">{t("FOR EVERY SPEAKER", "PARA QUEM PALESTRA")}</p><h2>{t("See what stayed ", "Descubra o que ")}<em>{t("with the room.", "ficou na sala.")}</em></h2><p>{t("Look beyond the average. Read the comments, explore the spread of ratings and take a useful insight into your next session.", "Olhe além da média. Leia os comentários, explore a distribuição das notas e leve uma ideia útil para a próxima sessão.")}</p><Link className="tf-button" href="/results">{t("Open workshop results", "Abrir resultados do workshop")}<ArrowRight size={18} aria-hidden="true" /></Link></div><div className="tf-insight-art" aria-hidden="true"><div className="tf-art-header"><BarChart3 size={25}/><span>{t("Every rating counts.", "Toda nota conta.")}</span></div><div className="tf-art-bars">{[35,54,43,71,92].map((h,i)=><span key={i} style={{height:`${h}%`}}/>)}</div><p>{t("Illustration of the rating scale", "Ilustração da escala de notas")}</p></div></section></div>
+    <section className="tf-section tf-faq"><div className="tf-section-heading"><p className="tf-eyebrow">{t("GOOD QUESTIONS", "PERGUNTAS FREQUENTES")}</p><h2>{t("Before you ", "Antes de ")}<em>{t("share.", "avaliar.")}</em></h2><p>{t("A few things to know about your feedback.", "O que você precisa saber sobre seu feedback.")}</p></div><div>{faq.map(([question,answer])=><details key={question}><summary>{question}<Plus size={19} aria-hidden="true"/></summary><p>{answer}</p></details>)}</div></section>
+    <div className="tf-final-wrap"><section className="tf-final-cta"><p className="tf-eyebrow">{t("THE MIC IS YOURS", "O MICROFONE É SEU")}</p><h2>{t("Just heard a ", "Acabou de assistir uma ")}<em>talk?</em></h2><p>{t("Tell us what you think while it is fresh in your mind.", "Conte como foi enquanto ainda está fresco na memória.")}</p><Link className="tf-button" href="/feedback">{t("Leave feedback", "Avaliar agora")}<ArrowRight size={18} aria-hidden="true"/></Link></section></div>
+  </article>;
 }

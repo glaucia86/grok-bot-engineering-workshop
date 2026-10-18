@@ -2,6 +2,7 @@
 import React from "react";
 import { readFileSync } from "node:fs";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { afterEach, expect, it, vi } from "vitest";
 import { FeedbackForm } from "./feedback-form";
 import { FeedbackPage } from "./feedback-page";
@@ -59,11 +60,39 @@ it("blocks duplicate submissions while saving", async () => {
   expect((await screen.findByRole("button", { name: /Saving/ }) as HTMLButtonElement).disabled).toBe(true);
 });
 
+it("keeps keyboard-selected star shapes until the pointer actually moves", async () => {
+  const user = userEvent.setup();
+  render(<FeedbackForm onSaved={() => {}} />);
+  const fourth = screen.getByRole("radio", { name: "4 stars" }) as HTMLInputElement;
+  const thirdLabel = screen.getByRole("radio", { name: "3 stars" }).closest("label")!;
+  fourth.focus();
+  await user.keyboard(" ");
+  expect(fourth.checked).toBe(true);
+
+  // Scrolling or layout changes can move a star under a stationary pointer.
+  // That boundary event must not replace the keyboard-selected shape cues.
+  fireEvent.pointerEnter(thirdLabel, { pointerType: "mouse", clientX: 160, clientY: 400 });
+  expect(document.querySelectorAll('.rating-option svg[fill="currentColor"]')).toHaveLength(4);
+  expect(screen.queryByText(/^Preview:/)).toBeNull();
+  expect(screen.getByText("4 of 5 stars selected")).toBeTruthy();
+
+  fireEvent.pointerMove(thirdLabel, { pointerType: "mouse", clientX: 161, clientY: 400 });
+  expect(screen.getByText("Preview: 3 of 5 stars")).toBeTruthy();
+  expect(document.querySelectorAll('.rating-option svg[fill="currentColor"]')).toHaveLength(3);
+  expect(fourth.checked).toBe(true);
+
+  await user.keyboard("{ArrowRight}");
+  expect((screen.getByRole("radio", { name: "5 stars" }) as HTMLInputElement).checked).toBe(true);
+  expect(screen.queryByText(/^Preview:/)).toBeNull();
+  expect(document.querySelectorAll('.rating-option svg[fill="currentColor"]')).toHaveLength(5);
+});
+
 it("previews pointer stars without committing and restores the selected rating on leave", () => {
   render(<FeedbackForm onSaved={() => {}} />);
   fireEvent.click(screen.getByRole("radio", { name: "2 stars" }));
   const fifth = screen.getByRole("radio", { name: "5 stars" });
   fireEvent.pointerEnter(fifth.closest("label")!);
+  fireEvent.pointerMove(fifth.closest("label")!);
   expect(screen.getByText("Preview: 5 of 5 stars")).toBeTruthy();
   expect((screen.getByRole("radio", { name: "2 stars" }) as HTMLInputElement).checked).toBe(true);
   expect((fifth as HTMLInputElement).checked).toBe(false);
@@ -81,6 +110,7 @@ it.each([true, false])("clears a hovered star preview when submitting from anoth
   fireEvent.change(author, { target: { value: "Ana" } });
   if (hasRating) fireEvent.click(screen.getByRole("radio", { name: "2 stars" }));
   fireEvent.pointerEnter(screen.getByRole("radio", { name: "5 stars" }).closest("label")!);
+  fireEvent.pointerMove(screen.getByRole("radio", { name: "5 stars" }).closest("label")!);
   expect(screen.getByText("Preview: 5 of 5 stars")).toBeTruthy();
   author.focus();
   fireEvent.keyDown(author, { key: "Enter" });

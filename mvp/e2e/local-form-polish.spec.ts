@@ -118,7 +118,12 @@ test("local form fixture: 320px stars fit the form content without losing44px ta
   await page.route("**/api/feedback", route => route.fulfill({ json: [] }));
   await page.goto("/feedback");
   const group = page.locator(".rating-options");
-  const bounds = await page.locator("#feedback form").boundingBox();
+  const form = page.locator("#feedback form");
+  // The form is streamed beneath Suspense; geometry reads do not auto-wait.
+  await expect(form).toBeVisible();
+  await expect(group.getByRole("radio")).toHaveCount(5);
+  await page.evaluate(() => document.fonts.ready);
+  const bounds = await form.boundingBox();
   const ratingBounds = await group.boundingBox();
   const targets = await page.getByRole("radio").all();
   const boxes = await Promise.all(targets.map(target => target.boundingBox()));

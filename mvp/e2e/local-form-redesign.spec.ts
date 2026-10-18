@@ -16,8 +16,8 @@ for (const width of [320, 390, 1440]) {
     await expect(guidance.getByRole("listitem")).toHaveCount(3);
     await expect(page.getByLabel("Your name", { exact: true })).toHaveAttribute("autocomplete", "name");
     await expect(page.locator('.rating-selection[aria-live="polite"]')).toHaveCount(1);
-    await expect(page.locator(".feedback-panel")).toHaveCSS("border-radius", "12px");
-    await expect(page.getByRole("button", { name: "Send feedback", exact: true })).toHaveCSS("background-color", "rgb(36, 75, 232)");
+    await expect(page.locator(".feedback-panel")).toHaveCSS("border-radius", width <= 520 ? "25px" : "30px");
+    await expect(page.getByRole("button", { name: "Send feedback", exact: true })).toHaveCSS("background-color", "rgb(91, 61, 245)");
     const formBounds = await form.boundingBox();
     for (const radio of await page.getByRole("radio").all()) {
       const bounds = await radio.boundingBox();

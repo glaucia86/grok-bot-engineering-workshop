@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { LocaleProvider } from "@/components/locale-provider";
+import "./talkfeedback.css";
 import { WorkshopShell } from "@/components/workshop-shell";
 
 export const metadata: Metadata = {
@@ -10,10 +12,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en"
+      lang="en-US"
       className="h-full antialiased"
     >
-      <body className="min-h-full flex flex-col"><WorkshopShell>{children}</WorkshopShell></body>
+      <body className="min-h-full flex flex-col"><LocaleProvider><WorkshopShell>{children}</WorkshopShell></LocaleProvider></body>
     </html>
   );
 }
