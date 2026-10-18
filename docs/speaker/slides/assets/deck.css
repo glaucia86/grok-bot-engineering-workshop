@@ -155,6 +155,7 @@ svg.sketch text { font-family: var(--hand); fill: var(--text); }
 .split.compact .mergeline.big { font-size: 64px; margin-top: 18px; }
 /* Portuguese review sentence needs one line to keep all cards below the kicker. */
 html[lang="pt-BR"] .split.compact .mergeline.big { font-size: 48px; }
+html[lang="pt-BR"] section[data-clock="11:40"] .big-quote { font-size: 80px; }
 
 
 /* Shared illustrative chat: one thread, named senders, no live service claims. */
