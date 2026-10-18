@@ -29,7 +29,7 @@
     svg.dataset.motion = 'static';
     img.replaceWith(svg);
     svg.dataset.cue = 'idle';
-    let dots = null, wink = null;
+    let dots = null, wink = null, winkCenter = null;
     if (svg.dataset.mascotCue === 'thinking') {
       dots = document.createElementNS(svg.namespaceURI, 'g');
       dots.setAttribute('class', 'mascot-thinking');
@@ -48,10 +48,10 @@
       wink.setAttribute('class', 'mascot-wink');
       // A separate wrapper preserves the supplied path and native eye matrix.
       const matrix = eye.getAttribute('transform').slice(7, -1).split(',').map(Number);
-      wink.style.transformOrigin = `${matrix[4]}px ${matrix[5]}px`;
+      winkCenter = [matrix[4], matrix[5]];
       eye.replaceWith(wink); wink.append(eye);
     }
-    bots.push({ svg, dots, wink, cueStart: null, body: svg.querySelector('.mascot-motion'), face: svg.querySelector('.mascot-face'),
+    bots.push({ svg, dots, wink, winkCenter, cueStart: null, body: svg.querySelector('.mascot-motion'), face: svg.querySelector('.mascot-face'),
       x: 0, y: 0, tx: 0, ty: 0 });
   });
   if (typeof window.matchMedia !== 'function' || !bots.length) return;
@@ -74,7 +74,7 @@
     bot.cueStart = null;
     bot.svg.dataset.cue = 'idle';
     if (bot.dots) bot.dots.style.removeProperty('opacity');
-    if (bot.wink) bot.wink.style.removeProperty('transform');
+    if (bot.wink) bot.wink.removeAttribute('transform');
   }
   function sync() {
     reset();
@@ -87,7 +87,11 @@
       bot.svg.dataset.motion = 'active';
       // Only entering a slide starts a cue. Resuming a tab, overview, print or
       // motion preference never replays a gesture that was already cancelled.
-      if (entered && (bot.dots || bot.wink)) bot.cueStart = performance.now();
+      if (entered && (bot.dots || bot.wink)) {
+        bot.cueStart = performance.now();
+        bot.svg.dataset.cue = bot.svg.dataset.mascotCue;
+        if (bot.dots) bot.dots.style.opacity = 0;
+      }
     });
     if (active.some(bot => bot.cueStart !== null)) schedule();
   }
@@ -107,7 +111,7 @@
       bot.body.style.transform = `translate(${bot.x * .16}px, ${bot.y * .16}px) rotate(${bot.x / 12 * 1.2}deg)`;
       bot.face.style.transform = `translate(${bot.x * .65}px, ${bot.y * .65}px)`;
       if (bot.cueStart !== null) {
-        const cue = window.WorkshopMascotCues.sampleCue(bot.svg.dataset.mascotCue, now - bot.cueStart);
+        const cue = window.WorkshopMascotCues.sampleCue(bot.svg.dataset.mascotCue, Math.max(0, now - bot.cueStart));
         if (!cue) clearCue(bot);
         else {
           settled = false;
@@ -119,7 +123,11 @@
               dot.setAttribute('opacity', .55 + cue.pulses[i] * .45);
             });
           }
-          if (bot.wink) bot.wink.style.transform = `scale(${1 + cue.close * .55}, ${1 - cue.close * .88})`;
+          if (bot.wink) {
+            const [x, y] = bot.winkCenter;
+            // SVG coordinates avoid CSS view-box transform-origin offsets.
+            bot.wink.setAttribute('transform', `translate(${x} ${y}) scale(${1 + cue.close * .55} ${1 - cue.close * .88}) translate(${-x} ${-y})`);
+          }
         }
       }
     });

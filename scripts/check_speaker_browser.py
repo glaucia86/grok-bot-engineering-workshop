@@ -132,9 +132,14 @@ def assert_contextual_cues(page, output, base):
     # Reveal emits slidechanged then ready when resolving an initial hash.
     # Every directly linked cue slide must still play after initialization.
     for index, kind in [(7, 'thinking'), (12, 'thinking'), (21, 'wink')]:
+        page.goto('about:blank')
         page.goto(base+f'slides/#/{index}', wait_until='domcontentloaded')
-        page.wait_for_function('Reveal.isReady()')
-        page.wait_for_function('(kind)=>!!document.querySelector(`section.present [data-cue="${kind}"]`)', arg=kind, timeout=3000)
+        page.wait_for_function('window.Reveal && Reveal.isReady()')
+        try:
+            page.wait_for_function('(kind)=>!!document.querySelector(`section.present [data-cue="${kind}"]`)', arg=kind, timeout=3000)
+        except PlaywrightTimeoutError:
+            print('Direct-link cue failure', index, page.evaluate("({hidden:document.hidden,ready:Reveal.isReady(),slide:Reveal.getIndices(),api:typeof WorkshopMascotCues,bots:[...document.querySelectorAll('section.present .workshop-mascot')].map(s=>({motion:s.dataset.motion,cue:s.dataset.cue,planned:s.dataset.mascotCue}))})"))
+            raise
         page.wait_for_function('!document.querySelector("section.present [data-cue=thinking],section.present [data-cue=wink]")')
     page.evaluate('Reveal.slide(0)')
     for index, ident in [(7, 'fde'), (12, 'qa')]:
@@ -152,12 +157,12 @@ def assert_contextual_cues(page, output, base):
         assert cue.locator('.mascot-thinking').evaluate('(e)=>getComputedStyle(e).display') == 'none'
     page.evaluate('Reveal.slide(21)')
     wink = page.locator('section.present [data-mascot-cue="wink"]')
-    page.wait_for_function("document.querySelector('section.present .mascot-wink')?.style.transform.includes('scale')")
+    page.wait_for_function("document.querySelector('section.present .mascot-wink')?.getAttribute('transform')?.includes('scale')")
     page.wait_for_timeout(650)
     assert wink.locator('.mascot-wink').evaluate('(e)=>new DOMMatrix(getComputedStyle(e).transform).d') < .5
     page.screenshot(path=str(output/'mascots-closing-wink.png'))
     page.wait_for_function("!document.querySelector('section.present [data-cue=wink]')")
-    assert wink.locator('.mascot-wink').evaluate('(e)=>e.style.transform') == ''
+    assert wink.locator('.mascot-wink').get_attribute('transform') is None
     page.wait_for_timeout(1700)
     assert wink.get_attribute('data-cue') == 'idle', 'Cue must not loop'
     # Overview / reduced motion cancel immediately, and resuming must not replay.
