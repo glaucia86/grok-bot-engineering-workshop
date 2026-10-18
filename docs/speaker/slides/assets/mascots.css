@@ -14,6 +14,7 @@
 .slide-cameo { position: absolute; bottom: 96px; width: 92px; height: 92px; pointer-events: none; }
 .cameo-right { right: 96px; }
 .cameo-left { left: 96px; }
+.cameo-low { bottom: 64px; }
 @media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) {
   .mascot-motion, .mascot-face { transform: none !important; }
   .mascot-eye { transform: none !important; transition: none !important; }
