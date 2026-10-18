@@ -1,14 +1,16 @@
 'use strict';
 const englishGuide = document.documentElement.lang === 'en-US';
-for (const link of document.querySelectorAll('.language-switch a')) {
-  // Stable, explicitly shared step fragments are portable across translations.
-  if (/^#step-\d{2}$/.test(location.hash)) link.hash = location.hash;
-}
-window.addEventListener('hashchange', () => {
+function syncGuideLanguageLinks() {
+  // Read the current fragment at activation too: hashchange is asynchronous.
   for (const link of document.querySelectorAll('.language-switch a')) {
     link.hash = /^#step-\d{2}$/.test(location.hash) ? location.hash : '';
   }
-});
+}
+syncGuideLanguageLinks();
+window.addEventListener('hashchange', syncGuideLanguageLinks);
+for (const link of document.querySelectorAll('.language-switch a')) {
+  link.addEventListener('click', syncGuideLanguageLinks);
+}
 for (const button of document.querySelectorAll('.copy-prompt, .copy-command')) {
   button.addEventListener('click', async () => {
     const text = button.parentElement.querySelector('code').textContent;
