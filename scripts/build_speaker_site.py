@@ -7,6 +7,7 @@ import re
 import shutil
 import urllib.parse
 import markdown
+from speaker_slide_localization import publish_localized_slides
 
 REPO = 'https://github.com/glaucia86/grok-bot-engineering-workshop'
 SOURCE_REF = 'main'
@@ -131,6 +132,7 @@ def build(root, output):
         target = output/'slides'/path.relative_to(speaker/'slides')
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(path, target)
+    publish_localized_slides(speaker, output)
     (output/'guide').mkdir()
     legacy_text = (speaker/'guia-glaucia.md').read_text(encoding='utf-8')
     (output/'guide/run-sheet').mkdir()
@@ -151,4 +153,5 @@ if __name__ == '__main__':
     parser.add_argument('--output',type=pathlib.Path,default=ROOT/'_site')
     args=parser.parse_args()
     build(ROOT,args.output)
+
 

@@ -3,7 +3,7 @@
   'use strict';
   const bots = [];
   let instance = 0;
-  document.querySelectorAll('img[src^="assets/avatars/"]').forEach(img => {
+  document.querySelectorAll('img[src^="assets/avatars/"],img[src^="../assets/avatars/"]').forEach(img => {
     const name = img.getAttribute('src').split('/').pop().replace('.svg', '');
     const template = document.getElementById(`mascot-${name}`);
     if (!template) return; // Keep the human avatar and any unknown assets intact.
@@ -163,3 +163,4 @@
   // Covers deferred script loading after Reveal is already ready.
   if (Reveal.isReady()) sync();
 })();
+

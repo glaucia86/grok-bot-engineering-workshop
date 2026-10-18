@@ -1,0 +1,272 @@
+Build Your First Engineering Bot with Grok Bot · Packt · 17 Nov 2026	Crie seu primeiro time de bots de engenharia com Grok Bot · Packt · 17 nov 2026
+Packt live workshop · 90 min	Workshop ao vivo da Packt · 90 min
+Build Your First	Crie seu primeiro
+Engineering Bot	time de bots de engenharia
+with Grok Bot	com Grok Bot
+Glaucia Lemos · 17 Nov 2026 · 9:00–10:30 ET	Glaucia Lemos · 17 nov 2026 · 9:00–10:30 ET
+The plan · 90 minutes	O plano · 90 minutos
+From empty chat to a reviewed PR	Do chat vazio ao PR revisado
+Setup	Preparação
+Create bots	Criar bots
+Create the bots	Criar os bots
+Verify	Verificação
+Background PR	PR em segundo plano
+Approval	Aprovação
+Recovery	Recuperação
+Q&A	Perguntas
+You only build	Vocês só constroem
+the form and the dashboard	o formulário e o dashboard
+The repo · reference and exercise	O repositório · referência e exercício
+Two tracks, one clear contract	Duas trilhas, um acordo claro
+The map: steps, agenda, checkpoints.	O mapa: etapas, agenda e checkpoints.
+The app. Frozen base:	O app. Base congelada:
+The goal, the team, and the	O objetivo, o time e os
+acceptance criteria	critérios de aceite
+We build:	Vamos construir:
+form + dashboard	formulário + dashboard
+MVP architecture	Arquitetura do MVP
+One repo, one deployment, real data	Um repositório, um deploy, dados reais
+The one rule	A regra principal
+The bot that builds	O bot que constrói
+does not judge.	não julga.
+No bot merges.	Nenhum bot faz merge.
+I do.	Eu faço.
+The team flow	O fluxo do time
+One human lead, three bots, one group chat	Uma líder humana, três bots, um chat
+Every bot has a charter	Todo bot tem um acordo de atuação
+Owns · Good output · Stops	Responsabilidade · Entrega · Limites
+Owns	Responsabilidade
+Code + the PR	Código + PR
+Good output	Boa entrega
+Tests + preview link	Testes + link de preview
+Stops	Limites
+No merge, no push to main	Sem merge nem push na main
+Judging the PR	Avaliar o PR
+PASS / FAIL / WARN / BLOCKED + evidence	PASS / FAIL / WARN / BLOCKED + evidências
+No merge	Sem merge
+CI link + preview URL	Link do CI + URL de preview
+Never shows a secret	Nunca expõe segredos
+Live · create the FDE from scratch	Ao vivo · crie o FDE do zero
+Team, one shared chat. FDE builds, QA verifies, DevOps handles CI. I approve.	Time, um chat compartilhado. FDE constrói, QA verifica, DevOps cuida do CI. Eu aprovo.
+I own: issue → change → branch → PR.	Minha parte: issue → alteração → branch → PR.
+Good output: what, why, how to test.	Boa entrega: o quê, por quê e como testar.
+I stop: never push to main or merge.	Meu limite: nunca fazer push na main nem merge.
+I judge the PR against the agreed criteria.	Avalio o PR pelos critérios combinados.
+PASS / FAIL / WARN / BLOCKED + evidence.	PASS / FAIL / WARN / BLOCKED + evidências.
+I bring the CI link and preview URL.	Trago o link do CI e a URL de preview.
+No secrets in the chat. No merge.	Sem segredos no chat. Sem merge.
+FDE skills · 3	Skills do FDE · 3
+Three skills max.	No máximo três skills.
+Less context,	Menos contexto,
+better bot.	melhor bot.
+QA has 4:	O QA tem 4:
+Every bot ends with	Todo bot termina com
+Message the group…	Mensagem para o grupo…
+Simulation · illustrative conversation	Simulação · conversa ilustrativa
+Block 2 · Design	Bloco 2 · Design
+No code yet.	Ainda sem código.
+First, a design.	Primeiro, o design.
+Ask. Inspect. Decide.	Peça. Confira. Decida.
+Keep this guide on screen	Mantenha este guia na tela
+while the FDE works.	enquanto o FDE trabalha.
+Ask the FDE	Peça ao FDE
+Read the spec + acceptance criteria.	Leia a spec + os critérios de aceite.
+Propose a design. Do not code yet.	Proponha um design. Ainda sem código.
+Inspect the response	Confira a resposta
+Decisions	Decisões
+What will we build, and why?	O que vamos construir e por quê?
+Files to change	Arquivos a alterar
+Where will the change live?	Onde ficará a alteração?
+Tests → criteria	Testes → critérios
+How will each rule be checked?	Como cada regra será verificada?
+Assumptions, listed separately	Suposições, em separado
+What still needs a human decision?	O que ainda exige decisão humana?
+You resolve the open questions.	Você resolve as questões em aberto.
+The bot waits for your approval.	O bot espera sua aprovação.
+Illustrative workflow · review the real answer live	Fluxo ilustrativo · confira a resposta real ao vivo
+Block 3 · Verify	Bloco 3 · Verificação
+Green CI	CI verde
+is	é
+not	não
+acceptance.	aceite.
+QA checks the agreed rules.	O QA verifica as regras combinadas.
+WARN: coverage gaps only.	WARN: só lacunas de cobertura.
+PR → verify → approve	PR → verificar → aprovar
+Block 3 · Verify · every bot	Bloco 3 · Verificação · todo bot
+No bot says	Nenhum bot diz
+done	pronto
+without proof.	sem prova.
+Check the real thing	Verifique o resultado real
+Run the feature. Read the real value.	Execute a função. Confira o valor real.
+Not a proxy	Sem evidência indireta
+Not “it compiles”, not a self-report, not an old screenshot.	Não basta compilar, dizer que funciona ou mostrar uma captura antiga.
+Script it	Crie um script
+A check anyone can re-run. Keep the output visible.	Uma verificação que qualquer pessoa pode repetir. Mostre o resultado.
+pstack · principle-prove-it-works · by Lauren Tan (@poteto), MIT	pstack · principle-prove-it-works · de Lauren Tan (@poteto), MIT
+Live · QA plans checks before preview access	Ao vivo · QA planeja antes de acessar o preview
+QA: prepare the checks against our agreed criteria. Do not run preview tests before the gate is confirmed.	QA: prepare as verificações dos critérios combinados. Só teste o preview após confirmar a liberação.
+Exercise PR ready: change, tests and commit attached. Please review.	PR do exercício pronto: alteração, testes e commit anexados. Por favor, revise.
+CI link + isolated preview attached. Missing access means BLOCKED.	Link do CI + preview isolado anexados. Sem acesso significa BLOCKED.
+Example report · commit	Relatório de exemplo · commit
+· target: PR preview URL	· destino: URL de preview do PR
+Same error in form and API	Mesmo erro no formulário e na API
+Empty state shows an error	Estado vazio mostra um erro
+BLOCKED · access	BLOCKED · acesso
+Preview unavailable	Preview indisponível
+Simulation · independent example outcomes	Simulação · exemplos de resultados independentes
+Block 4 · Background PR	Bloco 4 · PR em segundo plano
+This runs in the	Roda na
+cloud	nuvem
+not on my laptop.	não no notebook.
+✓ passed	✓ passou
+· link	· link
+Preview URL: link	URL de preview: link
+present (redacted)	presente (oculto)
+mock UI · illustrative	Interface simulada · ilustrativa
+Pull request · cloud workspace	Pull request · ambiente na nuvem
+Illustrative example · not live evidence	Exemplo ilustrativo · não é evidência ao vivo
+Code + tests	Código + testes
+Changes and reproducible checks in one PR	Alterações e verificações reproduzíveis em um PR
+PASS example	Exemplo PASS
+Open the run · confirm the tested commit	Abra a execução · confirme o commit testado
+Vercel preview	Preview da Vercel
+Open the preview · observe the running app	Abra o preview · observe o app em execução
+Secrets: presence only	Segredos: só a presença
+DATABASE_URL · present (redacted)	DATABASE_URL · presente (oculto)
+Live · send feedback, watch the chart	Ao vivo · envie feedback, veja o gráfico
+Feedback / new	Feedback / novo
+Illustrative form · use the real preview live	Formulário ilustrativo · use o preview real ao vivo
+How was the talk?	Como foi a palestra?
+Talk	Palestra
+Author	Autor
+Workshop demo	Demo do workshop
+Comment	Comentário
+optional	opcional
+Clear example. I can follow the workflow.	Exemplo claro. Consigo acompanhar o fluxo.
+Rating · 1–5	Nota · 1–5
+Submit feedback	Enviar feedback
+1 · submit the form	1 · envie o formulário
+Feedback / dashboard	Feedback / dashboard
+Sample data · not a recorded result	Dados de exemplo · não é resultado registrado
+One bar per talk	Uma barra por palestra
+Mean rating · one decimal	Média das notas · uma casa decimal
+2 entries	2 envios
+Before	Antes
+· 1 entry	· 1 envio
+After adding 5	Após adicionar 5
+· 2 entries	· 2 envios
+Reload the real page	Recarregue a página real
+The saved data must still be there.	Os dados salvos devem continuar lá.
+2 · the bar moves	2 · a barra muda
+Block 5 · Approval	Bloco 5 · Aprovação
+The bots brought the evidence.	Os bots trouxeram as evidências.
+I decide.	Eu decido.
+Within the approved scope	Dentro do escopo aprovado
+The bot follows the agreed limits.	O bot segue os limites combinados.
+branch · commit · draft · test run	branch · commit · rascunho · teste
+Send · spend · publish · delete · merge?	Enviar · gastar · publicar · excluir · merge?
+A human decides.	Uma pessoa decide.
+Only I can merge.	Só eu posso fazer o merge.
+Live · read three things, then decide	Ao vivo · leia três coisas e decida
+1 · What changed	1 · O que mudou
+the FDE's PR description	a descrição do PR do FDE
+2 · QA report	2 · Relatório do QA
+3 · CI status	3 · Status do CI
+Pull request / human review	Pull request / revisão humana
+Illustrative review · not an actual verdict	Revisão ilustrativa · não é um parecer real
+Confirm the exercise target	Confirme o destino do exercício
+Never reference main · never the frozen checkpoint	Nunca a main de referência nem o checkpoint congelado
+Changes	Alterações
+Scope · files · tests · assumptions	Escopo · arquivos · testes · suposições
+Independent QA	QA independente
+Criterion → result → evidence · tested commit	Critério → resultado → evidência · commit testado
+Read the real Actions run and preview	Confira a execução real do Actions e o preview
+Human decision	Decisão humana
+Required PASS + WARN reviewed → decide	PASS obrigatórios + WARN avaliados → decidir
+Any FAIL / BLOCKED → no acceptance	Qualquer FAIL / BLOCKED → sem aceite
+Block 6 · Recovery first	Bloco 6 · Recuperação primeiro
+Recover the	Recupere o
+core	núcleo
+before extras.	antes dos extras.
+Recap starts at	Resumo às
+; questions at 12:26 BRT. Say what is BLOCKED.	; perguntas às 12:26 BRT. Diga o que está BLOCKED.
+Recovery checklist	Checklist de recuperação
+Illustrative decision guide · check live evidence	Guia de decisão ilustrativo · confira evidências reais
+Core	Núcleo
+Form + chart	Formulário + gráfico
+Tests	Testes
+Independent	Independentes
+Review	Revisão
+Human	Humana
+ANY NO	ALGUM NÃO
+Recover or declare BLOCKED	Recupere ou declare BLOCKED
+Skip the routine. Name the missing evidence.	Pule a rotina. Diga qual evidência falta.
+ALL YES + TIME	TUDO SIM + TEMPO
+Optional extras only now	Só agora, extras opcionais
+Disabled routine draft → offline preview	Rascunho de rotina desativado → preview offline
+Routine draft	Rascunho de rotina
+Enabled: No	Ativada: não
+Mon–Fri · 09:00 · America/Sao_Paulo	Seg–sex · 09:00 · America/Sao_Paulo
+Read-only GitHub · private delivery	GitHub só leitura · entrega privada
+Offline samples: bug / feature / unclear.	Exemplos offline: bug / feature / incerto.
+Preview only. Apply nothing. Missing proof stays BLOCKED.	Só preview. Não aplique nada. Sem prova, continua BLOCKED.
+Recap	Resumo
+Three things to remember	Três coisas para lembrar
+One bot	Um bot
+per role.	por função.
+Evidence for	Evidência para
+every claim.	cada afirmação.
+A human at	Uma pessoa em
+every key decision.	cada decisão importante.
+Bonus · reduce usage	Bônus · economize uso
+Small context, fewer surprises	Contexto menor, menos surpresas
+New chat per task	Um chat novo por tarefa
+The role lives in the instructions, not in the history.	A função fica nas instruções, não no histórico.
+One full prompt	Um prompt completo
+What, where, context, result. Not three messages.	O quê, onde, contexto e resultado. Não três mensagens.
+Connectors first	Conectores primeiro
+Use connectors for supported GitHub tasks.	Use conectores nas tarefas do GitHub que eles suportam.
+Optional · 2 min · skip if late	Opcional · 2 min · pule se atrasar
+Rigor on demand with pstack	Mais rigor com pstack
+Made by	Criado por
+. Our verification skills come from pstack. MIT.	. Nossas skills de verificação vêm do pstack. MIT.
+Start a message with it for more rigor: short answers, simple code, verified work.	Comece uma mensagem com ele para ter mais rigor: respostas curtas, código simples, trabalho verificado.
+Not sure which skill to use? Ask it.	Não sabe qual skill usar? Pergunte.
+Engineering Lead	Líder de engenharia
+Questions?	Perguntas?
+Thank you so much! See you next time.	Muito obrigada! Até a próxima.
+Workshop resources: ask your instructor for repository access	Materiais do workshop: peça acesso ao repositório à instrutora
+Engineering lead	Líder de engenharia
+Illustrative PR review checklist: confirm exercise target, read changes, QA evidence and CI, then human decides. Fail or blocked means no acceptance.	Checklist ilustrativo de revisão do PR: confirme o destino do exercício, leia as alterações, as evidências do QA e o CI. Uma pessoa decide. FAIL ou BLOCKED impedem o aceite.
+Illustrative chart: keynote rating average moves from 4.0 with one feedback to 4.5 with two feedbacks after adding a rating of five. Check persistence with a reload in the real app.	Gráfico ilustrativo: a média da palestra keynote passa de 4,0 com um feedback para 4,5 com dois após adicionar uma nota cinco. Recarregue o app real para conferir a persistência.
+Illustrative design review workflow	Fluxo ilustrativo de revisão do design
+Illustrative feedback form. Talk keynote, author Workshop demo, optional comment Clear example, rating five out of five.	Formulário ilustrativo de feedback. Palestra keynote, autor Demo do workshop, comentário opcional Exemplo claro, nota cinco de cinco.
+Illustrative messages in reading order	Mensagens ilustrativas em ordem de leitura
+Illustrative pull request flow: code and tests, GitHub Actions, Vercel preview, secret presence only. Open the real targets to verify.	Fluxo ilustrativo de pull request: código e testes, GitHub Actions, preview da Vercel, só a presença dos segredos. Abra os destinos reais para verificar.
+Simulated QA group chat	Chat de grupo simulado do QA
+Simulated workshop group chat	Chat de grupo simulado do workshop
+Skills reminder	Lembrete de skills
+Browser\nform · dashboard	Navegador\nformulário · painel
+Next.js UI\nshadcn · charts	UI Next.js\nshadcn · gráficos
+API route\n/api/feedback\nZod schema	Rota da API\n/api/feedback\nschema Zod
+Neon Postgres\ntable: feedback	Neon Postgres\ntabela: feedback
+every PR	cada PR
+serves	serve
+e2e on the real preview	e2e no preview real
+Next.js App Router · one repo, one deploy	Next.js App Router · um repositório, um deploy
+🔒 DATABASE_URL: only in Vercel + GitHub secrets	🔒 DATABASE_URL: só na Vercel + secrets do GitHub
+Glaucia\ntech lead (human)	Glaucia\nlíder técnica (humana)
+Group chat\nWorkshop - Packt Grok Bot	Chat do grupo\nWorkshop - Packt Grok Bot
+FDE TypeScript\nbuilds + opens PR	FDE TypeScript\nconstrói + abre PR
+QA bot\nverifies vs. §5	QA bot\nverifica pela §5
+PR + evidence\ntests · report · URL	PR + evidências\ntestes · relatório · URL
+asks	pede
+I approve + merge	Eu aprovo + merge
+FDE TypeScript\nbuilds on a branch	FDE TypeScript\nconstrói na branch
+QA bot\ntests the commit	QA bot\ntesta o commit
+all PASS?	tudo PASS?
+opens	abre
+yes	sim
+FAIL → fix only that	FAIL → corrija só isso
+BLOCKED = missing access,	BLOCKED = sem acesso,
+not a pass	não é aprovação

@@ -255,7 +255,7 @@ try:
         from check_speaker_languages import check_languages
         check_languages(page, context, base, OUT, results)
         page.goto(base+'guide/run-sheet/', wait_until='networkidle')
-        assert page.locator('.copy-prompt').count() == 10
+        assert page.locator('.copy-prompt').count() == 11
         assert page.locator('.copy-command').count() == 1
         page.locator('.copy-command').click()
         page.wait_for_function("document.querySelector('.copy-status').textContent === 'Comando copiado.'")
@@ -509,4 +509,5 @@ try:
     print('\n'.join(results))
 finally:
     server.shutdown()
+
 

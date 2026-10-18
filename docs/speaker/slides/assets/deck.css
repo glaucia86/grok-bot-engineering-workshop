@@ -23,6 +23,7 @@ html, body, .reveal-viewport { background: var(--bg) !important; }
 .reveal .slides > section.present > aside.notes { display: none; }
 .reveal h1, .reveal h2, .reveal h3 { font-family: var(--sans); color: var(--text); margin: 0 0 .35em; letter-spacing: -0.025em; line-height: 1.05; text-transform: none; }
 .reveal h1 { font-size: 112px; font-weight: 850; }
+html[lang="pt-BR"] .reveal h1 { font-size: 100px; }
 .reveal h2 { font-size: 68px; font-weight: 800; }
 .reveal h3 { font-size: 40px; font-weight: 750; }
 .reveal p { margin: 0 0 .5em; line-height: 1.3; }
@@ -76,7 +77,7 @@ html, body, .reveal-viewport { background: var(--bg) !important; }
 .agenda i { display: block; font-style: normal; font-weight: 700; font-size: 30px; color: var(--c); margin-top: 6px; }
 
 /* sketch diagrams (rough.js, Excalidraw style) */
-svg.sketch { width: 100%; height: 560px; display: block; }
+svg.sketch { width: 100%; height: 560px; display: block; overflow: visible; }
 svg.sketch text { font-family: var(--hand); fill: var(--text); }
 
 /* placeholders for real screenshots from the rehearsal */
@@ -153,6 +154,9 @@ svg.sketch text { font-family: var(--hand); fill: var(--text); }
 .split.compact .card p { font-size: 32px; }
 .split.compact .ph { height: 620px !important; }
 .split.compact .mergeline.big { font-size: 64px; margin-top: 18px; }
+/* Portuguese review sentence needs one line to keep all cards below the kicker. */
+html[lang="pt-BR"] .split.compact .mergeline.big { font-size: 48px; }
+html[lang="pt-BR"] section[data-clock="11:40"] .big-quote { font-size: 80px; }
 
 
 /* Shared illustrative chat: one thread, named senders, no live service claims. */
