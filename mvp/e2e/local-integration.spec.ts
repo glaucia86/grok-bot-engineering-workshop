@@ -31,6 +31,8 @@ for (const width of [390, 1440]) {
       return route.fulfill({ status: 201, json: { id: posts, ...parsed.data, createdAt: "2026-01-01T00:00:00.000Z" } });
     });
     await page.goto("/");
+    await expect(page.locator(".tf-summary strong")).toHaveText(["0", "0"]);
+    expect(gets).toBe(1);
     await page.getByRole("navigation", { name: "Main navigation" }).getByRole("link", { name: "Leave feedback", exact: true }).click();
     await expect(page).toHaveURL(/\/feedback$/);
     const longName = "Engineering reliable bots: a practical workshop with examples";
@@ -38,7 +40,8 @@ for (const width of [390, 1440]) {
     await expect(page.getByText(/Feedback saved/)).toBeVisible();
     await expect(page).toHaveURL(/\/feedback$/);
     await expect(page.locator("#results")).toHaveCount(0);
-    expect(gets).toBe(0);
+    // Home reads the real summary once; entering/submitting the form adds no GET.
+    expect(gets).toBe(1);
     expect(posts).toBe(1);
     expect(rows).toEqual([{ talkId: longName, author: "Integration attendee", comment: "", rating: 4 }]);
     await page.getByRole("link", { name: "View results", exact: true }).click();
@@ -53,7 +56,7 @@ for (const width of [390, 1440]) {
     await page.reload();
     await expect(results.getByRole("rowheader", { name: longName, exact: true })).toBeVisible();
     await expect(results.locator(".dashboard-count")).toHaveText("1");
-    expect(gets).toBeGreaterThanOrEqual(2);
+    expect(gets).toBe(3);
     expect(posts).toBe(1);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     if (width === 390) expect(await results.evaluate(node => node.getAnimations({ subtree: true }).length)).toBe(0);

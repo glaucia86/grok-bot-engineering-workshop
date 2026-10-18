@@ -18,9 +18,13 @@ async function expectNavigation(page: Page, active: string) {
   await expect(nav.locator('[aria-current="page"]')).toHaveCount(1);
 }
 
-test("local route contract: home presents the workshop without form, dashboard or API reads", async ({ page }) => {
+test("local route contract: home presents real summary counts without a submission form or full dashboard", async ({ page }) => {
   let reads = 0;
-  await page.route("**/api/feedback", route => { reads++; return route.fulfill({ json: [] }); });
+  let writes = 0;
+  await page.route("**/api/feedback", route => {
+    if (route.request().method() === "GET") reads++; else writes++;
+    return route.fulfill({ json: [{ talkId: "Real fixture talk", count: 3, average: 4.3 }] });
+  });
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
   await expectNavigation(page, "Home");
@@ -29,7 +33,10 @@ test("local route contract: home presents the workshop without form, dashboard o
   await expect(page.getByLabel("Talk", { exact: true })).toHaveCount(0);
   await expect(page.locator("#results")).toHaveCount(0);
   await expect(page.getByRole("table")).toHaveCount(0);
-  expect(reads).toBe(0);
+  await expect(page.locator(".tf-summary strong")).toHaveText(["3", "1"]);
+  await expect(page.locator(".tf-talk-list")).toContainText("Real fixture talk");
+  expect(reads).toBe(1);
+  expect(writes).toBe(0);
 });
 
 for (const route of routes) {
