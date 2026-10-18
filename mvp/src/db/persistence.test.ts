@@ -61,6 +61,34 @@ describe("durable isolated PostgreSQL adapter integration", () => {
     expect(talkBInsights).toMatchObject({ talkId: "Talk B", average: 2, count: 1 });
   });
 
+  it("preserves Unicode grouping, request trimming and exact internal whitespace in PostgreSQL", async () => {
+    const groups = [
+      ["İSTANBUL", "i\u0307stanbul", "istanbul"],
+      ["ΟΣ", "ος", "οσ"],
+      ["CAFÉ", "café", "cafe"],
+      ["Talk  A", "talk  a", "talk a"],
+      ["O'Reilly", "o'reilly", "Other"],
+    ];
+    for (const [label, variant, other] of groups) {
+      for (const [talkId, rating] of [[label, 5], [variant, 3], [other, 1]] as const) {
+        expect((await post({ talkId, rating, comment: talkId, author: "Ana" })).status).toBe(201);
+      }
+    }
+    const aggregate = await (await GET()).json();
+    for (const [label, variant] of groups) {
+      const response = await insights(new Request(
+        `http://localhost/api/feedback/insights?talkId=${encodeURIComponent(` \t${variant}\n `)}`,
+      ));
+      const data = await response.json();
+      const summary = aggregate.find((item: { talkId: string }) => item.talkId.toLowerCase() === variant);
+      expect(data).toMatchObject({ count: 2, average: 4 });
+      expect(data).toMatchObject({ count: summary.count, average: summary.average });
+      expect([label, variant]).toContain(data.talkId);
+      expect(data.comments.map((comment: { text: string }) => comment.text).sort()).toEqual([label, variant].sort());
+      expect(response.headers.get("Cache-Control")).toBe("no-store");
+    }
+  });
+
   it("reads actual stored rating distribution and comments without exposing authors", async () => {
     await post(valid);
     await post({ ...valid, rating: 3, comment: "" });
