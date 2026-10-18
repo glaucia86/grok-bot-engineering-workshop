@@ -1,10 +1,131 @@
 """Real Chromium verification. Screenshots are site QA, never rehearsal evidence."""
+from collections import Counter
 import functools
 import http.server
 import json
 from pathlib import Path
 import threading
 from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
+
+# Inspect computed eye transforms, not just data attributes or screenshots. In a
+# mask, removing the original matrix puts both eye cutouts at the same origin.
+MASCOT_STATE = r"""selector => [...document.querySelectorAll(selector)].map(svg => {
+  const matrix = value => {
+    const m = new DOMMatrix(value || undefined);
+    return [m.a, m.b, m.c, m.d, m.e, m.f];
+  };
+  // Inspect the rendered SVG root, never mask paths: mask geometry has no
+  // ordinary layout box even when it is painting a visible mascot.
+  const hiddenAncestors = [];
+  for (let element = svg; element; element = element.parentElement) {
+    const style = getComputedStyle(element);
+    if (style.display === 'none' || ['hidden', 'collapse'].includes(style.visibility) || style.contentVisibility === 'hidden') {
+      hiddenAncestors.push({tag: element.localName, class: element.getAttribute('class'), display: style.display, visibility: style.visibility});
+    }
+  }
+  const rendered = [...svg.getClientRects()].some(rect => rect.width > 0 && rect.height > 0) &&
+    !hiddenAncestors.length && (!svg.checkVisibility || svg.checkVisibility({visibilityProperty: true, contentVisibilityAuto: true}));
+  const masks = [...svg.querySelectorAll('mask')];
+  const refs = [...svg.querySelectorAll('[mask]')].map(e => {
+    const match = /^url\(["']?#([^"')]+)["']?\)$/.exec(e.getAttribute('mask'));
+    const target = match && document.getElementById(match[1]);
+    return {id: match && match[1], local: !!target && svg.contains(target) && target.localName === 'mask'};
+  });
+  return {
+    mascot: svg.dataset.mascot, viewBox: svg.getAttribute('viewBox'), motion: svg.dataset.motion,
+    current: !!svg.closest('section.present'), rendered, hiddenAncestors,
+    masks: masks.map(e => e.id), refs,
+    hasBodyWrapper: !!svg.querySelector('.mascot-motion .mascot-body'),
+    hasMaskedFace: !!svg.querySelector('mask .mascot-face'),
+    keyframes: [...svg.querySelectorAll('style')].flatMap(e =>
+      [...e.textContent.matchAll(/@keyframes\s+([\w-]+)/g)].map(match => match[1])),
+    eyes: [...svg.querySelectorAll('.mascot-eye')].map(eye => {
+      const style = getComputedStyle(eye);
+      return {
+        tag: eye.localName, classes: [...eye.classList].filter(c => c !== 'mascot-eye'),
+        authored: eye.getAttribute('transform'), initial: matrix(eye.getAttribute('transform')),
+        transform: matrix(style.transform), computedTransform: style.transform, inlineTransform: eye.style.transform,
+        name: style.animationName, duration: style.animationDuration,
+        direction: style.animationDirection, iterations: style.animationIterationCount,
+        playState: style.animationPlayState,
+        nativeAnimation: eye.getAnimations().some(a => a instanceof CSSAnimation && a.animationName === style.animationName),
+        maskedFace: !!eye.closest('mask .mascot-face')
+      };
+    })
+  };
+})"""
+
+
+def mascot_state(page, selector='.workshop-mascot'):
+    return page.evaluate(MASCOT_STATE, selector)
+
+
+def assert_static_mascots(page, selector='.workshop-mascot', standalone=False, require_current_rendered=False):
+    def check(states):
+        assert states, f'No mascots matched {selector}'
+        if standalone or require_current_rendered:
+            required = [svg for svg in states if standalone or svg['current']]
+            assert required and all(svg['rendered'] for svg in required), ('Expected rendered static mascots', states)
+        for svg in states:
+            assert standalone or svg['motion'] == 'static', svg
+            assert len(svg['eyes']) == 2, svg
+            for eye in svg['eyes']:
+                assert eye['authored'] and eye['authored'].startswith('matrix('), eye
+                assert eye['name'] == 'none' and not eye['nativeAnimation'], eye
+                assert eye['initial'] != [1, 0, 0, 1, 0, 0], eye
+                # Chromium reports transform:none for descendants of Reveal's
+                # display:none slides. Only rendered roots provide computed-style
+                # evidence; hidden roots must still retain the authored matrices.
+                if svg['rendered']:
+                    assert all(abs(a - b) < .00001 for a, b in zip(eye['initial'], eye['transform'])), (svg, eye)
+            assert svg['eyes'][0]['initial'] != svg['eyes'][1]['initial'], svg
+            if svg['rendered']:
+                assert svg['eyes'][0]['transform'] != svg['eyes'][1]['transform'], svg
+
+    states = mascot_state(page, selector)
+    check(states)
+    # Recheck both the static policy and actual visible eye geometry over time.
+    # A ready/current-slide test must contain rendered roots on both observations.
+    page.wait_for_timeout(220)
+    later = mascot_state(page, selector)
+    check(later)
+    assert len(later) == len(states)
+    for before, after in zip(states, later):
+        assert [eye['authored'] for eye in before['eyes']] == [eye['authored'] for eye in after['eyes']]
+        if before['rendered'] and after['rendered']:
+            assert [eye['transform'] for eye in before['eyes']] == [eye['transform'] for eye in after['eyes']]
+    return states
+
+
+def assert_active_mascots(page):
+    page.wait_for_function("""() => {
+      const bots = [...document.querySelectorAll('section.present .workshop-mascot')];
+      return bots.length && bots.every(svg => svg.dataset.motion === 'active' &&
+        [...svg.querySelectorAll('.mascot-eye')].every(eye => getComputedStyle(eye).animationName !== 'none'));
+    }""")
+    states = mascot_state(page, 'section.present .workshop-mascot')
+    for svg in states:
+        assert len(svg['eyes']) == 2, svg
+        for eye in svg['eyes']:
+            assert eye['nativeAnimation'] and eye['name'] in svg['keyframes'], eye
+            assert eye['playState'] == 'running', eye
+            assert eye['duration'] == '2.967s' and eye['direction'] == 'alternate', eye
+            assert eye['iterations'] == 'infinite', eye
+            assert not eye['inlineTransform'], eye  # Gaze belongs to wrapper groups.
+        assert svg['eyes'][0]['name'] != svg['eyes'][1]['name'], svg
+    # Let Chromium's native timeline advance. A class toggle, paused keyframe,
+    # JS-only blink or screenshot with animations disabled cannot satisfy this.
+    samples = [[eye['transform'] for svg in states for eye in svg['eyes']]]
+    for _ in range(5):
+        page.wait_for_timeout(220)
+        samples.append([eye['transform'] for svg in mascot_state(page, 'section.present .workshop-mascot') for eye in svg['eyes']])
+    for index, first in enumerate(samples[0]):
+        assert any(sample[index] != first for sample in samples[1:]), (index, samples)
+    assert not page.locator('.workshop-mascot[data-motion="active"]').evaluate_all(
+        "bots => bots.some(svg => !svg.closest('section.present'))"
+    )
+    return states
+
 
 ROOT = Path('_site').resolve()
 OUT = Path('speaker-browser-evidence')
@@ -37,6 +158,29 @@ try:
                 external.append(request_route.request.url)
                 request_route.abort()
         context.route('**/*', route)
+        # Pointer/visibility events before Reveal.initialize must be harmless.
+        # Keep a real browser timeline: the native SVG keyframes are not JS timers.
+        startup_context = browser.new_context(viewport={'width':1440,'height':900})
+        startup_context.route('**/*', route)
+        startup = startup_context.new_page()
+        startup.on('pageerror', lambda error: errors.append(str(error)))
+        startup.add_init_script("""{
+          const pending = new Promise(resolve => { window.releaseMascotFonts = resolve; });
+          document.fonts.load = () => pending;
+        }""")
+        startup.goto(base+'slides/', wait_until='domcontentloaded')
+        assert not startup.evaluate('Reveal.isReady()')
+        startup.mouse.move(800, 300)
+        startup.evaluate("document.dispatchEvent(new Event('visibilitychange'))")
+        assert not errors, errors
+        assert_static_mascots(startup)
+        startup.evaluate('window.releaseMascotFonts([])')
+        startup.wait_for_function('document.querySelector(".reveal").classList.contains("ready")')
+        startup.evaluate("document.dispatchEvent(new Event('visibilitychange'))")
+        assert_active_mascots(startup)
+        startup.screenshot(animations='allow', path=str(OUT/'mascot-native-animation-desktop.png'))
+        startup_context.close()
+        results.append('Pre-ready pointer/visibility events, static initial matrices and native 2.967s SVG animation PASS')
         page = context.new_page()
         page.goto(base, wait_until='networkidle')
         page.screenshot(animations='disabled', path=str(OUT/'home-desktop.png'), full_page=True)
@@ -107,6 +251,64 @@ try:
             page.goto(link, wait_until='networkidle')
             page.wait_for_function('(i)=>Reveal.getIndices().h === i', arg=int(link.rsplit('/',1)[1]))
         page.evaluate('Reveal.slide(0)')
+        # Uploaded SVGs retain their geometry, two distinct eye matrices and
+        # per-instance namespacing even when several copies of one bot coexist.
+        assert page.locator('template[id^="mascot-"]').count() == 5
+        states = mascot_state(page)
+        assert states
+        ids = page.locator('[id]').evaluate_all('(elements) => elements.map(e => e.id)')
+        assert len(ids) == len(set(ids)), 'Duplicate document ID (including mascot masks)'
+        keyframes = [name for svg in states for name in svg['keyframes']]
+        assert len(keyframes) == len(states) * 2 and len(set(keyframes)) == len(keyframes), keyframes
+        classes = Counter(name for svg in states for eye in svg['eyes'] for name in eye['classes'])
+        for svg in states:
+            assert svg['viewBox'] == '-125 -125 250 250', svg
+            assert svg['hasBodyWrapper'] and svg['hasMaskedFace'], svg
+            assert svg['masks'] and svg['refs'] and all(ref['local'] for ref in svg['refs']), svg
+            assert len(svg['eyes']) == 2 and all(eye['tag'] == 'path' and eye['maskedFace'] for eye in svg['eyes']), svg
+            assert all(any(classes[name] == 1 for name in eye['classes']) for eye in svg['eyes']), svg
+        assert page.locator('.workshop-mascot[data-blink]').count() == 0
+        for slide_number in [0, 21]:
+            page.evaluate('(i)=>Reveal.slide(i)', slide_number)
+            assert page.locator('section.present .workshop-mascot').count() == 5
+            current = assert_active_mascots(page)
+            # The five uploaded bots must not silently share one bot's eye data.
+            assert len({tuple(tuple(eye['initial']) for eye in svg['eyes']) for svg in current}) == 5
+            assert_static_mascots(page, 'section:not(.present) .workshop-mascot')
+        page.evaluate('Reveal.slide(0)')
+        assert_active_mascots(page)
+        before_gaze = [[eye['authored'] for eye in svg['eyes']] for svg in mascot_state(page)]
+        page.mouse.move(1400, 300)
+        page.wait_for_function("[...document.querySelectorAll('section.present .mascot-face')].some(e=>e.style.transform.includes('translate'))")
+        assert [[eye['authored'] for eye in svg['eyes']] for svg in mascot_state(page)] == before_gaze
+        assert all(not eye['inlineTransform'] for svg in mascot_state(page) for eye in svg['eyes'])
+        page.screenshot(animations='disabled', path=str(OUT/'mascots-gaze-desktop.png'))
+        page.emulate_media(reduced_motion='reduce')
+        page.wait_for_function("[...document.querySelectorAll('.mascot-motion,.mascot-face')].every(e=>!e.style.transform)")
+        assert_static_mascots(page, require_current_rendered=True)
+        page.screenshot(animations='disabled', path=str(OUT/'mascots-reduced-motion.png'))
+        page.emulate_media(reduced_motion='no-preference')
+        assert_active_mascots(page)
+        # Reveal presentation modes suspend motion without destroying first-frame eyes.
+        page.evaluate('Reveal.toggleOverview(true)')
+        assert_static_mascots(page, require_current_rendered=True)
+        page.evaluate('Reveal.toggleOverview(false)')
+        assert_active_mascots(page)
+        page.evaluate('Reveal.togglePause(true)')
+        assert_static_mascots(page, require_current_rendered=True)
+        page.evaluate('Reveal.togglePause(false)')
+        assert_active_mascots(page)
+        # Cameos must never intersect actual content or the progress HUD.
+        for slide_number in [2, 15, 19]:
+            page.evaluate('(i)=>Reveal.slide(i,0,999)', slide_number)
+            page.wait_for_timeout(800)
+            overlaps = page.evaluate("""()=>{const s=Reveal.getCurrentSlide(), c=s.querySelector('.slide-cameo').getBoundingClientRect();
+              return [...s.children, document.querySelector('#hud')].filter(e=>!e.matches('.slide-cameo,aside')).filter(e=>{
+              const r=e.getBoundingClientRect(); return r.width && r.height && c.left<r.right && c.right>r.left && c.top<r.bottom && c.bottom>r.top;
+              }).map(e=>e.className)}""")
+            assert not overlaps, (slide_number+1, overlaps)
+        page.evaluate('Reveal.slide(0)')
+        results.append('Five uploaded mascots: unique masks/classes/keyframes, native eye motion, wrapper-only gaze, static offscreen/reduced-motion/overview/pause states and unobstructed cameos PASS')
         # Notes header click count must equal the number of fragment steps on each slide.
         mismatches = page.evaluate("""()=>Reveal.getSlides().map((s,i)=>{const n=new Set([...s.querySelectorAll('.fragment')].map(f=>f.dataset.fragmentIndex)).size;const m=/(\\d+) click/.exec(s.querySelector('aside.notes').textContent);return (m?+m[1]:0)===n?null:`slide ${i+1}: notes ${m?m[1]:0} vs ${n}`}).filter(Boolean)""")
         assert not mismatches, mismatches
@@ -150,7 +352,53 @@ try:
         context.set_offline(False)
         page.set_viewport_size({'width':390,'height':844})
         page.goto(base+'slides/', wait_until='networkidle')
+        page.wait_for_function('Reveal.isReady() && !Reveal.isScrollView() && Reveal.getIndices().h === 0')
+        page.locator('section.present h1').wait_for(state='visible')
         page.screenshot(animations='disabled', path=str(OUT/'slides-mobile.png'))
+        touch = browser.new_context(viewport={'width':390,'height':844}, is_mobile=True, has_touch=True)
+        touch.route('**/*', route)
+        touch_page = touch.new_page()
+        touch_page.on('pageerror', lambda error: errors.append(str(error)))
+        touch_page.goto(base+'slides/', wait_until='networkidle')
+        touch_page.wait_for_function('Reveal.isReady() && !Reveal.isScrollView() && Reveal.getIndices().h === 0')
+        touch_page.locator('section.present h1').wait_for(state='visible')
+        touch_page.mouse.move(300, 200)
+        touch_page.wait_for_timeout(200)
+        assert touch_page.evaluate("[...document.querySelectorAll('.mascot-motion,.mascot-face')].every(e=>!e.style.transform)")
+        assert_static_mascots(touch_page, require_current_rendered=True)
+        touch_page.screenshot(animations='disabled', path=str(OUT/'mascots-touch-cover.png'))
+        touch_page.evaluate('Reveal.slide(21)')
+        touch_page.wait_for_function('Reveal.getIndices().h === 21 && !Reveal.isScrollView()')
+        touch_page.locator('section.present h1').filter(has_text='Questions?').wait_for(state='visible')
+        touch_page.wait_for_timeout(800)
+        assert touch_page.locator('section.present .workshop-mascot').count() == 5
+        assert_static_mascots(touch_page, require_current_rendered=True)
+        bounds = touch_page.locator('section.present h1').bounding_box()
+        assert bounds and bounds['x'] >= 0 and bounds['y'] >= 0 and bounds['x'] + bounds['width'] <= 390 and bounds['y'] + bounds['height'] <= 844, bounds
+        touch_page.screenshot(animations='disabled', path=str(OUT/'mascots-touch-closing.png'))
+        touch.close()
+        fallback = browser.new_context(java_script_enabled=False)
+        fallback.route('**/*', route)
+        fallback_page = fallback.new_page()
+        fallback_page.goto(base+'slides/', wait_until='networkidle')
+        fallback_images = fallback_page.locator('img[src^="assets/avatars/"]')
+        assert fallback_images.count() > 0
+        assert fallback_images.evaluate_all('(images) => images.every(e => e.complete && e.naturalWidth > 0)')
+        # Open each actual fallback SVG with scripting disabled. Image-load checks
+        # alone cannot catch collapsed mask eyes or an accidentally animated fallback.
+        fallback_urls = sorted(set(fallback_images.evaluate_all('(images) => images.map(e => e.src)')))
+        checked_fallbacks = 0
+        for url in fallback_urls:
+            fallback_page.goto(url, wait_until='networkidle')
+            if not fallback_page.locator('.mascot-eye').count():
+                continue  # The presenter's human portrait is not a bot.
+            checked_fallbacks += 1
+            assert fallback_page.locator('svg').get_attribute('viewBox') == '-125 -125 250 250'
+            assert fallback_page.locator('style, animate, animateTransform, script').count() == 0
+            assert_static_mascots(fallback_page, 'svg', standalone=True)
+        assert checked_fallbacks == 5, checked_fallbacks
+        fallback.close()
+        results.append('Touch/coarse pointer and five no-JavaScript SVG fallbacks retain static, distinct first-frame eyes PASS')
         assert not errors, errors
         assert not external, external
         assert not bad, bad
@@ -160,3 +408,4 @@ try:
     print('\n'.join(results))
 finally:
     server.shutdown()
+

@@ -11,7 +11,7 @@ import markdown
 REPO = 'https://github.com/glaucia86/grok-bot-engineering-workshop'
 SOURCE_REF = 'main'
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-SLIDE_FILES = frozenset(('assets/shots/.gitkeep', 'vendor/fonts/Inter-Variable.woff2', 'vendor/fonts/OFL-Inter.txt', 'assets/avatars/devops.svg', 'assets/avatars/engineering-lead.svg', 'assets/avatars/fde-typescript.svg', 'assets/avatars/glaucia.svg', 'assets/avatars/qa-bot.svg', 'assets/deck.css', 'assets/diagrams.js', 'assets/sketch.js', 'index.html', 'vendor/fonts/OFL-Virgil.txt', 'vendor/fonts/Virgil.woff2', 'vendor/reveal.js-5.2.1/LICENSE', 'vendor/reveal.js-5.2.1/plugin/notes/notes.js', 'vendor/reveal.js-5.2.1/reset.css', 'vendor/reveal.js-5.2.1/reveal.css', 'vendor/reveal.js-5.2.1/reveal.js', 'vendor/roughjs-4.6.6/LICENSE', 'vendor/roughjs-4.6.6/rough.js'))
+SLIDE_FILES = frozenset(('assets/shots/.gitkeep', 'assets/avatars/grok.svg', 'assets/mascots.js', 'assets/mascots.css', 'vendor/fonts/Inter-Variable.woff2', 'vendor/fonts/OFL-Inter.txt', 'assets/avatars/devops.svg', 'assets/avatars/engineering-lead.svg', 'assets/avatars/fde-typescript.svg', 'assets/avatars/glaucia.svg', 'assets/avatars/qa-bot.svg', 'assets/deck.css', 'assets/diagrams.js', 'assets/sketch.js', 'index.html', 'vendor/fonts/OFL-Virgil.txt', 'vendor/fonts/Virgil.woff2', 'vendor/reveal.js-5.2.1/LICENSE', 'vendor/reveal.js-5.2.1/plugin/notes/notes.js', 'vendor/reveal.js-5.2.1/reset.css', 'vendor/reveal.js-5.2.1/reveal.css', 'vendor/reveal.js-5.2.1/reveal.js', 'vendor/roughjs-4.6.6/LICENSE', 'vendor/roughjs-4.6.6/rough.js'))
 
 def source_url(link):
     link = html.unescape(link)
@@ -100,7 +100,7 @@ def build(root, output):
     for name in ['site.css','site.js']:
         shutil.copyfile(speaker/'site'/name,output/name)
     (output/'.nojekyll').touch()
-    (output/'index.html').write_text(page('Build Your First Engineering Bot', '''<main id="content" class="home"><p class="eyebrow">Packt live workshop · 90 min</p><h1>Build Your First<br><span>Engineering Bot</span><br>with Grok Bot</h1><p class="byline">Glaucia Lemos · 17 Nov 2026<br>11:00–12:30 Brasília · 9:00–10:30 ET</p><div class="choices"><a class="primary" href="slides/" lang="en">Open presentation ↗</a><a href="guide/">Guia da apresentadora · PT / EN ↗</a></div><div class="team" aria-label="Workshop bot team"><img src="slides/assets/avatars/fde-typescript.svg" alt="FDE TypeScript, blue rounded square"><img src="slides/assets/avatars/qa-bot.svg" alt="QA bot, pink teardrop"><img src="slides/assets/avatars/devops.svg" alt="DevOps, orange cloud"><img src="slides/assets/avatars/engineering-lead.svg" alt="Engineering Lead, red shield"></div><p class="hint">Apresentação: <kbd>F</kbd> tela cheia · <kbd>S</kbd> notas da apresentadora.<br>Compartilhe só a janela do deck. O guia e as notas publicados são públicos.</p></main>'''), encoding='utf-8')
+    (output/'index.html').write_text(page('Build Your First Engineering Bot', '''<main id="content" class="home"><p class="eyebrow">Packt live workshop · 90 min</p><h1>Build Your First<br><span>Engineering Bot</span><br>with Grok Bot</h1><p class="byline">Glaucia Lemos · 17 Nov 2026<br>11:00–12:30 Brasília · 9:00–10:30 ET</p><div class="choices"><a class="primary" href="slides/" lang="en">Open presentation ↗</a><a href="guide/">Guia da apresentadora · PT / EN ↗</a></div><div class="team" aria-label="Workshop bot team"><img src="slides/assets/avatars/fde-typescript.svg" alt="FDE TypeScript, green triangle"><img src="slides/assets/avatars/qa-bot.svg" alt="QA bot, pink teardrop"><img src="slides/assets/avatars/devops.svg" alt="DevOps, purple circle"><img src="slides/assets/avatars/engineering-lead.svg" alt="Engineering Lead, red rounded square"></div><p class="hint">Apresentação: <kbd>F</kbd> tela cheia · <kbd>S</kbd> notas da apresentadora.<br>Compartilhe só a janela do deck. O guia e as notas publicados são públicos.</p></main>'''), encoding='utf-8')
     print(f'Built speaker site: {len(files)} deck files + guide + landing (explicit allowlist)')
 
 if __name__ == '__main__':
@@ -108,3 +108,4 @@ if __name__ == '__main__':
     parser.add_argument('--output',type=pathlib.Path,default=ROOT/'_site')
     args=parser.parse_args()
     build(ROOT,args.output)
+
