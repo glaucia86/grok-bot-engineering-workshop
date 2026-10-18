@@ -83,3 +83,17 @@ usage within the owner's quota; no paid plan upgrade is authorized here.
 - Glaucia merges. Verify the exact deployed commit and successful Pages workflow
   before treating the site URL as live. Never report a successful rehearsal or UI
   acceptance from static tests alone.
+
+
+## Workshop mascots
+
+The cover and closing show the five original workshop characters together.
+Three fixed cameos (slides 3, 16, 20) add variety without random placement.
+`python scripts/sync_speaker_mascots.py` reuses the app's authored paths, eye
+positions and colors in local SVG fallbacks and inline templates; `--check`
+verifies that the exports remain current. No proprietary bundle is copied.
+The tiny progressive enhancement uses the app's bounded gaze/tilt and independent
+blinks only on the active slide, with static open eyes for reduced motion and
+touch/coarse-pointer devices. Reveal's keyboard, fullscreen and notes controls
+remain unchanged. The existing speaker-browser evidence includes mascot checks;
+review the actual screenshots before publishing a layout change.

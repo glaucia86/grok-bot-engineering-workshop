@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="vendor/reveal.js-5.2.1/reset.css">
 <link rel="stylesheet" href="vendor/reveal.js-5.2.1/reveal.css">
 <link rel="stylesheet" href="assets/deck.css">
+<link rel="stylesheet" href="assets/mascots.css">
 </head>
 <body>
 <div id="hud"><div class="txt"><span class="blk" id="hud-block"></span><span id="hud-clock"></span></div><div class="segs" id="hud-segs"></div></div>
@@ -21,6 +22,7 @@
     <span class="kicker">Packt live workshop · 90 min</span>
     <h1>Build Your First<br><span class="hl-amber">Engineering Bot</span><br>with Grok Bot</h1>
     <div class="row hero-av" style="align-items:center;margin-top:56px;gap:36px">
+      <img class="av" src="assets/avatars/grok.svg" alt="Grok Bot">
       <img data-id="av-fde" class="av" src="assets/avatars/fde-typescript.svg" alt="FDE TypeScript">
       <img data-id="av-qa" class="av" src="assets/avatars/qa-bot.svg" alt="QA bot">
       <img data-id="av-ops" class="av" src="assets/avatars/devops.svg" alt="DevOps">
@@ -101,6 +103,7 @@
     <div class="card fragment" style="--cc:var(--amber)"><h3><code>docs/inception.md</code></h3><p>The goal, the team, and the <b>acceptance criteria</b>.</p></div>
   </div>
   <p class="lead" style="margin-top:44px">We build: <span class="hl-amber">form + dashboard</span>.</p>
+  <img class="slide-cameo cameo-right" src="assets/avatars/fde-typescript.svg" alt="" aria-hidden="true">
   <aside class="notes">
 <p style="margin:0 0 10px;font-size:1.05em;font-weight:700;color:#111">⏱ 11:02–11:03 BRT · 1 min · slide 3/22 · block 0 · Setup · 3 clicks on the slide</p>
 <p style="margin:14px 0 4px;font-size:.78em;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#444">🖱 Hands-on · Passo a passo</p><ol style="margin:0 0 0 1.2em;padding:0">
@@ -600,6 +603,7 @@ Script one check (for example, a curl for the preview&#x27;s HTTP status) and pa
     <div class="card col fragment" style="--cc:var(--green)"><h3 class="hl-green">Undo in a minute?</h3><p style="font-size:38px;font-weight:700">The bot can do it alone.</p><p class="muted">branch · commit · draft · test run</p></div>
     <div class="card col fragment" style="--cc:var(--red)"><h3 class="hl-red">Send · spend · publish · delete · merge?</h3><p style="font-size:38px;font-weight:700">A human decides.</p><p data-id="merge" class="mergeline">I always merge.</p></div>
   </div>
+  <img class="slide-cameo cameo-left" src="assets/avatars/engineering-lead.svg" alt="" aria-hidden="true">
   <aside class="notes">
 <p style="margin:0 0 10px;font-size:1.05em;font-weight:700;color:#111">⏱ 11:55–11:58 BRT · 3 min · slide 16/22 · block 5 · Approval · 2 clicks on the slide</p>
 <p style="margin:14px 0 4px;font-size:.78em;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#444">🖱 Hands-on · Passo a passo</p><ol style="margin:0 0 0 1.2em;padding:0">
@@ -749,6 +753,7 @@ Do not comment, apply labels, edit files, open PRs, close issues, merge, deploy,
     <div class="card fragment" style="--cc:var(--amber)"><h3>One full prompt</h3><p>What, where, context, result. Not three messages.</p></div>
     <div class="card fragment" style="--cc:var(--blue)"><h3>Connectors first</h3><p>The browser is the most expensive way to read GitHub.</p></div>
   </div>
+  <img class="slide-cameo cameo-right" src="assets/avatars/devops.svg" alt="" aria-hidden="true">
   <aside class="notes">
 <p style="margin:0 0 10px;font-size:1.05em;font-weight:700;color:#111">⏱ 12:23–12:24 BRT · 1 min · slide 20/22 · block 7 · Q&amp;A · 3 clicks on the slide</p>
 <p style="margin:14px 0 4px;font-size:.78em;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#444">🖱 Hands-on · Passo a passo</p><ol style="margin:0 0 0 1.2em;padding:0">
@@ -798,6 +803,7 @@ Do not comment, apply labels, edit files, open PRs, close issues, merge, deploy,
 <section data-clock="12:26" data-block="7 · Q&amp;A">
   <div class="center fill" style="align-items:center;text-align:center">
     <div class="row" style="justify-content:center;gap:40px;margin-bottom:30px">
+      <div class="bot"><img src="assets/avatars/grok.svg" alt=""><div class="name">Grok Bot</div></div>
       <div class="bot"><img src="assets/avatars/fde-typescript.svg" alt=""><div class="name">FDE TypeScript</div></div>
       <div class="bot"><img src="assets/avatars/qa-bot.svg" alt=""><div class="name">QA bot</div></div>
       <div class="bot"><img src="assets/avatars/devops.svg" alt=""><div class="name">DevOps</div></div>
@@ -834,11 +840,20 @@ Do not comment, apply labels, edit files, open PRs, close issues, merge, deploy,
 
 </div></div>
 
+<!-- workshop-mascot templates:start -->
+<template id="mascot-grok"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" focusable="false" data-mascot="grok" data-shape="blob"><g class="mascot-motion"><path class="mascot-body" d="M78 17C111 14 140 43 143 79C147 115 124 142 87 145C49 149 20 127 17 92C14 56 42 21 78 17Z" fill="#101516"/><g class="mascot-face" fill="#fff"><g transform="rotate(-22 78 61)"><ellipse class="mascot-eye" cx="78" cy="61" rx="5" ry="10"/></g><g transform="rotate(-22 100 58)"><ellipse class="mascot-eye" cx="100" cy="58" rx="5" ry="10"/></g></g></g></svg></template>
+<template id="mascot-fde-typescript"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" focusable="false" data-mascot="fde" data-shape="square"><g class="mascot-motion"><path class="mascot-body" d="M32 22H128Q138 22 138 32V128Q138 138 128 138H32Q22 138 22 128V32Q22 22 32 22Z" fill="#00C972"/><g class="mascot-face" fill="#101516"><g transform="rotate(-12 65 83)"><ellipse class="mascot-eye" cx="65" cy="83" rx="5" ry="10"/></g><g transform="rotate(-12 87 81)"><ellipse class="mascot-eye" cx="87" cy="81" rx="5" ry="10"/></g></g></g></svg></template>
+<template id="mascot-qa-bot"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" focusable="false" data-mascot="qa" data-shape="drop"><g class="mascot-motion"><path class="mascot-body" d="M80 12C96 36 139 64 139 98C139 127 114 146 80 146C46 146 21 127 21 98C21 64 64 36 80 12Z" fill="#FF309B"/><g class="mascot-face" fill="#101516"><g transform="rotate(-12 65 91)"><ellipse class="mascot-eye" cx="65" cy="91" rx="5" ry="10"/></g><g transform="rotate(-12 87 89)"><ellipse class="mascot-eye" cx="87" cy="89" rx="5" ry="10"/></g></g></g></svg></template>
+<template id="mascot-devops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" focusable="false" data-mascot="devops" data-shape="drop"><g class="mascot-motion"><path class="mascot-body" d="M80 12C96 36 139 64 139 98C139 127 114 146 80 146C46 146 21 127 21 98C21 64 64 36 80 12Z" fill="#9159FE"/><g class="mascot-face" fill="#101516"><g transform="rotate(-12 65 91)"><ellipse class="mascot-eye" cx="65" cy="91" rx="5" ry="10"/></g><g transform="rotate(-12 87 89)"><ellipse class="mascot-eye" cx="87" cy="89" rx="5" ry="10"/></g></g></g></svg></template>
+<template id="mascot-engineering-lead"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" focusable="false" data-mascot="lead" data-shape="wedge"><g class="mascot-motion"><path class="mascot-body" d="M28 30Q28 16 42 23L137 111Q150 126 132 132L40 145Q22 147 24 129Z" fill="#FF263C"/><g class="mascot-face" fill="#101516"><g transform="rotate(-12 55 105)"><ellipse class="mascot-eye" cx="55" cy="105" rx="5" ry="10"/></g><g transform="rotate(-12 77 103)"><ellipse class="mascot-eye" cx="77" cy="103" rx="5" ry="10"/></g></g></g></svg></template>
+<!-- workshop-mascot templates:end -->
+
 <script src="vendor/reveal.js-5.2.1/reveal.js"></script>
 <script src="vendor/reveal.js-5.2.1/plugin/notes/notes.js"></script>
 <script src="vendor/roughjs-4.6.6/rough.js"></script>
 <script src="assets/sketch.js"></script>
 <script src="assets/diagrams.js"></script>
+<script src="assets/mascots.js"></script>
 <script>
   // Progress HUD: one segment per block, width = minutes, filled by the planned clock of the current slide.
   const BLOCKS = [["Setup", 0, 5, "--teal"], ["Create the bots", 5, 7, "--blue"], ["Design", 12, 8, "--purple"], ["Verify", 20, 20, "--pink"],
@@ -879,3 +894,4 @@ Do not comment, apply labels, edit files, open PRs, close issues, merge, deploy,
 </script>
 </body>
 </html>
+

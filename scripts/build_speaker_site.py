@@ -11,7 +11,7 @@ import markdown
 REPO = 'https://github.com/glaucia86/grok-bot-engineering-workshop'
 SOURCE_REF = 'main'
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-SLIDE_FILES = frozenset(('assets/shots/.gitkeep', 'vendor/fonts/Inter-Variable.woff2', 'vendor/fonts/OFL-Inter.txt', 'assets/avatars/devops.svg', 'assets/avatars/engineering-lead.svg', 'assets/avatars/fde-typescript.svg', 'assets/avatars/glaucia.svg', 'assets/avatars/qa-bot.svg', 'assets/deck.css', 'assets/diagrams.js', 'assets/sketch.js', 'index.html', 'vendor/fonts/OFL-Virgil.txt', 'vendor/fonts/Virgil.woff2', 'vendor/reveal.js-5.2.1/LICENSE', 'vendor/reveal.js-5.2.1/plugin/notes/notes.js', 'vendor/reveal.js-5.2.1/reset.css', 'vendor/reveal.js-5.2.1/reveal.css', 'vendor/reveal.js-5.2.1/reveal.js', 'vendor/roughjs-4.6.6/LICENSE', 'vendor/roughjs-4.6.6/rough.js'))
+SLIDE_FILES = frozenset(('assets/shots/.gitkeep', 'assets/avatars/grok.svg', 'assets/mascots.js', 'assets/mascots.css', 'vendor/fonts/Inter-Variable.woff2', 'vendor/fonts/OFL-Inter.txt', 'assets/avatars/devops.svg', 'assets/avatars/engineering-lead.svg', 'assets/avatars/fde-typescript.svg', 'assets/avatars/glaucia.svg', 'assets/avatars/qa-bot.svg', 'assets/deck.css', 'assets/diagrams.js', 'assets/sketch.js', 'index.html', 'vendor/fonts/OFL-Virgil.txt', 'vendor/fonts/Virgil.woff2', 'vendor/reveal.js-5.2.1/LICENSE', 'vendor/reveal.js-5.2.1/plugin/notes/notes.js', 'vendor/reveal.js-5.2.1/reset.css', 'vendor/reveal.js-5.2.1/reveal.css', 'vendor/reveal.js-5.2.1/reveal.js', 'vendor/roughjs-4.6.6/LICENSE', 'vendor/roughjs-4.6.6/rough.js'))
 
 def source_url(link):
     link = html.unescape(link)
@@ -108,3 +108,4 @@ if __name__ == '__main__':
     parser.add_argument('--output',type=pathlib.Path,default=ROOT/'_site')
     args=parser.parse_args()
     build(ROOT,args.output)
+

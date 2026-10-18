@@ -37,6 +37,30 @@ try:
                 external.append(request_route.request.url)
                 request_route.abort()
         context.route('**/*', route)
+        # Delay font readiness so pointer/visibility events occur before Reveal.initialize.
+        startup = context.new_page()
+        startup.add_init_script("""{
+          const pending = new Promise(resolve => { window.releaseMascotFonts = resolve; });
+          document.fonts.load = () => pending;
+          Math.random = () => 0;
+        }""")
+        startup.clock.install()
+        startup.goto(base+'slides/', wait_until='domcontentloaded')
+        assert not startup.evaluate('Reveal.isReady()')
+        startup.mouse.move(800, 300)
+        startup.evaluate("document.dispatchEvent(new Event('visibilitychange'))")
+        assert not errors, errors
+        startup.evaluate('window.releaseMascotFonts([])')
+        startup.wait_for_function('Reveal.isReady()')
+        startup.clock.pause_at(startup.evaluate('Date.now()'))
+        # Independent phases reuse the app timings; only the first closes at 4 s.
+        startup.clock.run_for(4001)
+        assert startup.locator('section.present [data-blink="closed"]').count() == 1
+        startup.screenshot(animations='disabled', path=str(OUT/'mascot-blink-desktop.png'))
+        startup.clock.run_for(140)
+        assert startup.locator('section.present [data-blink="closed"]').count() == 0
+        startup.close()
+        results.append('Pre-ready pointer/visibility events and independent 140ms blink PASS')
         page = context.new_page()
         page.goto(base, wait_until='networkidle')
         page.screenshot(animations='disabled', path=str(OUT/'home-desktop.png'), full_page=True)
@@ -107,6 +131,31 @@ try:
             page.goto(link, wait_until='networkidle')
             page.wait_for_function('(i)=>Reveal.getIndices().h === i', arg=int(link.rsplit('/',1)[1]))
         page.evaluate('Reveal.slide(0)')
+        # Original app mascots: offline enhancement, gaze, static preferences and layout.
+        assert page.locator('template[id^="mascot-"]').count() == 5
+        for slide_number in [0, 21]:
+            page.evaluate('(i)=>Reveal.slide(i)', slide_number)
+            assert page.locator('section.present .workshop-mascot').count() == 5
+        page.evaluate('Reveal.slide(0)')
+        page.mouse.move(1400, 300)
+        page.wait_for_function("[...document.querySelectorAll('section.present .mascot-face')].some(e=>e.style.transform.includes('translate'))")
+        page.screenshot(animations='disabled', path=str(OUT/'mascots-gaze-desktop.png'))
+        page.emulate_media(reduced_motion='reduce')
+        page.wait_for_function("[...document.querySelectorAll('.mascot-motion,.mascot-face')].every(e=>!e.style.transform)")
+        assert page.locator('[data-blink="closed"]').count() == 0
+        page.screenshot(animations='disabled', path=str(OUT/'mascots-reduced-motion.png'))
+        page.emulate_media(reduced_motion='no-preference')
+        # Cameos must never intersect actual content or the progress HUD.
+        for slide_number in [2, 15, 19]:
+            page.evaluate('(i)=>Reveal.slide(i,0,999)', slide_number)
+            page.wait_for_timeout(800)
+            overlaps = page.evaluate("""()=>{const s=Reveal.getCurrentSlide(), c=s.querySelector('.slide-cameo').getBoundingClientRect();
+              return [...s.children, document.querySelector('#hud')].filter(e=>!e.matches('.slide-cameo,aside')).filter(e=>{
+              const r=e.getBoundingClientRect(); return r.width && r.height && c.left<r.right && c.right>r.left && c.top<r.bottom && c.bottom>r.top;
+              }).map(e=>e.className)}""")
+            assert not overlaps, (slide_number+1, overlaps)
+        page.evaluate('Reveal.slide(0)')
+        results.append('Five original mascots on cover/closing, bounded gaze, reduced motion and unobstructed cameos PASS')
         # Notes header click count must equal the number of fragment steps on each slide.
         mismatches = page.evaluate("""()=>Reveal.getSlides().map((s,i)=>{const n=new Set([...s.querySelectorAll('.fragment')].map(f=>f.dataset.fragmentIndex)).size;const m=/(\\d+) click/.exec(s.querySelector('aside.notes').textContent);return (m?+m[1]:0)===n?null:`slide ${i+1}: notes ${m?m[1]:0} vs ${n}`}).filter(Boolean)""")
         assert not mismatches, mismatches
@@ -151,6 +200,27 @@ try:
         page.set_viewport_size({'width':390,'height':844})
         page.goto(base+'slides/', wait_until='networkidle')
         page.screenshot(animations='disabled', path=str(OUT/'slides-mobile.png'))
+        touch = browser.new_context(viewport={'width':390,'height':844}, is_mobile=True, has_touch=True)
+        touch.route('**/*', route)
+        touch_page = touch.new_page()
+        touch_page.on('pageerror', lambda error: errors.append(str(error)))
+        touch_page.goto(base+'slides/', wait_until='networkidle')
+        touch_page.mouse.move(300, 200)
+        touch_page.wait_for_timeout(200)
+        assert touch_page.evaluate("[...document.querySelectorAll('.mascot-motion,.mascot-face')].every(e=>!e.style.transform)")
+        assert touch_page.locator('[data-blink="closed"]').count() == 0
+        touch_page.screenshot(animations='disabled', path=str(OUT/'mascots-touch-cover.png'))
+        touch_page.evaluate('Reveal.slide(21)')
+        touch_page.wait_for_timeout(800)
+        touch_page.screenshot(animations='disabled', path=str(OUT/'mascots-touch-closing.png'))
+        touch.close()
+        fallback = browser.new_context(java_script_enabled=False)
+        fallback.route('**/*', route)
+        fallback_page = fallback.new_page()
+        fallback_page.goto(base+'slides/', wait_until='networkidle')
+        assert fallback_page.evaluate("[...document.querySelectorAll('img[src^=\"assets/avatars/\"]')].every(e=>e.complete && e.naturalWidth>0)")
+        fallback.close()
+        results.append('Touch/coarse pointer stays static; no-JavaScript SVG fallbacks load locally PASS')
         assert not errors, errors
         assert not external, external
         assert not bad, bad
@@ -160,3 +230,4 @@ try:
     print('\n'.join(results))
 finally:
     server.shutdown()
+
