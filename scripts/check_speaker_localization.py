@@ -123,6 +123,7 @@ try:
         notes = opened.value
         notes.wait_for_load_state()
         notes.wait_for_function("document.querySelector('.speaker-controls-notes .value').textContent.includes('Passo a passo')")
+        assert notes.locator('.speaker-controls-notes .label').text_content() == 'Notas'
         # Capture the already-asserted popup directly: its Reveal preview frames
         # keep FontFaceSet pending in headless Chromium even after notes render.
         session = context.new_cdp_session(notes)

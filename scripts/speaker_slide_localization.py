@@ -190,6 +190,7 @@ def localize_notes_plugin(source):
         'reveal.js - Speaker View': 'reveal.js - Notas da apresentadora',
         '>Loading speaker view...</div>': '>Carregando notas da apresentadora...</div>',
         '>Upcoming</span>': '>Próximo slide</span>',
+        '>Notes</h4>': '>Notas</h4>',
         '>Time <span': '>Tempo <span',
         '>Click to Reset</span>': '>Clique para zerar</span>',
         '>Pacing – Time to finish current slide</h4>': '>Ritmo – Tempo para concluir este slide</h4>',
