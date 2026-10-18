@@ -1,4 +1,5 @@
 """Real Chromium QA for both deck locales; artifacts are UI QA, not rehearsal."""
+import base64
 import functools
 import http.server
 import json
@@ -113,7 +114,12 @@ try:
         notes = opened.value
         notes.wait_for_load_state()
         notes.wait_for_function("document.querySelector('.speaker-controls-notes .value').textContent.includes('Passo a passo')")
-        notes.screenshot(path=str(OUT/'pt-speaker-notes.png'), timeout=15000)
+        # Capture the already-asserted popup directly: its Reveal preview frames
+        # keep FontFaceSet pending in headless Chromium even after notes render.
+        session = context.new_cdp_session(notes)
+        shot = session.send('Page.captureScreenshot', {'format':'png'})
+        (OUT/'pt-speaker-notes.png').write_bytes(base64.b64decode(shot['data']))
+        session.detach()
         notes.close()
         for width,height in [(1280,720),(390,844)]:
             page.set_viewport_size({'width':width,'height':height})
