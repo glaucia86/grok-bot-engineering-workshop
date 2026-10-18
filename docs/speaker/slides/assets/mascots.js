@@ -145,7 +145,10 @@
   window.addEventListener('blur', neutral);
   document.addEventListener('visibilitychange', sync);
   media.addEventListener('change', sync);
-  ['ready', 'slidechanged', 'overviewshown', 'overviewhidden', 'paused', 'resumed'].forEach(event => Reveal.on(event, sync));
+  // Initial hash navigation can emit slidechanged immediately before ready.
+  // Do not cancel the cue that this first slidechanged has already started.
+  Reveal.on('ready', () => { if (currentSlide !== Reveal.getCurrentSlide()) sync(); });
+  ['slidechanged', 'overviewshown', 'overviewhidden', 'paused', 'resumed'].forEach(event => Reveal.on(event, sync));
   window.addEventListener('beforeprint', () => { printing = true; sync(); });
   window.addEventListener('afterprint', () => { printing = false; sync(); });
   window.addEventListener('pagehide', reset);

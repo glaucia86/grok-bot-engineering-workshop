@@ -127,8 +127,16 @@ def assert_active_mascots(page):
     return states
 
 
-def assert_contextual_cues(page, output):
+def assert_contextual_cues(page, output, base):
     """Observe actual visible decoration, finite lifetime and mode cancellation."""
+    # Reveal emits slidechanged then ready when resolving an initial hash.
+    # Every directly linked cue slide must still play after initialization.
+    for index, kind in [(7, 'thinking'), (12, 'thinking'), (21, 'wink')]:
+        page.goto(base+f'slides/#/{index}', wait_until='domcontentloaded')
+        page.wait_for_function('Reveal.isReady()')
+        page.wait_for_function('(kind)=>!!document.querySelector(`section.present [data-cue="${kind}"]`)', arg=kind, timeout=3000)
+        page.wait_for_function('!document.querySelector("section.present [data-cue=thinking],section.present [data-cue=wink]")')
+    page.evaluate('Reveal.slide(0)')
     for index, ident in [(7, 'fde'), (12, 'qa')]:
         page.evaluate('(i)=>Reveal.slide(i,0,-1)', index)
         cue = page.locator(f'section.present .workshop-mascot[data-mascot="{ident}"][data-mascot-cue="thinking"]')
@@ -279,7 +287,7 @@ try:
         cue_page.on('pageerror', lambda error: errors.append(str(error)))
         cue_page.goto(base+'slides/', wait_until='networkidle')
         cue_page.wait_for_function('Reveal.isReady()')
-        assert_contextual_cues(cue_page, OUT)
+        assert_contextual_cues(cue_page, OUT, base)
         cue_video = cue_page.video
         cue_context.close()
         cue_video.save_as(str(OUT/'mascot-cues.webm'))

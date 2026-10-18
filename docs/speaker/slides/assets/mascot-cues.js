@@ -25,6 +25,5 @@
     return null;
   }
   const api = Object.freeze({ sampleCue });
-  if (typeof module === 'object' && module.exports) module.exports = api;
-  else root.WorkshopMascotCues = api;
+  root.WorkshopMascotCues = api;
 })(typeof window === 'undefined' ? globalThis : window);

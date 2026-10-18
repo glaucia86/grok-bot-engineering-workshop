@@ -6,7 +6,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 class MascotCues(unittest.TestCase):
     def sample(self, kind, times):
-        script = 'const {sampleCue} = require("./docs/speaker/slides/assets/mascot-cues.js"); console.log(JSON.stringify('+json.dumps(times)+'.map(t=>sampleCue('+json.dumps(kind)+', t))));'
+        script = 'const sandbox = {window:{}}; require("node:vm").runInNewContext(require("node:fs").readFileSync("./docs/speaker/slides/assets/mascot-cues.js", "utf8"), sandbox); const {sampleCue} = sandbox.window.WorkshopMascotCues; console.log(JSON.stringify('+json.dumps(times)+'.map(t=>sampleCue('+json.dumps(kind)+', t))));'
         result = subprocess.run(['node','-e',script],cwd=ROOT,text=True,capture_output=True)
         self.assertEqual(result.returncode,0,result.stderr)
         return json.loads(result.stdout)
