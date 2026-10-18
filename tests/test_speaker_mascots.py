@@ -31,6 +31,9 @@ class SlideMascots(unittest.TestCase):
             rule = context.strip() + ' .workshop-mascot {' + declarations + '}'
             self.assertIn(rule, mascot_css)
 
+    def test_fixed_stage_disables_automatic_mobile_scroll_view(self):
+        self.assertIn('scrollActivationWidth: null', (DECK/'index.html').read_text())
+
     def test_motion_is_local_and_does_not_capture_navigation(self):
         js = (DECK/'assets/mascots.js').read_text()
         self.assertIn('prefers-reduced-motion: no-preference',js)

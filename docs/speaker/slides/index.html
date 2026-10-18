@@ -886,7 +886,8 @@ Do not comment, apply labels, edit files, open PRs, close issues, merge, deploy,
   setInterval(renderHud, 30000);
   (document.fonts && document.fonts.load ? Promise.all([document.fonts.load('30px "Virgil"'), document.fonts.load('700 30px "Inter"')]).catch(() => {}) : Promise.resolve()).then(() => {
     window.drawDiagrams();   // diagrams are drawn first so their build steps (fragments) exist when reveal.js starts
-    Reveal.initialize({ width: 1600, height: 900, margin: 0, center: false, hash: true, controls: false, progress: false, slideNumber: false,
+    // The fixed-stage deck stays in slide mode on narrow screens too.
+    Reveal.initialize({ width: 1600, height: 900, margin: 0, center: false, hash: true, scrollActivationWidth: null, controls: false, progress: false, slideNumber: false,
       transition: "fade", transitionSpeed: "default", backgroundTransition: "fade", autoAnimate: true, autoAnimateDuration: 0.7, autoAnimateEasing: "ease",
       fragments: true, plugins: [RevealNotes] }).then(() => updateHud(Reveal.getCurrentSlide()));
     Reveal.on("slidechanged", e => updateHud(e.currentSlide));

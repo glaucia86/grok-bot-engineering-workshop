@@ -95,5 +95,6 @@ verifies that the exports remain current. No proprietary bundle is copied.
 The tiny progressive enhancement uses the app's bounded gaze/tilt and independent
 blinks only on the active slide, with static open eyes for reduced motion and
 touch/coarse-pointer devices. Reveal's keyboard, fullscreen and notes controls
-remain unchanged. The existing speaker-browser evidence includes mascot checks;
+remain unchanged. Narrow screens explicitly retain slide mode (Reveal's automatic
+scroll view is disabled for this fixed-stage deck). The existing speaker-browser evidence includes mascot checks;
 review the actual screenshots before publishing a layout change.
