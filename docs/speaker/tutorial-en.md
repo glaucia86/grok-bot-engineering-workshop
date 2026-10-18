@@ -6,7 +6,7 @@
 
 This companion tutorial details each action without changing the existing deck or generated guide. Both versions use identical step numbers. The Portuguese edition includes translations of every spoken line; bot prompts remain English. Read aloud only **Say in English**. Copy each block only to its stated destination; do not read full prompts to the audience.
 
-**Copy safely:** replace every <FIELD> in your working copy before sending. Never send unresolved placeholders. `text` blocks are notes, form values or prompts as stated. `sh` blocks go into a Bash terminal, one line at a time. Choose one alternative rather than sending both. Never paste spoken lines into a terminal. URLs and IDs here are non-secret; credentials never belong in this guide.
+**Copy safely:** replace every <FIELD> in your working copy before sending. Never send unresolved placeholders. `text` blocks are notes, form values or prompts as stated. `sh` blocks go into a Bash terminal, normally one line at a time; paste the protected step 4 block as a whole, as instructed. Choose one alternative rather than sending both. Never paste spoken lines into a terminal. URLs and IDs here are non-secret; credentials never belong in this guide.
 
 **Verification status:** base commands and contracts checked against repository source on October 18, 2026, reference `88a64a4eb0f72074eb8703c89845a43dda255a63`; this is not an execution of the tutorial or a timed rehearsal. Grok Bot controls, account permissions, isolated preview and remote procedures require the stated rehearsal. Unobserved UI labels are not facts. The 90-minute budget assumes completed preflight and permits an honest BLOCKED outcome.
 
@@ -131,32 +131,63 @@ npm --version
 
 **Window and micro-actions:**
 
-1. In the same terminal at the clone root, paste only ls-remote first.
-2. Compare all 40 characters with the SHA below.
-3. Only then paste remaining commands one at a time, replacing APPROVED_EXERCISE_TARGET with the dedicated branch from your card.
-4. Compare its remote SHA with EXERCISE_TARGET_SHA; merge-base must exit 0 (no output).
-5. Stop on any error or mismatch.
-6. For a descendant target, the instructor must already have reviewed that it contains preparation only and preserves UI gaps.
+1. In the same Bash terminal at the clean clone root, fill EXERCISE_BRANCH, EXERCISE_TARGET_BRANCH and EXERCISE_TARGET_SHA from the card.
+2. Use a fresh branch name for every rehearsal; update the card and every prompt if it changes.
+3. Paste the entire block, including parentheses: it stops on the first error without closing your terminal.
+4. The first check preserves the frozen checkpoint; the exercise branch starts at the approved target, including its preparation.
+5. Do not continue unless the final PASS appears.
+6. Ancestry alone does not prove scope: the instructor must have reviewed that the target contains preparation only and preserves UI gaps.
 
 ```sh
-git ls-remote --exit-code --heads origin refs/heads/checkpoint/mvp-base
-# Expected: d25831759530d4e4a1a022bb85d670e2f0964287 refs/heads/checkpoint/mvp-base
+(
+set -eu
+STARTER_SHA='d25831759530d4e4a1a022bb85d670e2f0964287'
+EXERCISE_BRANCH='exercise/feedback-ui'
+EXERCISE_TARGET_BRANCH='APPROVED_EXERCISE_TARGET'
+EXERCISE_TARGET_SHA='FULL_APPROVED_TARGET_SHA'
+
+# Validate the card before changing this checkout.
+git check-ref-format --branch "$EXERCISE_BRANCH" >/dev/null
+git check-ref-format --branch "$EXERCISE_TARGET_BRANCH" >/dev/null
+[[ "$EXERCISE_TARGET_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo 'BLOCKED: replace target SHA from the card'; exit 1; }
+case "$EXERCISE_TARGET_BRANCH" in main|checkpoint/mvp-base) echo 'BLOCKED: use the dedicated exercise target'; exit 1;; esac
+[ "$EXERCISE_BRANCH" != "$EXERCISE_TARGET_BRANCH" ] || { echo 'BLOCKED: source and target must differ'; exit 1; }
+[ -z "$(git status --porcelain)" ] || { echo 'BLOCKED: preserve existing local changes'; exit 1; }
+
+# The frozen checkpoint must still point to the approved starter.
+checkpoint_ref=$(git ls-remote --exit-code --heads origin refs/heads/checkpoint/mvp-base)
+[ "$checkpoint_ref" = "$(printf '%s\t%s' "$STARTER_SHA" refs/heads/checkpoint/mvp-base)" ] || { echo 'BLOCKED: checkpoint SHA mismatch'; exit 1; }
+
+# No --exit-code here: a successful empty result means the remote branch is absent.
+# Authentication/network failure still aborts; it must never be treated as absence.
+remote_exercise=$(git ls-remote --heads origin "refs/heads/$EXERCISE_BRANCH")
+[ -z "$remote_exercise" ] || { echo 'BLOCKED: remote exercise branch exists; choose a fresh card name'; exit 1; }
+if git show-ref --verify --quiet "refs/heads/$EXERCISE_BRANCH"; then
+  echo 'BLOCKED: local exercise branch exists; choose a fresh card name'
+  exit 1
+fi
+
 git fetch origin
-# Replace APPROVED_EXERCISE_TARGET with the card value, then inspect:
-git rev-parse origin/APPROVED_EXERCISE_TARGET
-git merge-base --is-ancestor d25831759530d4e4a1a022bb85d670e2f0964287 origin/APPROVED_EXERCISE_TARGET
-# Stop unless the target SHA matches the card and ancestry exits 0.
-git switch --detach d25831759530d4e4a1a022bb85d670e2f0964287
-git rev-parse HEAD
-git switch -c exercise/feedback-ui
-git branch --show-current
+# Read the live target too: a deleted remote branch can leave a stale tracking ref.
+target_ref=$(git ls-remote --exit-code --heads origin "refs/heads/$EXERCISE_TARGET_BRANCH")
+[ "$target_ref" = "$(printf '%s\t%s' "$EXERCISE_TARGET_SHA" "refs/heads/$EXERCISE_TARGET_BRANCH")" ] || { echo 'BLOCKED: remote target differs from the approved card'; exit 1; }
+[ "$(git rev-parse "refs/remotes/origin/$EXERCISE_TARGET_BRANCH")" = "$EXERCISE_TARGET_SHA" ] || { echo 'BLOCKED: fetched target differs from the approved card'; exit 1; }
+git merge-base --is-ancestor "$STARTER_SHA" "$EXERCISE_TARGET_SHA"
+
+# Verify the frozen starter, then include all approved preparation in the exercise head.
+git switch --detach "$STARTER_SHA"
+[ "$(git rev-parse HEAD)" = "$STARTER_SHA" ]
+git switch -c "$EXERCISE_BRANCH" "$EXERCISE_TARGET_SHA"
+[ "$(git rev-parse HEAD)" = "$EXERCISE_TARGET_SHA" ]
+printf 'PASS: exercise branch %s starts at approved target %s\n' "$EXERCISE_BRANCH" "$EXERCISE_TARGET_SHA"
+)
 ```
 
-**Expected result/checkpoint:** The local SHA is d25831759530d4e4a1a022bb85d670e2f0964287 and the new branch is exercise/feedback-ui. The frozen remote ref was not moved.
+**Expected result/checkpoint:** The final PASS names the card branch and EXERCISE_TARGET_SHA. That SHA may equal the starter or be a reviewed preparation-only descendant; HEAD must match the target, not necessarily d258317. No remote branch was created or moved. Before the first push, FDE will repeat the remote-absence check to catch another rehearsal creating it meanwhile.
 
-**Say in English:** “This exact checkpoint is our starting point. Main is the completed reference.”
+**Say in English:** “We verify the frozen checkpoint, then start from the approved exercise target so its preparation is included.”
 
-**If it fails / recovery:** Different SHA, missing ref or existing exercise branch: stop and check with the instructor. Do not use reset, force-push or main as a shortcut. For a new rehearsal, choose a new approved branch name.
+**If it fails / recovery:** Without PASS, stop. An existing local or remote branch requires a fresh name in the card and prompts even if its SHA appears compatible; never reuse another rehearsal’s work. Access failure does not mean absence. A changed/missing/unrelated target requires instructor confirmation. Do not use reset, force-push or main as a shortcut.
 
 ### Step 05 — Run each base check
 
@@ -179,7 +210,7 @@ npm run verify:http
 cd ..
 ```
 
-**Expected result/checkpoint:** Each command exits 0. verify:http uses its own localhost server and invalid input; it proves neither preview nor remote writes. The starter intentionally has no form/dashboard or test:e2e scripts.
+**Expected result/checkpoint:** Each command exits 0. verify:http uses its own localhost server and invalid input; it proves neither preview nor remote writes. The frozen starter intentionally has no form/dashboard or test:e2e scripts; the approved target may add test preparation, which must be identified separately.
 
 **Say in English:** “These checks prove the local base. They do not prove the deployed user journey.”
 
@@ -288,9 +319,9 @@ git status --short
 ```text
 You are the Forward Deployed Engineer for Talk Feedback.
 Own the small Next.js form/results exercise in mvp/, not the separate root Fastify app.
-Read the supplied current spec, inception and selected issue; inspect the frozen starter.
+Read the supplied current spec, inception and selected issue; compare the frozen starter with the verified EXERCISE_TARGET_SHA and inspect the actual prepared target files.
 First propose files, shared API/schema contracts, tests and risks. Wait for explicit design approval before implementation.
-After approval, use the approved exercise branch and open one PR only to the supplied exercise repository and target branch. The presenter's local clone is not automatically your workspace; inspect your own checkout. If that branch is absent remotely, create it from the exact frozen SHA after approval. If it already exists, verify its ancestry and do not overwrite unrelated work.
+After approval, use the approved exercise branch and open one PR only to the supplied exercise repository and target branch. The presenter's local clone is not automatically your workspace; inspect your own checkout. After approval, verify the frozen checkpoint and approved EXERCISE_TARGET_SHA/ancestry. Create the exercise branch from EXERCISE_TARGET_SHA, including approved preparation, not unconditionally from the older starter. Before creation and again before the first push, check the exact remote exercise ref; an existing ref or access failure means STOP and request a fresh instructor-approved branch name, never reuse or overwrite it. A fresh presenter-created local branch may be used only in that exact authorized workspace after verifying its HEAD equals EXERCISE_TARGET_SHA and it has no unrelated changes; do not adopt an existing bot-local branch from another run.
 Do not copy the complete reference UI wholesale. Detailed insights/distributions and polished reference layout are optional.
 Deliver the diff, exact commit, test commands/results, PR URL and remaining blockers. Never claim preview acceptance from local checks.
 Skills: shadcn; vercel-react-best-practices; neon-drizzle.
@@ -398,10 +429,11 @@ Exercise repository: <EXERCISE_REPOSITORY>
 Exercise branch: <EXERCISE_BRANCH>
 Future PR target: <EXERCISE_TARGET_BRANCH> at <EXERCISE_TARGET_SHA>
 The presenter prepared this branch locally only. Inspect remote refs and your own workspace; do not assume you can access that clone. Do not create or push a branch during this design-only task.
-Frozen starter: d25831759530d4e4a1a022bb85d670e2f0964287
+Frozen checkpoint verification: d25831759530d4e4a1a022bb85d670e2f0964287
+Implementation starting commit: <EXERCISE_TARGET_SHA>, the verified dedicated target including approved preparation.
 Selected issue: <SCOPE_ISSUE>
 Current contract source: glaucia86/grok-bot-engineering-workshop at <REFERENCE_SHA>, spec.md and docs/inception.md.
-Read those current documents through the connector and inspect the starter's mvp/ files. Report conflicts rather than trusting historical text.
+Read those current documents through the connector. Verify the frozen starter, then inspect mvp/ at EXERCISE_TARGET_SHA, including every approved preparation change and its test/tooling implications. Design against that actual implementation base, not only the old starter files. Report conflicts rather than trusting historical text.
 Design only the core feedback form and simple results, using existing API/schema/UI primitives.
 POST /api/feedback: required trimmed nonempty talkId and author; required numeric integer rating 1–5; optional comment normalized to empty text when omitted/blank, maximum 1000 after trim. Reject non-string comments including null.
 Use exact shared field errors. Success confirms and resets; rejection preserves input.
@@ -430,7 +462,8 @@ Return a short design and stop for my approval. Do not merge or run remote write
 
 ```text
 DESIGN APPROVED: <identify the specific design message/version>.
-Implement only that core design in <EXERCISE_REPOSITORY> on <EXERCISE_BRANCH>, based on d25831759530d4e4a1a022bb85d670e2f0964287.
+Implement only that core design in <EXERCISE_REPOSITORY> on <EXERCISE_BRANCH>, starting from verified EXERCISE_TARGET_SHA <EXERCISE_TARGET_SHA>, including its approved preparation. Verify that the frozen checkpoint is still d25831759530d4e4a1a022bb85d670e2f0964287 and an ancestor of that target; do not discard preparation by branching from the older starter.
+Before creating the branch and again before its first push, inspect the exact remote exercise ref. If it already exists or cannot be checked, STOP and request a fresh card branch name; never reuse or overwrite it. A presenter-created fresh local branch in the authorized shared workspace must have HEAD equal to EXERCISE_TARGET_SHA and no unrelated changes; otherwise stop.
 PR target is <EXERCISE_REPOSITORY>:<EXERCISE_TARGET_BRANCH>; this is the instructor-approved exercise destination.
 Approved form route: <FORM_PATH>. Approved results route: <RESULTS_PATH>.
 Use focused tests first, then implement, then run from mvp/: npm test; npm run lint; npm run build; npm run typecheck; npm run verify:http.
@@ -500,7 +533,7 @@ Return one row per AC: planned method, target, current available evidence, missi
 ```text
 For this handoff, provide:
 1. PR URL, exercise repository, source branch and target branch.
-2. Full 40-character PR head SHA and frozen base SHA.
+2. Full 40-character PR head SHA, approved implementation-base EXERCISE_TARGET_SHA and frozen-checkpoint SHA; show that approved preparation is in the PR head.
 3. Files changed and approved form/results routes.
 4. Test-first evidence and final command exit status/output for each MVP check.
 5. Browser tests added, if any, with their actual target and limits.
