@@ -28,3 +28,16 @@
 
 .reveal .workshop-review-row .workshop-mascot { width:52px; height:52px; }
 .reveal .workshop-decision .workshop-mascot { width:55px; height:55px; }
+
+/* Decorations stay inside the avatar box and never imply a live task status. */
+.mascot-thinking { display: none; pointer-events: none; }
+.workshop-mascot[data-motion="active"][data-cue="thinking"] .mascot-thinking { display: block; }
+.mascot-wink { transform-box: view-box; }
+.workshop-mascot[data-cue="wink"] .mascot-eye {
+  animation-play-state: paused;
+  transform: var(--mascot-eye-initial) !important;
+}
+@media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse), print {
+  .mascot-thinking { display: none !important; }
+  .mascot-wink { transform: none !important; }
+}
