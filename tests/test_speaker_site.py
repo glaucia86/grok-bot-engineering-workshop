@@ -1,9 +1,11 @@
 import importlib.util
 import pathlib
+import sys
 import tempfile
 import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT/'scripts'))
 spec = importlib.util.spec_from_file_location('site_builder', ROOT/'scripts/build_speaker_site.py')
 builder = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(builder)
