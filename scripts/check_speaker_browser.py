@@ -51,12 +51,13 @@ try:
         startup.evaluate("document.dispatchEvent(new Event('visibilitychange'))")
         assert not errors, errors
         startup.evaluate('window.releaseMascotFonts([])')
-        startup.wait_for_function('Reveal.isReady()')
+        startup.wait_for_function('document.querySelector(".reveal").classList.contains("ready")')
         startup.clock.pause_at(startup.evaluate('Date.now()'))
+        startup.evaluate("document.dispatchEvent(new Event('visibilitychange'))")
         # Independent phases reuse the app timings; only the first closes at 4 s.
         startup.clock.run_for(4001)
-        assert startup.locator('section.present [data-blink="closed"]').count() == 1
         startup.screenshot(animations='disabled', path=str(OUT/'mascot-blink-desktop.png'))
+        assert startup.locator('section.present [data-blink="closed"]').count() == 1, startup.evaluate("({ready:Reveal.isReady(),hidden:document.hidden,media:matchMedia(\"(hover: hover) and (pointer: fine)\").matches,states:[...document.querySelectorAll(\"section.present [data-blink]\")].map(e=>e.dataset.blink)})")
         startup.clock.run_for(140)
         assert startup.locator('section.present [data-blink="closed"]').count() == 0
         startup.close()
