@@ -18,6 +18,9 @@ for (const width of [390, 1440]) for (const locale of ['en-US', 'pt-BR']) {
    if(route==='/results')await expect(page.getByRole('table')).toBeVisible();
    await page.evaluate(()=>document.fonts.ready);
    if(route==='/'){
+    const kicker=await page.locator('.tf-card-kicker').boundingBox();
+    const floatingLabel=await page.locator('.tf-floating-label').boundingBox();
+    expect(floatingLabel!.y+floatingLabel!.height).toBeLessThanOrEqual(kicker!.y);
     const footnote=await page.locator('.tf-card-footnote').boundingBox();
     const badge=await page.locator('.tf-floating-note').boundingBox();
     expect(badge!.y).toBeGreaterThanOrEqual(footnote!.y+footnote!.height);
@@ -69,4 +72,22 @@ test('home header stays visible and becomes glass while scrolling',async({page})
  await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
  await expect(header).toHaveAttribute('data-scrolled','false');
  await expect(header).toHaveCSS('background-color','rgba(0, 0, 0, 0)');
+});
+
+for (const locale of ['en-US', 'pt-BR']) test(`hero rating controls stay circular and usable at 320px ${locale}`, async ({page})=>{
+ await page.setViewportSize({width:320,height:844});
+ await page.addInitScript(value=>localStorage.setItem('talkfeedback-locale',value),locale);
+ await mockCobaltFeedback(page);
+ await page.goto('/');
+ await expect(page.getByRole('radio')).toHaveCount(5);
+ await page.evaluate(()=>document.fonts.ready);
+ const group=await page.locator('.tf-hero-stars').boundingBox();
+ for(const radio of await page.getByRole('radio').all()){
+  const box=await radio.boundingBox();
+  expect(box!.width).toBeGreaterThanOrEqual(44);
+  expect(box!.height).toBeGreaterThanOrEqual(44);
+  expect(box!.x+box!.width).toBeLessThanOrEqual(group!.x+group!.width+.5);
+ }
+ await expect(page.locator('.tf-hero-stars label').first()).toHaveCSS('border-radius','50%');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });

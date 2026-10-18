@@ -22,7 +22,7 @@ is explicitly labeled as an illustration.
 
 ## Checks before publication
 
-- Unit tests: 293 passed, including RED-to-GREEN locale, form and hero checks.
+- Unit tests: 295 passed, including RED-to-GREEN locale, form and hero checks.
 - Production build: passed, including streamed query-parameter handling.
 - Typecheck: passed.
 - Lint: passed with one pre-existing radio aria-invalid warning.
@@ -32,7 +32,8 @@ is explicitly labeled as an illustration.
 
 ## Browser evidence
 
-Local headless Chromium launch is blocked by the execution sandbox. The cloud
+Local Chromium is unavailable in this workspace; earlier launch attempts were
+also blocked by the execution sandbox. The cloud
 browser cannot reach this workspace's loopback server. Before the measured
 layout refinement, CI run 39158362804 passed all 80 browser cases on both the
 PR head and merge ref. Its twelve desktop/mobile, EN-US/PT-BR screenshots were
@@ -44,7 +45,9 @@ desktop header, 20px/32px gutters, 160px/176px desktop hero padding, 448px
 rating card, overlapping metrics, dark results band and inset final CTA.
 Mobile keeps the existing two-row accessible navigation, rather than claiming
 an identical hamburger menu. Existing real metrics and truthful copy are retained.
-The complete hero source is still pending from the user.
+The supplied talkfeedback-source.zip is a Manus React/Vite visual replica, not
+the original Modulify export. Its simulated submission, hardcoded statistics,
+speaker identities, comments and live-update claims are not imported.
 
 New geometry assertions verify the overlap, card/container widths, desktop
 header height, dark band and inset CTA alongside the existing overflow and
@@ -56,3 +59,18 @@ Legacy tests for the superseded mascot/sidebar presentation were updated
 to the new design while retaining navigation, keyboard, form, error and
 analytics behavior checks. This preview does not change the frozen workshop
 checkpoint, tutorials or slides and must not be merged before visual review.
+
+## Combined visual polish
+
+The supplied Manus reference contributes the angled violet/coral brand mark,
+circular rating controls, layered card depth and small descriptive chips. The
+hero card explains the real five-star scale and optional comment instead of
+showing placeholder lines. Inner-page headings use the same editorial serif
+accent, and results overview cards sit directly on the paper background.
+
+Modulify's measured container, header, overlapping summary, dark showcase and
+inset call-to-action remain. The floating card label now has its own layout
+space, and small-screen inner gutters retain five 44px rating targets. Added
+browser assertions cover label separation and 320px hero controls in both
+languages. Fresh CI screenshots and independent visual review are required
+before this revision is accepted.

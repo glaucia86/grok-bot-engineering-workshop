@@ -9,7 +9,8 @@ export function FeedbackPage({ initialRating }: { initialRating?: number } = {})
   return (
     <>
       <header className="loop-page-intro">
-        <h1>{t("Leave feedback", "Deixe seu feedback")}</h1>
+        <p className="tf-eyebrow tf-page-eyebrow">{t("YOUR PERSPECTIVE MATTERS", "SUA PERSPECTIVA IMPORTA")}</p>
+        <h1>{t("Leave ", "Deixe seu ")}<em>feedback</em></h1>
         <p>{t("A small reflection can make the next talk better.", "Uma pequena reflexão pode melhorar a próxima palestra.")}</p>
       </header>
       <div className="loop-task-grid">

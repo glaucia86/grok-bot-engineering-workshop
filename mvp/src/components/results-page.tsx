@@ -8,7 +8,8 @@ export function ResultsPage() {
   const { t } = useLocale();
   return <>
     <div className="loop-page-intro results-intro">
-      <h1>{t("Workshop results", "Resultados do workshop")}</h1>
+      <p className="tf-eyebrow tf-page-eyebrow">{t("THE AUDIENCE, IN PERSPECTIVE", "O OLHAR DA PLATEIA")}</p>
+      <h1>{t("Workshop ", "Resultados ")}<em>{t("results", "do workshop")}</em></h1>
       <p>{t("What resonated with the room? Explore ratings and response counts for every talk.", "O que mais marcou o público? Explore as avaliações e o número de respostas de cada palestra.")}</p>
       <Link className="loop-secondary" href="/feedback">{t("Leave feedback", "Deixe seu feedback")}</Link>
     </div>
