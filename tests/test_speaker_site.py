@@ -50,9 +50,9 @@ class SpeakerSite(unittest.TestCase):
             self.assertFalse((out/'mvp').exists())
             self.assertFalse((out/'spec.md').exists())
             self.assertFalse((out/'package.json').exists())
-            guide = (out/'guide/index.html').read_text()
-            self.assertIn('../slides/#/0', guide)
-            self.assertIn('../slides/#/21', guide)
+            guide = (out/'guide/run-sheet/index.html').read_text()
+            self.assertIn('../../slides/#/0', guide)
+            self.assertIn('../../slides/#/21', guide)
             self.assertIn('Copiar prompt', guide)
             self.assertIn('lang="en"', guide)
             self.assertIn('11:00', guide)
@@ -72,7 +72,7 @@ class SpeakerSite(unittest.TestCase):
         prompts = re.findall(r'```\w*\n(.*?)\n```', guide, re.S)
         with tempfile.TemporaryDirectory() as tmp:
             builder.build(ROOT, pathlib.Path(tmp)/'site')
-            output = (pathlib.Path(tmp)/'site/guide/index.html').read_text()
+            output = (pathlib.Path(tmp)/'site/guide/run-sheet/index.html').read_text()
             copied = [unescape(x).rstrip() for x in re.findall(r'<pre><code[^>]*>(.*?)</code></pre>',output,re.S)]
             self.assertEqual([x.rstrip() for x in prompts],copied)
             self.assertEqual(output.count('class="copy-prompt"'),10)
@@ -119,7 +119,7 @@ class SpeakerSite(unittest.TestCase):
                 with self.assertRaises(ValueError):builder.build(source,pathlib.Path(tmp)/'out')
     def test_rejects_symlinked_inputs(self):
         import shutil
-        for relative in ['docs/speaker/guia-glaucia.md','docs/speaker/site/site.css','docs/speaker/site/site.js','docs/speaker/slides/vendor/fonts/Virgil.woff2']:
+        for relative in ['docs/speaker/tutorial-en.md','docs/speaker/tutorial-pt-br.md','docs/speaker/guia-glaucia.md','docs/speaker/site/site.css','docs/speaker/site/site.js','docs/speaker/slides/vendor/fonts/Virgil.woff2']:
             with tempfile.TemporaryDirectory() as tmp:
                 source=pathlib.Path(tmp)/'source';source.mkdir()
                 shutil.copytree(ROOT/'docs',source/'docs')

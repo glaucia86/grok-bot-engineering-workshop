@@ -180,11 +180,39 @@ Todo bot tem um charter de três partes. A primeira diz **do que ele é dono**. 
 | QA | Julgar o PR pela seção 5 do inception | PASS, FAIL, WARN (só cobertura AC9) ou BLOCKED por critério, com evidência | Sem merge, e só apaga o que ele mesmo criou |
 | DevOps | CI e Vercel | Link do CI e preview URL, com os segredos conferidos só pela presença | Não mostra nem pede segredo, sem merge |
 
-Skills, no máximo 3 por bot:
-- **FDE:** shadcn, vercel-react-best-practices, neon-drizzle.
-- **QA:** playwright-best-practices, playwright-cli, `create-verification-skill` e `interrogate` (pstack). **Exceção ao limite de 3:** a `interrogate` fica no QA por decisão da Glaucia, porque faz parte do pstack. A `create-verification-skill` gera uma skill de verificação local do projeto, que dirige o app e captura evidência; ela **não** monta o checklist. O checklist vem dos critérios AC1–12 da seção 5 do inception.
-- **Todos os bots:** aplicam a skill `principle-prove-it-works` (pstack, copiada em `.agents/skills/principle-prove-it-works`) no fim de cada entrega: conferir o artefato real, não um proxy, auto-relato ou "compila"; fazer um script da verificação; deixar a saída visível. Ela fecha a entrega e não conta no limite de 3.
-- **DevOps:** deploy-to-vercel, ci-cd-and-automation.
+### Skills do FDE
+
+- `shadcn`
+- `vercel-react-best-practices`
+- `neon-drizzle`
+
+### Skills do QA
+
+- `playwright-best-practices`
+- `playwright-cli`
+- `create-verification-skill`
+- `interrogate` (pstack)
+
+**Exceção ao limite de 3:** a `interrogate` fica no QA por decisão da Glaucia, porque faz parte do pstack. O QA tem quatro skills; o FDE e o DevOps continuam com no máximo três.
+
+A `create-verification-skill` gera uma skill de verificação local do projeto, que dirige o app e captura evidência. Ela **não** monta o checklist. O checklist vem dos critérios AC1–12 da seção 5 do inception.
+
+### Skills do DevOps
+
+- `deploy-to-vercel`
+- `ci-cd-and-automation`
+
+### Passo final de todos os bots
+
+- `principle-prove-it-works` (pstack, copiada em `.agents/skills/principle-prove-it-works`)
+
+Aplicar no fim de cada entrega:
+
+1. Conferir o artefato real, não um proxy, auto-relato ou “compila”.
+2. Fazer um script da verificação.
+3. Deixar a saída visível.
+
+Essa skill fecha a entrega e não conta no limite de 3.
 
 ---
 

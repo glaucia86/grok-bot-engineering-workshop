@@ -252,6 +252,9 @@ try:
         page.get_by_role('link', name='Guia da apresentadora').click()
         page.wait_for_load_state('networkidle')
         assert page.url == base+'guide/'
+        from check_speaker_languages import check_languages
+        check_languages(page, context, base, OUT, results)
+        page.goto(base+'guide/run-sheet/', wait_until='networkidle')
         assert page.locator('.copy-prompt').count() == 10
         assert page.locator('.copy-command').count() == 1
         page.locator('.copy-command').click()
@@ -268,7 +271,7 @@ try:
         links = page.locator('a[href^="#"]').evaluate_all('(xs)=>xs.map(x=>x.getAttribute("href"))')
         for anchor in links:
             assert page.locator('[id="'+anchor[1:]+'"]').count() == 1, anchor
-        slide_links = page.locator('a[href^="../slides/#/"]').evaluate_all('(xs)=>xs.map(x=>x.href)')
+        slide_links = page.locator('a[href^="../../slides/#/"]').evaluate_all('(xs)=>xs.map(x=>x.href)')
         assert len(slide_links) >= 20
         # Deterministic rejection exercises fallback without changing browser security settings.
         page.evaluate("Object.defineProperty(navigator.clipboard, 'writeText', {configurable:true,value:()=>Promise.reject(new Error('test rejection'))})")
