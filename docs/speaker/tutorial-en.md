@@ -4,7 +4,7 @@
 
 **Packt · November 17, 2026 · 90 minutes · 11:00–12:30 BRT / 09:00–10:30 ET.**
 
-This companion tutorial details each action without changing the existing deck or generated guide. Both versions use identical step numbers. The Portuguese edition includes translations of every spoken line; bot prompts remain English. Read aloud only **Say in English**. Copy each block only to its stated destination; do not read full prompts to the audience.
+This companion tutorial details each action without changing the existing deck or generated guide. Both versions use identical step numbers. The Portuguese edition includes translations of every spoken line; bot prompts remain English. Read aloud only the lines labeled **Say in English**. Copy each block only to its stated destination; do not read full prompts to the audience.
 
 **Copy safely:** replace every `<FIELD>` in your working copy before sending. Never send unresolved placeholders. `text` blocks are notes, form values or prompts as stated. `sh` blocks go into a Bash terminal, normally one line at a time; paste the protected step 4 block as a whole, as instructed. Choose one alternative rather than sending both. Never paste spoken lines into a terminal. URLs and IDs here are non-secret; credentials never belong in this guide.
 
@@ -31,7 +31,7 @@ This companion tutorial details each action without changing the existing deck o
 15. Read the FDE handoff and open the PR
 16. Request CI and preview status
 17. Run QA only after the gate
-18. Submit one synthetic feedback manually
+18. Submit one synthetic feedback entry manually
 19. Check results and reload
 20. Review three sources for the same commit
 21. Request a focused fix or keep it blocked
@@ -213,7 +213,7 @@ cd ..
 
 **Expected result/checkpoint:** Each command exits 0. verify:http uses its own localhost server and invalid input; it proves neither preview nor remote writes. The frozen starter intentionally has no form/dashboard or test:e2e scripts; the approved target may add test preparation, which must be identified separately.
 
-**Say in English:** “These checks prove the local base. They do not prove the deployed user journey.”
+**Say in English:** “These checks verify the local base. They do not prove the deployed user journey.”
 
 **If it fails / recovery:** On failure, send the command name, SHA and redacted error to the instructor. An interrupted run is not PASS. The final cd .. returns to the root; check your folder before subsequent commands.
 
@@ -259,7 +259,7 @@ BLOCKED items: <list with owner and exact next action>
 2. Before sharing, close credential consoles and notifications.
 3. In rehearsal, locate Grok Bot creation, name, instructions, skills and repository selection.
 4. Record actual labels below; this tutorial has not observed your UI.
-5. Leave the three live bots to create during the session, after rehearsing in a separate authorized context.
+5. Create the three live bots during the session. Rehearse first in a separate authorized context.
 
 ```text
 UI REHEARSAL CARD — not verified by this document
@@ -655,7 +655,7 @@ Evaluate code and available local evidence only for <PR_URL> at <TESTED_SHA>. Do
 
 **If it fails / recovery:** If the harness rejects the host, do not remove its guard or copy an old example URL. Operator/QA must prepare a specifically reviewed policy change. Show previous evidence only as labeled reference.
 
-### Step 18 — Submit one synthetic feedback manually
+### Step 18 — Submit one synthetic feedback entry manually
 
 #### Window and micro-actions
 
@@ -711,7 +711,7 @@ After reload: the same contribution is still visible.
 
 **Expected result/checkpoint:** GET and dashboard agree and survive reload. This demonstrates AC11 for this case, not AC10 fresh instance or all AC6/7 cases.
 
-**Say in English:** “The result is still here after reload. A fresh application instance is a separate persistence check.”
+**Say in English:** “The result is still here after reloading. A fresh application instance is a separate persistence check.”
 
 **If it fails / recovery:** Higher count? Check RUN_ID collision or duplicate submission; do not delete data to force the expectation. Do not invent a Vercel restart: use only the prepared procedure and its evidence.
 
@@ -866,7 +866,7 @@ Do not comment, edit files, open PRs, close issues, merge, deploy or change sche
 
 1. At 12:22 BRT, return to closing slides and state remaining blockers.
 2. Recap in three sentences.
-3. Open questions at 12:26; read each question before answering.
+3. Start taking questions at 12:26; read each question before answering.
 4. At 12:29 thank attendees and finish by 12:30.
 5. Share only links/artifacts whose access was checked; private code needs authorized access.
 6. Retain synthetic-data IDs for the authorized cleanup owner; do not delete database contents.

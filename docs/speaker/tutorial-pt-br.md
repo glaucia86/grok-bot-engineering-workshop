@@ -221,9 +221,9 @@ cd ..
 
 **Resultado/checkpoint:** Todos os comandos terminam com código 0. verify:http usa servidor localhost próprio e input inválido; não comprova preview nem gravação remota. O starter congelado deliberadamente não tem formulário/dashboard nem scripts test:e2e; o target aprovado pode acrescentar preparação de testes, que deve ser identificada separadamente.
 
-**Fale em inglês:** “These checks prove the local base. They do not prove the deployed user journey.”
+**Fale em inglês:** “These checks verify the local base. They do not prove the deployed user journey.”
 
-**Tradução:** Estas verificações comprovam a base local. Elas não comprovam a jornada publicada.
+**Tradução:** Estas verificações conferem a base local. Elas não comprovam a jornada publicada.
 
 **Se falhar / recuperação:** Falha: copie nome do comando, SHA e erro redigido para a instrutora. Não chame uma execução interrompida de PASS. O último comando cd .. retorna à raiz; confira a pasta antes de comandos posteriores.
 
@@ -748,7 +748,7 @@ After reload: the same contribution is still visible.
 
 **Resultado/checkpoint:** GET e dashboard concordam e sobrevivem ao reload. Isto demonstra AC11 para esse caso; não comprova AC10 nova instância nem todos os AC6/7.
 
-**Fale em inglês:** “The result is still here after reload. A fresh application instance is a separate persistence check.”
+**Fale em inglês:** “The result is still here after reloading. A fresh application instance is a separate persistence check.”
 
 **Tradução:** O resultado continua aqui depois de recarregar. Uma nova instância da aplicação é outra verificação de persistência.
 

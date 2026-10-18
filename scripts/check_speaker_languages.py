@@ -3,7 +3,7 @@ def check_languages(page, context, base, out, results):
     for route, lang in [('guide/', 'pt-BR'), ('guide/en-us/', 'en-US')]:
         page.goto(base+route, wait_until='networkidle')
         assert page.locator('html').get_attribute('lang') == lang
-        assert page.locator('.language-switch [aria-current=page]').text_content() == lang
+        assert page.locator('.language-switch [aria-current=page]').text_content() == lang.upper()
         assert page.locator('.speech').count() == 25
         assert page.locator('.translation').count() == (0 if lang == 'en-US' else 25)
         assert page.locator('#step-25').count() == 1
