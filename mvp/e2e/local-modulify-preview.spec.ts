@@ -15,9 +15,19 @@ for (const width of [390, 1440]) for (const locale of ['en-US', 'pt-BR']) {
    await page.goto(route);
    await expect(page.locator('html')).toHaveAttribute('lang',locale);
    await expect(page.getByRole('heading',{level:1})).toBeVisible();
-   if(route==='/results')await expect(page.getByRole('table')).toBeVisible();
+   if(route==='/results'){
+    await expect(page.getByRole('table')).toBeVisible();
+    const responseHeading=page.getByRole('columnheader').last();
+    await expect(responseHeading).toHaveCSS('white-space',width===390?'nowrap':'normal');
+    if(width===390){
+     const firstMetric=await page.locator('.results-metric').first().boundingBox();
+     const leading=await page.locator('.results-leading').boundingBox();
+     expect(leading!.x).toBe(firstMetric!.x);
+    }
+   }
    await page.evaluate(()=>document.fonts.ready);
    if(route==='/'){
+    await expect(page.locator('.tf-insight-art>p')).toHaveCSS('color','rgb(106, 100, 119)');
     const kicker=await page.locator('.tf-card-kicker').boundingBox();
     const floatingLabel=await page.locator('.tf-floating-label').boundingBox();
     expect(floatingLabel!.y+floatingLabel!.height).toBeLessThanOrEqual(kicker!.y);

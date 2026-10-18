@@ -128,3 +128,10 @@ html{scroll-behavior:smooth;scroll-padding-top:112px}body{margin:0;background:va
 .tf-site .results-intro>h1{grid-column:1;grid-row:2}
 .tf-site .results-intro>p:not(.tf-page-eyebrow){grid-column:1;grid-row:3}
 .tf-site .results-intro>a{grid-column:2;grid-row:2/4}
+/* Keep the illustration disclosure readable inside its white card. */
+.tf-site .tf-results-callout .tf-insight-art>p{color:var(--tf-muted)}
+.tf-site .results-metric.results-leading{margin:0}
+@container talkfeedback (max-width:520px){
+ .tf-site .dashboard-table thead th:last-child{white-space:nowrap;padding-left:0}
+ .tf-site .dashboard-table thead th:last-child,.tf-site .dashboard-table .dashboard-count{padding-right:16px}
+}
