@@ -134,9 +134,13 @@ def assert_contextual_cues(page, output, base):
     for index, kind in [(7, 'thinking'), (12, 'thinking'), (21, 'wink')]:
         page.goto('about:blank')
         page.goto(base+f'slides/#/{index}', wait_until='domcontentloaded')
-        page.wait_for_function('window.Reveal && Reveal.isReady()')
+        page.wait_for_function("document.querySelector('.reveal')?.classList.contains('ready')")
         try:
             page.wait_for_function('(kind)=>!!document.querySelector(`section.present [data-cue="${kind}"]`)', arg=kind, timeout=3000)
+            if kind == 'thinking':
+                page.wait_for_function("document.querySelector('section.present .mascot-thinking')?.style.opacity > 0.8", timeout=3000)
+            else:
+                page.wait_for_function("new DOMMatrix(getComputedStyle(document.querySelector('section.present .mascot-wink')).transform).d < 0.5", timeout=3000)
         except PlaywrightTimeoutError:
             print('Direct-link cue failure', index, page.evaluate("({hidden:document.hidden,ready:Reveal.isReady(),slide:Reveal.getIndices(),api:typeof WorkshopMascotCues,bots:[...document.querySelectorAll('section.present .workshop-mascot')].map(s=>({motion:s.dataset.motion,cue:s.dataset.cue,planned:s.dataset.mascotCue}))})"))
             raise
