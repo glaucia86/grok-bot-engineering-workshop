@@ -22,7 +22,7 @@ is explicitly labeled as an illustration.
 
 ## Checks before publication
 
-- Unit tests: 291 passed, including RED-to-GREEN locale, form and hero checks.
+- Unit tests: 293 passed, including RED-to-GREEN locale, form and hero checks.
 - Production build: passed, including streamed query-parameter handling.
 - Typecheck: passed.
 - Lint: passed with one pre-existing radio aria-invalid warning.
@@ -33,13 +33,24 @@ is explicitly labeled as an illustration.
 ## Browser evidence
 
 Local headless Chromium launch is blocked by the execution sandbox. The cloud
-browser cannot reach this workspace's loopback server. CI Chromium screenshots were downloaded and visually inspected for desktop
-and mobile. The first run passed 73/80 browser cases; its failures exposed
-zoom-width breakpoints, smooth-scroll focus timing and a hidden-DOM assertion.
-Those corrections are under follow-up CI verification. The suite captures all three routes
-at 390px and 1440px, in both languages, using explicitly synthetic intercepted
-responses and no database credentials. Screenshots are attached to the test
-report. Review these artifacts and the deployment preview before acceptance.
+browser cannot reach this workspace's loopback server. Before the measured
+layout refinement, CI run 39158362804 passed all 80 browser cases on both the
+PR head and merge ref. Its twelve desktop/mobile, EN-US/PT-BR screenshots were
+downloaded and visually inspected. The deployment preview requires Vercel access.
+
+The current refinement follows measurements from the user-provided Modulify
+preview and visible container/header source: 1152px outer containers, 64px
+desktop header, 20px/32px gutters, 160px/176px desktop hero padding, 448px
+rating card, overlapping metrics, dark results band and inset final CTA.
+Mobile keeps the existing two-row accessible navigation, rather than claiming
+an identical hamburger menu. Existing real metrics and truthful copy are retained.
+The complete hero source is still pending from the user.
+
+New geometry assertions verify the overlap, card/container widths, desktop
+header height, dark band and inset CTA alongside the existing overflow and
+privacy-disclosure checks. These refinements require fresh CI screenshots and
+visual review before acceptance. Screenshots use synthetic intercepted responses,
+not real participant records, and are attached to the Playwright report.
 
 Legacy tests for the superseded mascot/sidebar presentation were updated
 to the new design while retaining navigation, keyboard, form, error and
