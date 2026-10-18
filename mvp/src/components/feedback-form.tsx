@@ -111,7 +111,9 @@ export function FeedbackForm({ onSaved, resultsHref = "#results", initialRating 
           <legend>{t("Rating", "Avaliação")}</legend><p id="rating-hint">{t("Choose 1 to 5 stars. 1 = needs work · 5 = excellent", "Escolha de 1 a 5 estrelas. 1 = precisa melhorar · 5 = excelente")}</p>
           <div className="rating-options" onPointerLeave={() => setPreviewRating(0)} onKeyDown={() => setPreviewRating(0)}>
             {[1, 2, 3, 4, 5].map((rating) => (
-              <label className="rating-option" key={rating} data-preview={previewRating >= rating || undefined} onPointerEnter={() => { if (status !== "saving") setPreviewRating(rating); }}>
+              // Pointer entry can come from scrolling beneath a stationary mouse.
+              // Only actual pointer movement should override keyboard shape cues.
+              <label className="rating-option" key={rating} data-preview={previewRating >= rating || undefined} onPointerMove={() => { if (status !== "saving") setPreviewRating(rating); }}>
                 <input
                   type="radio"
                   name="rating"
