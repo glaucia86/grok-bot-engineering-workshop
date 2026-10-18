@@ -11,6 +11,18 @@ builder = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(builder)
 
 class SpeakerSite(unittest.TestCase):
+    def test_only_final_block_announces_session_end(self):
+        from speaker_content import guide_blocks, BLOCKS, block_heading
+        rendered = guide_blocks()
+        self.assertEqual(rendered.count('Fim da sessão.'), 1)
+        for index in range(len(BLOCKS) - 1):
+            current = rendered.split('## ' + block_heading(index) + '\n', 1)[1]
+            current = current.split('## ' + block_heading(index + 1) + '\n', 1)[0]
+            self.assertNotIn('Fim da sessão.', current)
+        final = rendered.split('## ' + block_heading(len(BLOCKS) - 1) + '\n', 1)[1]
+        self.assertIn('Fim da sessão.', final)
+
+
     def test_recovery_block_keeps_routine_optional_and_qa_fixed(self):
         content_spec = importlib.util.spec_from_file_location('speaker_content_recovery', ROOT/'scripts/speaker_content.py')
         content = importlib.util.module_from_spec(content_spec)
@@ -52,9 +64,9 @@ class SpeakerSite(unittest.TestCase):
             self.assertFalse((out/'mvp').exists())
             self.assertFalse((out/'spec.md').exists())
             self.assertFalse((out/'package.json').exists())
-            guide = (out/'guide/index.html').read_text()
-            self.assertIn('../slides/#/0', guide)
-            self.assertIn('../slides/#/21', guide)
+            guide = (out/'guide/run-sheet/index.html').read_text()
+            self.assertIn('../../slides/#/0', guide)
+            self.assertIn('../../slides/#/21', guide)
             self.assertIn('Copiar prompt', guide)
             self.assertIn('lang="en"', guide)
             self.assertIn('11:00', guide)
@@ -74,7 +86,7 @@ class SpeakerSite(unittest.TestCase):
         prompts = re.findall(r'```\w*\n(.*?)\n```', guide, re.S)
         with tempfile.TemporaryDirectory() as tmp:
             builder.build(ROOT, pathlib.Path(tmp)/'site')
-            output = (pathlib.Path(tmp)/'site/guide/index.html').read_text()
+            output = (pathlib.Path(tmp)/'site/guide/run-sheet/index.html').read_text()
             copied = [unescape(x).rstrip() for x in re.findall(r'<pre><code[^>]*>(.*?)</code></pre>',output,re.S)]
             self.assertEqual([x.rstrip() for x in prompts],copied)
             self.assertEqual(output.count('class="copy-prompt"'),11)
@@ -121,7 +133,7 @@ class SpeakerSite(unittest.TestCase):
                 with self.assertRaises(ValueError):builder.build(source,pathlib.Path(tmp)/'out')
     def test_rejects_symlinked_inputs(self):
         import shutil
-        for relative in ['docs/speaker/guia-glaucia.md','docs/speaker/site/site.css','docs/speaker/site/site.js','docs/speaker/slides/vendor/fonts/Virgil.woff2']:
+        for relative in ['docs/speaker/tutorial-en.md','docs/speaker/tutorial-pt-br.md','docs/speaker/guia-glaucia.md','docs/speaker/site/site.css','docs/speaker/site/site.js','docs/speaker/slides/vendor/fonts/Virgil.woff2']:
             with tempfile.TemporaryDirectory() as tmp:
                 source=pathlib.Path(tmp)/'source';source.mkdir()
                 shutil.copytree(ROOT/'docs',source/'docs')

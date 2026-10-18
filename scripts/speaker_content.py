@@ -439,8 +439,14 @@ def guide_blocks():
                 o.append('')
             o.append(f'✂️ **Se atrasar:** {s["cut"][0]} *({s["cut"][1]})*\n')
         last = SL[z - 1]
-        o.append('### ➡️ Transição\n')
-        o.append(f'> "{last["nxt"][0]}"  \n> *{last["nxt"][1]}*\n' if last["nxt"] else 'Fim da sessão.\n')
+        # Transitions already flow within the spoken paragraphs. A missing
+        # separate transition must not announce an early end to the workshop.
+        if last["nxt"]:
+            o.append('### ➡️ Transição\n')
+            o.append(f'> "{last["nxt"][0]}"  \n> *{last["nxt"][1]}*\n')
+        elif bi == len(BLOCKS) - 1:
+            o.append('### ➡️ Encerramento\n')
+            o.append('Fim da sessão.\n')
         o.append('### ✅ Checkpoint\n')
         o.append(f'{b["check"][1]}\n')
         o.append('---\n')

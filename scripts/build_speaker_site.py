@@ -40,7 +40,7 @@ def page(title, body, prefix='', lang='pt-BR'):
 <html lang="{lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(title)} · Packt workshop</title><meta name="color-scheme" content="dark">
 <link rel="stylesheet" href="{prefix}site.css"><script defer src="{prefix}site.js"></script></head>
-<body><a class="skip" href="#content">Pular para o conteúdo</a>{body}</body></html>'''
+<body><a class="skip" href="#content">{'Skip to content' if lang == 'en-US' else 'Pular para o conteúdo'}</a>{body}</body></html>'''
 
 def render_guide(text):
     md = markdown.Markdown(extensions=['tables', 'fenced_code', 'toc', 'sane_lists'], extension_configs={'toc': {'toc_depth': '2'}})
@@ -69,6 +69,42 @@ def render_guide(text):
 <div class="guide-layout"><nav class="index" aria-label="Índice do guia"><details open><summary>Índice do guia</summary>{md.toc}</details></nav>
 <main id="content" class="guide"><p class="eyebrow">Speaker guide · PT / EN</p><p class="reading-note">Leia as falas em inglês. As instruções e traduções são para sua leitura. Prompts são para copiar, sem ler em voz alta.</p>{body}<p class="end">Fim do guia · <a href="#content">Voltar ao início</a></p></main></div><p role="status" aria-live="polite" class="copy-status"></p>''', '../')
 
+def render_tutorial(text, lang, legacy_text=''):
+    en = lang == 'en-US'
+    prefix = '../../' if en else '../'
+    # Navigation is supplied by the site, rather than links to source Markdown.
+    text = re.sub(r'^\[.*?\]\(tutorial-.*?\).*$', '', text, flags=re.M)
+    md = markdown.Markdown(extensions=['tables', 'fenced_code', 'toc', 'sane_lists'], extension_configs={'toc': {'toc_depth': '2-3'}})
+    body = md.convert(text)
+    body = re.sub(r'href="([^"]+)"', lambda m: 'href="'+source_url(m[1])+'"', body)
+    # Stable shared step anchors survive translation and can be shared directly.
+    for anchor, number in re.findall(r'<h3 id="([^"]+)">(?:Step|Passo) (\d+) ', body):
+        md.toc = md.toc.replace(f'href="#{anchor}"', f'href="#step-{int(number):02}"')
+    body = re.sub(r'(<h3 id="[^"]+">(?:Step|Passo) (\d+) )', lambda m: f'<span id="step-{int(m[2]):02}" class="step-anchor"></span>'+m[1], body)
+    body = re.sub(r'<p><strong>(Fale em inglês:|Say in English:)</strong> (.*?)</p>', r'<p class="speech"><strong>\1</strong> <span lang="en-US">\2</span></p>', body, flags=re.S)
+    body = body.replace('<p><strong>Tradução:</strong>', '<p class="translation" lang="pt-BR"><strong>Tradução:</strong>')
+    def copy_block(match):
+        command = 'language-sh' in match[0]
+        kind = 'command' if command else 'prompt'
+        label = ('Copy command' if command else 'Copy text') if en else ('Copiar comando' if command else 'Copiar texto')
+        return f'<div class="prompt {"command" if command else ""}"><button type="button" class="copy-{kind}">{label}</button><pre><code lang="en-US">'
+    body = re.sub(r'<pre><code(?: class="[^"]*")?>', copy_block, body).replace('</code></pre>', '</code></pre></div>')
+    body = re.sub(r'<table>.*?</table>', lambda m: '<div class="table-scroll" tabindex="0" role="region" aria-label="'+('Workshop table' if en else 'Tabela do workshop')+'">'+m[0]+'</div>', body, flags=re.S)
+    title = 'Presenter guide' if en else 'Guia da apresentadora'
+    index = 'Guide contents' if en else 'Índice do guia'
+    note = ('Instructions and spoken lines are in English. Read aloud only “Say in English”. Copy blocks go to their stated destination.' if en else 'Instruções em português. Leia em voz alta apenas “Fale em inglês”. A tradução é só para sua leitura. Copie os blocos para o destino indicado.')
+    pt_current = '' if en else ' aria-current="page"'
+    en_current = ' aria-current="page"' if en else ''
+    switch = f'<nav class="language-switch" aria-label="{"Guide language" if en else "Idioma do guia"}"><a href="{"../" if en else "./"}" lang="pt-BR" hreflang="pt-BR"{pt_current}>PT-BR</a><a href="{"./" if en else "en-us/"}" lang="en-US" hreflang="en-US"{en_current}>EN-US</a></nav>'
+    legacy = ''
+    if not en:
+        old = markdown.markdown(legacy_text, extensions=['toc'])
+        ids = re.findall(r'<h[1-6] id="([^"]+)"', old)
+        legacy = ''.join(f'<p class="legacy-anchor" id="{anchor}">Esta seção está no <a href="run-sheet/#{anchor}">roteiro de apresentação e pronúncia</a>.</p>' for anchor in ids if f'id="{anchor}"' not in body)
+        legacy += '<details class="extra-guide"><summary>Roteiro de apresentação e pronúncia</summary><p><a href="run-sheet/">Abrir roteiro por slide, falas e dicas de pronúncia ↗</a></p></details>'
+    return page(title, f'''<header class="topbar"><a href="{prefix}">Workshop</a><a href="{prefix}slides/" target="workshop-slides">{'Open presentation' if en else 'Abrir apresentação'} ↗</a>{switch}</header><div class="guide-layout"><nav class="index" aria-label="{index}"><details open><summary>{index}</summary>{md.toc}</details></nav><main id="content" class="guide"><p class="eyebrow">{title} · {lang}</p><p class="reading-note">{note}</p>{legacy}{body}<p class="end"><a href="#content">{'Back to top' if en else 'Voltar ao início'}</a></p></main></div><p role="status" aria-live="polite" class="copy-status"></p>''', prefix, lang)
+
+
 def build(root, output):
     root, output = pathlib.Path(root).resolve(), pathlib.Path(output).resolve()
     if output == root or root.is_relative_to(output):
@@ -77,7 +113,7 @@ def build(root, output):
         raise ValueError('Use a new empty output path; existing outputs are not deleted')
     speaker = root/'docs/speaker'
     files = [p for p in (speaker/'slides').rglob('*') if p.is_file()]
-    inputs = files + [speaker/'guia-glaucia.md', speaker/'site/site.css', speaker/'site/site.js']
+    inputs = files + [speaker/'guia-glaucia.md', speaker/'tutorial-en.md', speaker/'tutorial-pt-br.md', speaker/'site/site.css', speaker/'site/site.js']
     for path in inputs:
         if not path.is_file() or not path.resolve().is_relative_to(root):
             raise ValueError(f'Source escapes repository or is missing: {path.name}')
@@ -98,11 +134,18 @@ def build(root, output):
         shutil.copyfile(path, target)
     publish_localized_slides(speaker, output)
     (output/'guide').mkdir()
-    (output/'guide/index.html').write_text(render_guide((speaker/'guia-glaucia.md').read_text()), encoding='utf-8')
+    legacy_text = (speaker/'guia-glaucia.md').read_text(encoding='utf-8')
+    (output/'guide/run-sheet').mkdir()
+    legacy = render_guide(legacy_text).replace('../', '../../')
+    legacy = legacy.replace('<main id="content" class="guide">', '<main id="content" class="guide"><p><a href="../">← Voltar ao tutorial PT-BR</a></p>')
+    (output/'guide/run-sheet/index.html').write_text(legacy, encoding='utf-8')
+    (output/'guide/index.html').write_text(render_tutorial((speaker/'tutorial-pt-br.md').read_text(encoding='utf-8'), 'pt-BR', legacy_text), encoding='utf-8')
+    (output/'guide/en-us').mkdir()
+    (output/'guide/en-us/index.html').write_text(render_tutorial((speaker/'tutorial-en.md').read_text(encoding='utf-8'), 'en-US'), encoding='utf-8')
     for name in ['site.css','site.js']:
         shutil.copyfile(speaker/'site'/name,output/name)
     (output/'.nojekyll').touch()
-    (output/'index.html').write_text(page('Build Your First Engineering Bot', '''<main id="content" class="home"><p class="eyebrow">Packt live workshop · 90 min</p><h1>Build Your First<br><span>Engineering Bot</span><br>with Grok Bot</h1><p class="byline">Glaucia Lemos · 17 Nov 2026<br>11:00–12:30 Brasília · 9:00–10:30 ET</p><div class="choices"><a class="primary" href="slides/" lang="en">Open presentation ↗</a><a href="guide/">Guia da apresentadora · PT / EN ↗</a></div><div class="team" aria-label="Workshop bot team"><img src="slides/assets/avatars/fde-typescript.svg" alt="FDE TypeScript, green triangle"><img src="slides/assets/avatars/qa-bot.svg" alt="QA bot, pink teardrop"><img src="slides/assets/avatars/devops.svg" alt="DevOps, purple circle"><img src="slides/assets/avatars/engineering-lead.svg" alt="Engineering Lead, red rounded square"></div><p class="hint">Apresentação: <kbd>F</kbd> tela cheia · <kbd>S</kbd> notas da apresentadora.<br>Compartilhe só a janela do deck. O guia e as notas publicados são públicos.</p></main>'''), encoding='utf-8')
+    (output/'index.html').write_text(page('Build Your First Engineering Bot', '''<main id="content" class="home"><p class="eyebrow">Packt live workshop · 90 min</p><h1>Build Your First<br><span>Engineering Bot</span><br>with Grok Bot</h1><p class="byline">Glaucia Lemos · 17 Nov 2026<br>11:00–12:30 Brasília · 9:00–10:30 ET</p><div class="choices"><a class="primary" href="slides/" lang="en">Open presentation ↗</a><a href="guide/">Guia da apresentadora · PT-BR / EN-US ↗</a></div><div class="team" aria-label="Workshop bot team"><img src="slides/assets/avatars/fde-typescript.svg" alt="FDE TypeScript, green triangle"><img src="slides/assets/avatars/qa-bot.svg" alt="QA bot, pink teardrop"><img src="slides/assets/avatars/devops.svg" alt="DevOps, purple circle"><img src="slides/assets/avatars/engineering-lead.svg" alt="Engineering Lead, red rounded square"></div><p class="hint">Apresentação: <kbd>F</kbd> tela cheia · <kbd>S</kbd> notas da apresentadora.<br>Compartilhe só a janela do deck. O guia e as notas publicados são públicos.</p></main>'''), encoding='utf-8')
     print(f'Built speaker site: {len(files)} deck files + guide + landing (explicit allowlist)')
 
 if __name__ == '__main__':
