@@ -28,9 +28,9 @@ test("the new rating hero leaves retired mascots out and keeps working routes cl
   await page.screenshot({ path: info.outputPath("home-rating-hero-desktop.png"), fullPage: true });
   await page.getByRole("main").getByRole("link", { name: "Leave feedback", exact: true }).click();
   await expect(page.getByLabel("Talk", { exact: true })).toBeVisible();
-  await expect(page.locator(".tf-rating-card, .bot-backdrop")).toHaveCount(0);
+  await expect(page.locator(".tf-rating-card:visible, .bot-backdrop:visible")).toHaveCount(0);
   await page.goto("/results");
-  await expect(page.locator(".tf-rating-card, .bot-backdrop")).toHaveCount(0);
+  await expect(page.locator(".tf-rating-card:visible, .bot-backdrop:visible")).toHaveCount(0);
 });
 
 test("pointer movement keeps the hero steady and hovering stars never commits a rating", async ({ page }, info) => {

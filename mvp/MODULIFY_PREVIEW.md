@@ -22,7 +22,7 @@ is explicitly labeled as an illustration.
 
 ## Checks before publication
 
-- Unit tests: 289 passed, including RED-to-GREEN locale, form and hero checks.
+- Unit tests: 291 passed, including RED-to-GREEN locale, form and hero checks.
 - Production build: passed, including streamed query-parameter handling.
 - Typecheck: passed.
 - Lint: passed with one pre-existing radio aria-invalid warning.
@@ -33,13 +33,15 @@ is explicitly labeled as an illustration.
 ## Browser evidence
 
 Local headless Chromium launch is blocked by the execution sandbox. The cloud
-browser cannot reach this workspace's loopback server. Therefore no local
-visual-completion claim is made. The CI browser suite captures all three routes
+browser cannot reach this workspace's loopback server. CI Chromium screenshots were downloaded and visually inspected for desktop
+and mobile. The first run passed 73/80 browser cases; its failures exposed
+zoom-width breakpoints, smooth-scroll focus timing and a hidden-DOM assertion.
+Those corrections are under follow-up CI verification. The suite captures all three routes
 at 390px and 1440px, in both languages, using explicitly synthetic intercepted
 responses and no database credentials. Screenshots are attached to the test
 report. Review these artifacts and the deployment preview before acceptance.
 
-Legacy tests for the superseded mascot/sidebar presentation are being updated
+Legacy tests for the superseded mascot/sidebar presentation were updated
 to the new design while retaining navigation, keyboard, form, error and
 analytics behavior checks. This preview does not change the frozen workshop
 checkpoint, tutorials or slides and must not be merged before visual review.

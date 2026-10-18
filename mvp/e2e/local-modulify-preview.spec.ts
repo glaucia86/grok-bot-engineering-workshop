@@ -17,6 +17,11 @@ for (const width of [390, 1440]) for (const locale of ['en-US', 'pt-BR']) {
    await expect(page.getByRole('heading',{level:1})).toBeVisible();
    if(route==='/results')await expect(page.getByRole('table')).toBeVisible();
    await page.evaluate(()=>document.fonts.ready);
+   if(route==='/'){
+    const footnote=await page.locator('.tf-card-footnote').boundingBox();
+    const badge=await page.locator('.tf-floating-note').boundingBox();
+    expect(badge!.y).toBeGreaterThanOrEqual(footnote!.y+footnote!.height);
+   }
    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
    const screenshot = await page.screenshot({path:`evidence/modulify-preview/${route==='/'?'home':route.slice(1)}-${width}-${locale}-synthetic.png`,fullPage:true});
    await testInfo.attach(`${route==='/'?'home':route.slice(1)}-${width}-${locale}-synthetic`, { body:screenshot, contentType:'image/png' });

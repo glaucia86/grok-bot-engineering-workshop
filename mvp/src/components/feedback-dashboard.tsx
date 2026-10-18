@@ -95,7 +95,13 @@ export function TalkResults({ talks, feedbackHref = "#feedback", insights = fals
           <caption className="sr-only">{t("Talk feedback summary", "Resumo do feedback das palestras")}</caption>
           <thead><tr><th scope="col">{t("Talk", "Palestra")}</th><th scope="col">{t("Average", "Média")}</th><th scope="col">{t("Responses", "Respostas")}</th></tr></thead>
           <tbody>{talks.map(talk => <tr key={talk.talkId} data-selected={selected.talkId === talk.talkId ? "true" : undefined}>
-            <th scope="row"><Button variant="ghost" type="button" className="comparison-talk-button" aria-pressed={selected.talkId === talk.talkId} onClick={() => { setSelection(talk.talkId); explorer.current?.focus(); }}>{talk.talkId}<ArrowUpRight size={16} aria-hidden="true" /></Button></th>
+            <th scope="row"><Button variant="ghost" type="button" className="comparison-talk-button" aria-pressed={selected.talkId === talk.talkId} onClick={() => {
+              setSelection(talk.talkId);
+              // Avoid the page's smooth-scroll behavior leaving keyboard focus
+              // offscreen. Centering also clears the sticky navigation header.
+              explorer.current?.focus({ preventScroll: true });
+              explorer.current?.scrollIntoView({ behavior: "instant", block: "center" });
+            }}>{talk.talkId}<ArrowUpRight size={16} aria-hidden="true" /></Button></th>
             <td className="dashboard-average">{number(talk.average, 1)} <span>/ 5</span></td>
             <td className="dashboard-count">{number(talk.count)}</td>
           </tr>)}</tbody>
