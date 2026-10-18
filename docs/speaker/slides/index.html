@@ -238,33 +238,13 @@
 <!-- 8 -->
 <section data-clock="11:07" data-block="1 · Create the bots">
   <span class="kicker">Live · create the FDE from scratch</span>
-  <div class="row split" style="gap:56px">
-    <div class="col" style="flex:1.7">
-      <div class="app" style="height:640px">
-        <aside class="side" style="width:340px">
-          <div class="side-h">Your bots</div>
-          <div class="bot-row on"><img src="assets/avatars/fde-typescript.svg" alt=""><div><b>FDE TypeScript</b><span>Forward Deployed Eng.</span></div></div>
-          <div class="bot-row"><img src="assets/avatars/qa-bot.svg" alt=""><div><b>QA bot</b><span>Judges PRs</span></div></div>
-          <div class="bot-row"><img src="assets/avatars/devops.svg" alt=""><div><b>DevOps</b><span>CI + previews</span></div></div>
-          <div class="bot-row"><img src="assets/avatars/engineering-lead.svg" alt=""><div><b>Engineering Lead</b><span>Chases CI</span></div></div>
-        </aside>
-        <main class="chat">
-          <header><img class="av" style="width:46px;height:46px" src="assets/avatars/fde-typescript.svg" alt="">FDE TypeScript <small>· instructions</small></header>
-          <div class="msgs">
-            <div class="bubble" style="max-width:none;font-family:var(--mono);font-size:23px;line-height:1.5"><span class="hl-blue">You own:</span> issue → change → branch → PR.<br><span class="hl-green">Good output:</span> what, why, how to test.<br><span class="hl-red">You stop:</span> never push to main or merge.</div>
-            <div class="bubble fragment" style="max-width:none">Skills (3): <span class="hl-blue">shadcn</span> · <span class="hl-blue">vercel-react-best-practices</span> · <span class="hl-blue">neon-drizzle</span></div>
-          </div>
-          <div class="composer">Message FDE TypeScript…</div>
-        </main>
-        <span class="mock-tag">mock UI · illustrative</span>
-      </div>
-    </div>
-    <div class="col fragment" style="flex:.8">
-      <p class="big-quote" style="font-size:72px">Three skills max.</p>
-      <p class="lead">Less context,<br>better bot.</p>
-      <p class="muted small">QA has 4: <code>playwright-best-practices</code>, <code>playwright-cli</code>, <code>create-verification-skill</code>, <code>interrogate</code>.<br>Every bot ends with <code>principle-prove-it-works</code>.</p>
-    </div>
-  </div>
+  <div class="group-conversation setup-conversation" role="group" aria-label="Simulated workshop group chat">
+<header class="conversation-header"><div class="conversation-members" aria-hidden="true"><img src="assets/avatars/glaucia.svg" alt=""><img src="assets/avatars/fde-typescript.svg" alt=""><img src="assets/avatars/qa-bot.svg" alt=""><img src="assets/avatars/devops.svg" alt=""></div><div><strong>Workshop - Packt Grok Bot</strong><span>Glaucia + FDE TypeScript + QA bot + DevOps</span></div></header><div class="conversation-layout"><ol class="conversation-thread" aria-label="Illustrative messages in reading order">
+<li class="conversation-message human "><img src="assets/avatars/glaucia.svg" alt=""><div><b>Glaucia</b><p>Team, one shared chat. FDE builds, QA verifies, DevOps handles CI. I approve.</p></div></li><li class="conversation-message fde "><img src="assets/avatars/fde-typescript.svg" alt=""><div><b>FDE TypeScript</b><p>I own: issue → change → branch → PR.<br>Good output: what, why, how to test.<br>I stop: never push to main or merge.</p></div></li><li class="conversation-message qa "><img src="assets/avatars/qa-bot.svg" alt=""><div><b>QA bot</b><p>I judge the PR against the agreed criteria.<br>PASS / FAIL / WARN / BLOCKED + evidence.</p></div></li><li class="conversation-message ops "><img src="assets/avatars/devops.svg" alt=""><div><b>DevOps</b><p>I bring the CI link and preview URL.<br>No secrets in the chat. No merge.</p></div></li></ol>
+    <aside class="conversation-charter" aria-label="Skills reminder">
+      <div class="fragment" data-fragment-index="0"><span class="conversation-label">FDE skills · 3</span><p>shadcn<br>vercel-react-best-practices<br>neon-drizzle</p></div>
+      <div class="fragment" data-fragment-index="1"><h3>Three skills max.</h3><p class="charter-idea">Less context,<br>better bot.</p><p class="charter-detail">QA has 4:<br>playwright-best-practices<br>playwright-cli<br>create-verification-skill<br>interrogate</p><p class="charter-done">Every bot ends with<br><strong>principle-prove-it-works</strong></p></div>
+    </aside></div><footer class="conversation-footer"><span>Message the group…</span><span>Simulation · illustrative conversation</span></footer></div>
   <aside class="notes">
 <p style="margin:0 0 10px;font-size:1.05em;font-weight:700;color:#111">⏱ 11:07–11:12 BRT · 5 min · slide 8/22 · block 1 · Criar os bots · 2 clicks on the slide</p>
 <p style="margin:14px 0 4px;font-size:.78em;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#444">🖱 Hands-on · Passo a passo</p><ol style="margin:0 0 0 1.2em;padding:0">
@@ -283,7 +263,7 @@ If you can&#x27;t show where a number came from, leave it out. Use the GitHub co
 <li style="margin-bottom:8px"><span style="margin:6px 0 0;font-size:1em;line-height:1.35;color:#111;font-weight:600">Create QA bot and DevOps by pasting the instructions from section 4 of docs/inception.md (open in a tab). Check against this guide: WARN only for coverage. QA: playwright-best-practices, playwright-cli, create-verification-skill, plus pstack interrogate (four skills in total; QA is the one exception to the three-skill limit, because interrogate is part of pstack). principle-prove-it-works is the final done-step for every bot and is not counted. DevOps: deploy-to-vercel, ci-cd-and-automation.</span><br><span style="margin:2px 0 8px;font-size:.88em;line-height:1.3;color:#555;font-style:italic">Crie o QA bot e o DevOps colando as instruções da seção 4 do docs/inception.md (aberto numa aba). Confira com este guia: WARN só para cobertura. QA: playwright-best-practices, playwright-cli, create-verification-skill, mais a interrogate do pstack (quatro no total; o QA é a única exceção ao limite de três skills, porque a interrogate faz parte do pstack). A principle-prove-it-works é o passo final de todo bot e não conta no limite. DevOps: deploy-to-vercel, ci-cd-and-automation.</span>
 <br><span style="color:#a11;font-size:.9em">⚠️ QA has four skills on purpose: interrogate stays. The FDE and DevOps have three at most. principle-prove-it-works is the final step for all, not counted.</span><br><span style="color:#a11;font-size:.85em;font-style:italic">O QA tem quatro skills de propósito: a interrogate fica. O FDE e o DevOps têm no máximo três. A principle-prove-it-works é o passo final de todos e não conta.</span>
 </li>
-<li style="margin-bottom:8px"><span style="margin:6px 0 0;font-size:1em;line-height:1.35;color:#111;font-weight:600">Create the group &#x27;Workshop - Packt Grok Bot&#x27; with you and the three bots (how to create a group: confirm in rehearsal). Go back to the deck around 11:11.</span><br><span style="margin:2px 0 8px;font-size:.88em;line-height:1.3;color:#555;font-style:italic">Crie o grupo &#x27;Workshop - Packt Grok Bot&#x27; com você e os três bots (como criar grupo: conferir no ensaio). Volte ao deck por volta das 11:11.</span>
+<li style="margin-bottom:8px"><span style="margin:6px 0 0;font-size:1em;line-height:1.35;color:#111;font-weight:600">Create the group &#x27;Workshop - Packt Grok Bot&#x27; with you and the three bots (how to create a group: confirm in rehearsal). Go back to the deck around 11:11. The shared-chat simulation is ready: click once for the FDE skills and once for the skills reminder.</span><br><span style="margin:2px 0 8px;font-size:.88em;line-height:1.3;color:#555;font-style:italic">Crie o grupo &#x27;Workshop - Packt Grok Bot&#x27; com você e os três bots (como criar grupo: conferir no ensaio). Volte ao deck por volta das 11:11. A simulação do chat em grupo está pronta: clique uma vez para as skills do FDE e outra para o lembrete de skills.</span>
 <br><span style="color:#0a6b2d;font-size:.9em">✅ The group shows 4 members: you plus 3 bots.</span><br><span style="color:#0a6b2d;font-size:.85em;font-style:italic">O grupo mostra 4 membros: você e 3 bots.</span>
 </li>
 </ol>
@@ -306,21 +286,20 @@ If you can&#x27;t show where a number came from, leave it out. Use the GitHub co
 <!-- ============ BLOCK 2 · DESIGN · 11:12–11:20 ============ -->
 <!-- 9 -->
 <section data-clock="11:12" data-block="2 · Design">
-  <div class="row split" style="gap:60px">
-    <div class="col">
-      <span class="kicker">Block 2 · Design</span>
-      <p class="big-quote">No code yet.<br><span class="hl-amber">First, a design.</span></p>
-      <div class="card fragment" style="margin-top:26px;--cc:var(--purple)"><ul>
-        <li>Decisions</li><li>Files to change</li><li>Tests → criteria</li><li>Assumptions, listed apart</li></ul></div>
-    </div>
-    <div class="col">
-      <div class="ph" style="height:620px"><b>Your real rehearsal screenshot</b><span>FDE design response: decisions, files, tests. Hide tokens and personal information.</span></div>
+  <span class="kicker">Block 2 · Design</span>
+  <div class="design-live">
+    <div class="design-intro"><p class="big-quote">No code yet.<br><span class="hl-amber">First, a design.</span></p><p class="lead">Ask. Inspect. Decide.</p><p class="muted small">Keep this guide on screen<br>while the FDE works.</p></div>
+    <div class="design-board" role="group" aria-label="Illustrative design review workflow">
+      <div class="design-request"><span class="design-step">1</span><div><b>Ask the FDE</b><p>Read the spec + acceptance criteria.<br>Propose a design. Do not code yet.</p></div></div>
+      <div class="design-answer fragment"><span class="design-step">2</span><div><b>Inspect the response</b><dl><dt>Decisions</dt><dd>What will we build, and why?</dd><dt>Files to change</dt><dd>Where will the change live?</dd><dt>Tests → criteria</dt><dd>How will each rule be checked?</dd><dt>Assumptions, listed apart</dt><dd>What still needs a human decision?</dd></dl></div></div>
+      <div class="design-gate"><span class="design-step">3</span><div><b>You decide the open questions.</b><p>The bot waits for your approval.</p></div></div>
+      <p class="design-caption">Illustrative workflow · review the real answer live</p>
     </div>
   </div>
   <aside class="notes">
 <p style="margin:0 0 10px;font-size:1.05em;font-weight:700;color:#111">⏱ 11:12–11:20 BRT · 8 min · slide 9/22 · block 2 · Design · 1 click on the slide</p>
 <p style="margin:14px 0 4px;font-size:.78em;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#444">🖱 Hands-on · Passo a passo</p><ol style="margin:0 0 0 1.2em;padding:0">
-<li style="margin-bottom:8px"><span style="margin:6px 0 0;font-size:1em;line-height:1.35;color:#111;font-weight:600">Open a NEW chat with FDE TypeScript (one chat per task). Paste the design prompt (below). Click once on the slide to show the checklist.</span><br><span style="margin:2px 0 8px;font-size:.88em;line-height:1.3;color:#555;font-style:italic">Abra um chat NOVO com o FDE TypeScript (um chat por tarefa). Cole o prompt de design (abaixo). Clique uma vez no slide para mostrar a lista.</span>
+<li style="margin-bottom:8px"><span style="margin:6px 0 0;font-size:1em;line-height:1.35;color:#111;font-weight:600">Open a NEW chat with FDE TypeScript (one chat per task). Paste the design prompt (below). Click once on the slide to show the design-review checklist. The ready illustration stays on screen while the FDE works; no screenshot is needed.</span><br><span style="margin:2px 0 8px;font-size:.88em;line-height:1.3;color:#555;font-style:italic">Abra um chat NOVO com o FDE TypeScript (um chat por tarefa). Cole o prompt de design (abaixo). Clique uma vez no slide para mostrar a lista de revisão do design. A ilustração pronta fica na tela enquanto o FDE trabalha; não é preciso inserir prints.</span>
 <br><span style="color:#0a6b2d;font-size:.9em">✅ The bot starts working. While it works, read the checklist on the slide.</span><br><span style="color:#0a6b2d;font-size:.85em;font-style:italic">O bot começa a trabalhar. Enquanto trabalha, leia a lista no slide.</span>
 <br><span style="color:#a11;font-size:.9em">⚠️ If it takes more than 2 minutes, say &#x27;Let&#x27;s give it a few seconds.&#x27; and keep explaining the checklist.</span><br><span style="color:#a11;font-size:.85em;font-style:italic">Se demorar mais de 2 minutos, diga &#x27;Let&#x27;s give it a few seconds.&#x27; e continue explicando a lista.</span>
 <pre>Read spec.md, docs/inception.md section 5, the selected form/dashboard issue (#18/#19), and mvp/ at the agreed reviewed base commit. PRs #9, #10 and #27 are merged; verify the actual base SHA instead of assuming.
@@ -445,29 +424,9 @@ Put the check in a script I can re-run (a Vitest or Playwright test), and paste 
 <!-- 13 -->
 <section data-clock="11:27" data-block="3 · Verify">
   <span class="kicker">Live · QA judges against the spec, not the author</span>
-  <div class="app">
-    <aside class="side">
-      <div class="side-h">Group</div>
-      <div class="bot-row on"><img src="assets/avatars/qa-bot.svg" alt=""><div><b>Workshop - Packt</b><span>QA bot: report ready</span></div></div>
-      <div class="side-h" style="margin-top:18px">Members</div>
-      <div class="bot-row"><img src="assets/avatars/glaucia.svg" alt=""><div><b>Glaucia</b><span>Tech lead</span></div></div>
-      <div class="bot-row"><img src="assets/avatars/fde-typescript.svg" alt=""><div><b>FDE TypeScript</b><span>PR opened</span></div></div>
-      <div class="bot-row"><img src="assets/avatars/qa-bot.svg" alt=""><div><b>QA bot</b><span>Verifying…</span></div></div>
-      <div class="bot-row"><img src="assets/avatars/devops.svg" alt=""><div><b>DevOps</b><span>CI + preview</span></div></div>
-    </aside>
-    <main class="chat">
-      <header>Workshop - Packt Grok Bot <small>· group chat</small></header>
-      <div class="msgs">
-        <div class="msg me"><div class="bubble">QA: use the merged acceptance contract, not the PR description. Record the commit and evidence.</div></div>
-        <div class="msg"><img src="assets/avatars/qa-bot.svg" alt=""><div class="bubble"><b class="hl-pink">QA bot</b>Tested commit <code>abc1234</code> · target: PR preview URL
-          <div class="fragment" style="margin-top:8px"><span class="pill pass" style="font-size:20px;padding:3px 14px">PASS</span> 4 · same error message in form and API</div>
-          <div class="fragment" style="margin-top:8px"><span class="pill fail" style="font-size:20px;padding:3px 14px">FAIL</span> 8 · empty state shows an error</div>
-          <div class="fragment" style="margin-top:8px"><span class="pill blocked" style="font-size:20px;padding:3px 14px">BLOCKED</span> Access · preview unavailable</div></div></div>
-      </div>
-      <div class="composer">Message the group…</div>
-    </main>
-    <span class="mock-tag">mock UI · example results, not real ones</span>
-  </div>
+  <div class="group-conversation verify-conversation" role="group" aria-label="Simulated QA group chat">
+<header class="conversation-header"><div class="conversation-members" aria-hidden="true"><img src="assets/avatars/glaucia.svg" alt=""><img src="assets/avatars/fde-typescript.svg" alt=""><img src="assets/avatars/qa-bot.svg" alt=""><img src="assets/avatars/devops.svg" alt=""></div><div><strong>Workshop - Packt Grok Bot</strong><span>Glaucia + FDE TypeScript + QA bot + DevOps</span></div></header><ol class="conversation-thread" aria-label="Illustrative messages in reading order">
+<li class="conversation-message human "><img src="assets/avatars/glaucia.svg" alt=""><div><b>Glaucia</b><p>QA: judge the merged criteria, not the PR description. Record the commit and evidence.</p></div></li><li class="conversation-message fde "><img src="assets/avatars/fde-typescript.svg" alt=""><div><b>FDE TypeScript</b><p>Exercise PR ready: change, tests and commit attached. Please review.</p></div></li><li class="conversation-message ops "><img src="assets/avatars/devops.svg" alt=""><div><b>DevOps</b><p>CI link + isolated preview attached. Missing access means BLOCKED.</p></div></li><li class="conversation-message qa "><img src="assets/avatars/qa-bot.svg" alt=""><div><b>QA bot</b><p>Example report · commit <code>abc1234</code> · target: PR preview URL<span class="qa-examples"><span class="fragment" data-fragment-index="0"><strong class="pass">PASS · AC4</strong>Same error in form and API</span><span class="fragment" data-fragment-index="1"><strong class="fail">FAIL · AC8</strong>Empty state shows an error</span><span class="fragment" data-fragment-index="2"><strong class="blocked">BLOCKED · access</strong>Preview unavailable</span></span></p></div></li></ol><footer class="conversation-footer"><span>Message the group…</span><span>Simulation · independent example outcomes</span></footer></div>
   <aside class="notes">
 <p style="margin:0 0 10px;font-size:1.05em;font-weight:700;color:#111">⏱ 11:27–11:40 BRT · 13 min · slide 13/22 · block 3 · Verify · 3 clicks on the slide</p>
 <p style="margin:14px 0 4px;font-size:.78em;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#444">🖱 Hands-on · Passo a passo</p><ol style="margin:0 0 0 1.2em;padding:0">
@@ -512,6 +471,7 @@ Keep the scripts and their output as artifacts I can re-run. A result you cannot
 <!-- ============ BLOCK 4 · BACKGROUND PR · 11:40–11:55 ============ -->
 <!-- 13 -->
 <section data-clock="11:40" data-block="4 · Background PR">
+
   <div class="row split" style="gap:60px">
     <div class="col">
       <span class="kicker">Block 4 · Background PR</span>
@@ -523,10 +483,21 @@ Keep the scripts and their output as artifacts I can re-run. A result you cannot
       </div>
     </div>
     <div class="col">
-      <div class="ph" style="height:620px"><b>Your real rehearsal screenshot</b><span>Real GitHub PR: Actions check and Vercel preview link.</span></div>
+      <div class="workshop-ui cloud-pr" role="img" aria-label="Illustrative pull request flow: code and tests, GitHub Actions, Vercel preview, secret presence only. Open the real targets to verify.">
+        <div class="workshop-ui-top"><span class="workshop-ui-dots">● ● ●</span><span>Pull request · cloud workspace</span></div>
+        <div class="workshop-ui-body">
+          <div class="workshop-eyebrow">Illustrative example · not live evidence</div>
+          <h3>Feedback MVP</h3>
+          <div class="workshop-flow-step"><span class="workshop-number">1</span><div><b>Code + tests</b><small>Changes and reproducible checks in one PR</small></div></div>
+          <div class="workshop-flow-step"><span class="workshop-number">2</span><div><b>GitHub Actions <span class="workshop-chip good">PASS example</span></b><small>Open the run · confirm the tested commit</small></div></div>
+          <div class="workshop-flow-step"><span class="workshop-number">3</span><div><b>Vercel preview <span class="workshop-link-mark">↗</span></b><small>Open the preview · observe the running app</small></div></div>
+          <div class="workshop-secret"><img src="assets/avatars/devops.svg" alt="DevOps"><div><b>Secrets: presence only</b><small>DATABASE_URL · present (redacted)</small></div></div>
+        </div>
+      </div>
     </div>
   </div>
-  <aside class="notes">
+
+<aside class="notes">
 <p style="margin:0 0 10px;font-size:1.05em;font-weight:700;color:#111">⏱ 11:40–11:47 BRT · 7 min · slide 14/22 · block 4 · Background PR · 1 click on the slide</p>
 <p style="margin:14px 0 4px;font-size:.78em;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#444">🖱 Hands-on · Passo a passo</p><ol style="margin:0 0 0 1.2em;padding:0">
 <li style="margin-bottom:8px"><span style="margin:6px 0 0;font-size:1em;line-height:1.35;color:#111;font-weight:600">Say that the work runs in the cloud. Click once to show the DevOps card (mock).</span><br><span style="margin:2px 0 8px;font-size:.88em;line-height:1.3;color:#555;font-style:italic">Diga que o trabalho roda na nuvem. Clique uma vez para mostrar o cartão do DevOps (mock).</span>
@@ -542,7 +513,7 @@ Verify DATABASE_URL and the protection bypass secret by presence only, values re
 <pre>Before you say CI and preview are ready, apply principle-prove-it-works. Open the real Actions run and the real preview URL, and report the status you observe now, not a remembered one.
 Script one check (for example, a curl for the preview&#x27;s HTTP status) and paste the command and output. Verify secrets by presence only, values redacted. Never print or ask for a secret. Never merge.</pre>
 </li>
-<li style="margin-bottom:8px"><span style="margin:6px 0 0;font-size:1em;line-height:1.35;color:#111;font-weight:600">Open the PR page: show the Actions check and the Vercel preview link. Put your real rehearsal screenshot in the dashed box before the event.</span><br><span style="margin:2px 0 8px;font-size:.88em;line-height:1.3;color:#555;font-style:italic">Abra a página do PR: mostre o check do Actions e o link da preview da Vercel. Coloque seu print real do ensaio na caixa tracejada antes do evento.</span>
+<li style="margin-bottom:8px"><span style="margin:6px 0 0;font-size:1em;line-height:1.35;color:#111;font-weight:600">Use the ready illustration to explain the PR, Actions run, and preview. Then open the real PR page and verify its current check and preview link. No screenshot preparation is needed; the illustration is not evidence.</span><br><span style="margin:2px 0 8px;font-size:.88em;line-height:1.3;color:#555;font-style:italic">Use a ilustração pronta para explicar o PR, a execução do Actions e a preview. Depois abra a página real do PR e confira o check atual e o link da preview. Não é preciso preparar prints; a ilustração não é evidência.</span>
 </li>
 </ol>
 <p style="margin:14px 0 4px;font-size:.78em;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#444">🗣 Say it · Fale (leia em voz alta)</p>
@@ -560,18 +531,48 @@ Script one check (for example, a curl for the preview&#x27;s HTTP status) and pa
 
 <!-- 14 -->
 <section data-clock="11:47" data-block="4 · Background PR">
+
   <span class="kicker">Live · send feedback, watch the chart</span>
   <div class="row" style="gap:48px;margin-top:6px">
-    <div class="col fragment"><div class="ph" style="height:540px"><b>Your real rehearsal screenshot</b><span>Real preview: feedback form (talk, author, required comment, rating 1–5).</span></div><p class="hand" style="text-align:center;margin-top:14px;font-size:36px;color:var(--bc)">1 · submit the form</p></div>
-    <div class="col fragment"><div class="ph" style="height:540px"><b>Your real rehearsal screenshot</b><span>Real preview: one bar per talk (mean with one decimal, feedback count).</span></div><p class="hand" style="text-align:center;margin-top:14px;font-size:36px;color:var(--bc)">2 · the bar moves</p></div>
+    <div class="col fragment">
+      <div class="workshop-ui feedback-ui" role="img" aria-label="Illustrative feedback form. Talk keynote, author Workshop demo, optional comment Clear example, rating five out of five.">
+        <div class="workshop-ui-top"><span class="workshop-ui-dots">● ● ●</span><span>Feedback / new</span></div>
+        <div class="workshop-ui-body">
+          <div class="workshop-eyebrow">Illustrative form · use the real preview live</div>
+          <h3>How was the talk?</h3>
+          <div class="workshop-form-grid"><div><span class="workshop-field-label">Talk</span><div class="workshop-field">keynote</div></div><div><span class="workshop-field-label">Author</span><div class="workshop-field">Workshop demo</div></div></div>
+          <span class="workshop-field-label">Comment <em>optional</em></span><div class="workshop-field workshop-comment">Clear example. I can follow the workflow.</div>
+          <div class="workshop-rating-line"><span class="workshop-field-label">Rating · 1–5</span><div class="workshop-rating"><span>1</span><span>2</span><span>3</span><span>4</span><span class="selected">5</span></div></div>
+          <div class="workshop-submit">Submit feedback <span>→</span></div>
+        </div>
+      </div>
+      <p class="hand" style="text-align:center;margin-top:14px;font-size:36px;color:var(--bc)">1 · submit the form</p>
+    </div>
+    <div class="col fragment">
+      <div class="workshop-ui feedback-ui" role="img" aria-label="Illustrative chart: keynote rating average moves from 4.0 with one feedback to 4.5 with two feedbacks after adding a rating of five. Check persistence with a reload in the real app.">
+        <div class="workshop-ui-top"><span class="workshop-ui-dots">● ● ●</span><span>Feedback / dashboard</span></div>
+        <div class="workshop-ui-body">
+          <div class="workshop-eyebrow">Sample data · not a recorded result</div>
+          <h3>One bar per talk</h3>
+          <div class="workshop-chart-legend"><span>Mean rating · one decimal</span><b>0–5</b></div>
+          <div class="workshop-chart-label"><b>keynote</b><span>2 feedbacks</span></div>
+          <div class="workshop-bar-track"><div class="workshop-bar" style="width:90%"><b>4.5</b></div></div>
+          <div class="workshop-chart-axis"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+          <div class="workshop-sample-math"><div><small>Before</small><b>4.0 <span>· 1 feedback</span></b></div><span class="workshop-math-arrow">→</span><div><small>After adding 5</small><b>4.5 <span>· 2 feedbacks</span></b></div></div>
+          <div class="workshop-reload"><span>↻</span><div><b>Reload the real page</b><small>The saved data must still be there.</small></div></div>
+        </div>
+      </div>
+      <p class="hand" style="text-align:center;margin-top:14px;font-size:36px;color:var(--bc)">2 · the bar moves</p>
+    </div>
   </div>
-  <aside class="notes">
+
+<aside class="notes">
 <p style="margin:0 0 10px;font-size:1.05em;font-weight:700;color:#111">⏱ 11:47–11:55 BRT · 8 min · slide 15/22 · block 4 · Background PR · 2 clicks on the slide</p>
 <p style="margin:14px 0 4px;font-size:.78em;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#444">🖱 Hands-on · Passo a passo</p><ol style="margin:0 0 0 1.2em;padding:0">
 <li style="margin-bottom:8px"><span style="margin:6px 0 0;font-size:1em;line-height:1.35;color:#111;font-weight:600">Open the preview URL of the tested commit (from the PR or from DevOps). Show the dashboard first: the empty state only if you use the isolated test dataset. Never clear a shared database for this.</span><br><span style="margin:2px 0 8px;font-size:.88em;line-height:1.3;color:#555;font-style:italic">Abra a preview URL do commit testado (pelo PR ou pelo DevOps). Mostre o dashboard primeiro: o estado vazio só se você usar o dataset de teste isolado. Nunca limpe um banco compartilhado para isso.</span>
 <br><span style="color:#a11;font-size:.9em">⚠️ If the preview does not load, say &#x27;This is live, so things can be slow.&#x27; If it is down, show the verified reference app (if reachable) and explain the block.</span><br><span style="color:#a11;font-size:.85em;font-style:italic">Se a preview não carregar, diga &#x27;This is live, so things can be slow.&#x27; Se estiver fora do ar, mostre a aplicação de referência verificada (se acessível) e explique o bloqueio.</span>
 </li>
-<li style="margin-bottom:8px"><span style="margin:6px 0 0;font-size:1em;line-height:1.35;color:#111;font-weight:600">Click on the slide once (form box), send feedback in the real form (talk &#x27;keynote&#x27;, your name, a short comment, rating 5). Click again (chart box) and go back to the dashboard.</span><br><span style="margin:2px 0 8px;font-size:.88em;line-height:1.3;color:#555;font-style:italic">Clique no slide uma vez (caixa do formulário), envie um feedback no formulário real (talk &#x27;keynote&#x27;, seu nome, um comentário curto, nota 5). Clique de novo (caixa do gráfico) e volte ao dashboard.</span>
+<li style="margin-bottom:8px"><span style="margin:6px 0 0;font-size:1em;line-height:1.35;color:#111;font-weight:600">Click once to reveal the illustrated form; its values are examples. Send feedback in the real form (talk &#x27;keynote&#x27;, your name, a short comment, rating 5). Click again to reveal the sample chart, then return to the real dashboard and read its actual mean and count.</span><br><span style="margin:2px 0 8px;font-size:.88em;line-height:1.3;color:#555;font-style:italic">Clique uma vez para revelar o formulário ilustrado; seus valores são exemplos. Envie um feedback no formulário real (talk &#x27;keynote&#x27;, seu nome, um comentário curto, nota 5). Clique de novo para revelar o gráfico de exemplo, depois volte ao dashboard real e leia a média e a contagem observadas.</span>
 <br><span style="color:#0a6b2d;font-size:.9em">✅ In the exercise PR preview (starter), the &#x27;keynote&#x27; average bar appears with one decimal and the feedback count; in the reference app fallback, read the &#x27;keynote&#x27; table row (mean and count) and the selected talk&#x27;s 1–5 distribution.</span><br><span style="color:#0a6b2d;font-size:.85em;font-style:italic">Na preview do PR do exercício (starter), aparece a barra de média de &#x27;keynote&#x27; com uma casa decimal e a contagem; no fallback da aplicação de referência, leia a linha &#x27;keynote&#x27; da tabela (média e contagem) e a distribuição 1–5 da talk selecionada.</span>
 </li>
 <li style="margin-bottom:8px"><span style="margin:6px 0 0;font-size:1em;line-height:1.35;color:#111;font-weight:600">Reload the page once. The data must still be there.</span><br><span style="margin:2px 0 8px;font-size:.88em;line-height:1.3;color:#555;font-style:italic">Recarregue a página uma vez. O dado precisa continuar lá.</span>
@@ -624,6 +625,7 @@ Script one check (for example, a curl for the preview&#x27;s HTTP status) and pa
 
 <!-- 16 -->
 <section data-clock="11:58" data-block="5 · Approval" data-auto-animate>
+
   <span class="kicker">Live · read three things, then merge</span>
   <div class="row split compact" style="gap:56px">
     <div class="col" style="flex:.85">
@@ -632,9 +634,20 @@ Script one check (for example, a curl for the preview&#x27;s HTTP status) and pa
       <div class="card fragment" style="--cc:var(--orange)"><h3>3 · CI status</h3><p>GitHub Actions + preview</p></div>
       <p data-id="merge" class="mergeline big">I always merge.</p>
     </div>
-    <div class="col"><div class="ph" style="height:640px"><b>Your real rehearsal screenshot</b><span>Real GitHub PR: QA report, checks and the human merge decision.</span></div></div>
+    <div class="col"><div class="workshop-ui review-ui" role="img" aria-label="Illustrative PR review checklist: confirm exercise target, read changes, QA evidence and CI, then human decides. Fail or blocked means no acceptance.">
+      <div class="workshop-ui-top"><span class="workshop-ui-dots">● ● ●</span><span>Pull request / human review</span></div>
+      <div class="workshop-ui-body">
+        <div class="workshop-eyebrow">Illustrative review · not an actual verdict</div>
+        <div class="workshop-target"><b>Confirm the exercise target</b><small>Never reference main · never the frozen checkpoint</small></div>
+        <div class="workshop-review-row"><img src="assets/avatars/fde-typescript.svg" alt="FDE"><div><b>Changes</b><small>Scope · files · tests · assumptions</small></div><span class="workshop-number">1</span></div>
+        <div class="workshop-review-row"><img src="assets/avatars/qa-bot.svg" alt="QA"><div><b>Independent QA</b><small>Criterion → result → evidence · tested commit</small></div><span class="workshop-number">2</span></div>
+        <div class="workshop-review-row"><img src="assets/avatars/devops.svg" alt="DevOps"><div><b>CI + preview</b><small>Read the real Actions run and preview</small></div><span class="workshop-number">3</span></div>
+        <div class="workshop-decision"><img src="assets/avatars/glaucia.svg" alt="Glaucia"><div><b>Human decision</b><small>Required PASS + WARN reviewed → decide<br>Any FAIL / BLOCKED → no acceptance</small></div></div>
+      </div>
+    </div></div>
   </div>
-  <aside class="notes">
+
+<aside class="notes">
 <p style="margin:0 0 10px;font-size:1.05em;font-weight:700;color:#111">⏱ 11:58–12:10 BRT · 12 min · slide 17/22 · block 5 · Approval · 3 clicks on the slide</p>
 <p style="margin:14px 0 4px;font-size:.78em;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#444">🖱 Hands-on · Passo a passo</p><ol style="margin:0 0 0 1.2em;padding:0">
 <li style="margin-bottom:8px"><span style="margin:6px 0 0;font-size:1em;line-height:1.35;color:#111;font-weight:600">Open the pull request on GitHub. First confirm the target: the approved exercise repo and branch. Never the reference main and never the frozen checkpoint.</span><br><span style="margin:2px 0 8px;font-size:.88em;line-height:1.3;color:#555;font-style:italic">Abra o pull request no GitHub. Primeiro confirme o destino: o repositório e a branch do exercício aprovados. Nunca a main de referência e nunca o checkpoint congelado.</span>
@@ -668,6 +681,7 @@ Script one check (for example, a curl for the preview&#x27;s HTTP status) and pa
 <!-- ============ BLOCK 6 · RECOVERY · 12:10–12:22 ============ -->
 <!-- 17 -->
 <section data-clock="12:10" data-block="6 · Recovery">
+
   <div class="row split" style="gap:60px">
     <div class="col">
       <span class="kicker">Block 6 · Recovery first</span>
@@ -675,15 +689,23 @@ Script one check (for example, a curl for the preview&#x27;s HTTP status) and pa
       <p class="lead">Recap starts at <b>12:22 BRT</b>; questions at 12:26 BRT. Say what is BLOCKED.</p>
     </div>
     <div class="col">
-      <div class="card fragment" style="--cc:var(--amber);padding:34px">
-        <div class="row" style="align-items:center;gap:22px;margin-bottom:16px"><img class="av" src="assets/avatars/engineering-lead.svg" alt=""><div><b style="font-size:36px">Recovery checklist</b><br><span class="muted small">Core · tests · human review</span></div></div>
-        <ul><li><b>All yes:</b> optional disabled routine draft</li><li><b>Any no:</b> skip routine; recover or declare BLOCKED</li><li class="hl-red">Missing evidence stays BLOCKED</li></ul>
-        <p class="hand muted small" style="margin:12px 0 0">mock card · confirm the real screen in rehearsal</p>
+      <div class="workshop-ui recovery-ui">
+        <div class="workshop-ui-top"><img src="assets/avatars/engineering-lead.svg" alt="Engineering lead"><span>Recovery checklist</span></div>
+        <div class="workshop-ui-body">
+          <div class="workshop-eyebrow">Illustrative decision guide · check live evidence</div>
+          <div class="workshop-core-gates"><span>Core<br><b>Form + chart</b></span><span>Tests<br><b>Independent</b></span><span>Review<br><b>Human</b></span></div>
+          <div class="workshop-recovery-branches fragment">
+            <div class="workshop-branch stop"><span class="workshop-chip blocked">ANY NO</span><b>Recover or declare BLOCKED</b><small>Skip the routine. Name the missing evidence.</small></div>
+            <div class="workshop-branch ready"><span class="workshop-chip good">ALL YES + TIME</span><b>Optional extras only now</b><small>Disabled routine draft → offline preview</small></div>
+          </div>
+          <div class="workshop-disabled-draft"><div><b>Routine draft</b><span class="workshop-chip warn">Enabled: No</span></div><small>Mon–Fri · 09:00 · America/Sao_Paulo<br>Read-only GitHub · private delivery</small></div>
+          <p class="workshop-footer">Offline samples: bug / feature / unclear.<br>Preview only. Apply nothing. Missing proof stays BLOCKED.</p>
+        </div>
       </div>
-      <div class="ph" style="min-height:190px;margin-top:22px"><b>Your real rehearsal screenshot</b><span>Core evidence; optional disabled draft and offline preview only afterward.</span></div>
     </div>
   </div>
-  <aside class="notes">
+
+<aside class="notes">
 <p style="margin:0 0 10px;font-size:1.05em;font-weight:700;color:#111">⏱ 12:10–12:22 BRT · 12 min · slide 18/22 · block 6 · Recovery · 1 click on the slide</p>
 <p style="margin:14px 0 4px;font-size:.78em;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#444">🖱 Hands-on · Passo a passo</p><ol style="margin:0 0 0 1.2em;padding:0">
 <li style="margin-bottom:8px"><span style="margin:6px 0 0;font-size:1em;line-height:1.35;color:#111;font-weight:600">Check core implementation, independent tests, and human review of the form and dashboard. Use this time to finish them, or declare BLOCKED and name the missing evidence.</span><br><span style="margin:2px 0 8px;font-size:.88em;line-height:1.3;color:#555;font-style:italic">Confira implementação do núcleo, testes independentes e revisão humana do formulário e dashboard. Use este tempo para concluí-los, ou declare BLOCKED e diga qual evidência falta.</span>
@@ -727,7 +749,7 @@ Do not comment, apply labels, edit files, open PRs, close issues, merge, deploy,
   <div class="grid3 recap" style="margin-top:20px">
     <div class="card fragment" style="--cc:var(--blue)"><div class="row" style="justify-content:center;gap:12px"><img class="av" src="assets/avatars/fde-typescript.svg" alt=""><img class="av" src="assets/avatars/qa-bot.svg" alt=""><img class="av" src="assets/avatars/devops.svg" alt=""></div><p class="big-quote" style="font-size:58px;margin-top:22px">One bot<br>per role.</p></div>
     <div class="card fragment" style="--cc:var(--pink)"><div><span class="pill pass">PASS</span></div><p class="big-quote" style="font-size:58px;margin-top:22px">Evidence for<br>every claim.</p></div>
-    <div class="card fragment" style="--cc:var(--red)"><img class="av" src="assets/avatars/glaucia.svg" alt=""><p class="big-quote" style="font-size:58px;margin-top:22px">A human on<br>every big step.</p></div>
+    <div class="card fragment" style="--cc:var(--red)"><img class="av" src="assets/avatars/glaucia.svg" alt="Glaucia Lemos"><p class="big-quote" style="font-size:58px;margin-top:22px">A human on<br>every big step.</p></div>
   </div>
   <aside class="notes">
 <p style="margin:0 0 10px;font-size:1.05em;font-weight:700;color:#111">⏱ 12:22–12:23 BRT · 1 min · slide 19/22 · block 7 · Q&amp;A · 3 clicks on the slide</p>

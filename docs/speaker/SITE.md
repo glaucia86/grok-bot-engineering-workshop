@@ -3,8 +3,9 @@
 The static site reuses the Reveal.js deck and generates the reading guide from
 `guia-glaucia.md`. Do not maintain a second copy of the talk track. The guide has
 the run sheet, English speech, Portuguese translation/instructions, all ten
-copyable prompts, and links to all 22 slides. Six rehearsal screenshot slots
-remain placeholders; illustrative chat results remain labeled mocks.
+copyable prompts, and links to all 22 slides. Ready illustrations replace all six screenshot slots. Group conversations and
+example outcomes are explicitly labeled simulations; no live screenshot insertion
+is required. Glaucia’s supplied portrait is embedded in the local avatar SVG.
 
 ## Preview and checks
 
@@ -98,3 +99,4 @@ touch/coarse-pointer devices. Reveal's keyboard, fullscreen and notes controls
 remain unchanged. Narrow screens explicitly retain slide mode (Reveal's automatic
 scroll view is disabled for this fixed-stage deck). The existing speaker-browser evidence includes mascot checks;
 review the actual screenshots before publishing a layout change.
+

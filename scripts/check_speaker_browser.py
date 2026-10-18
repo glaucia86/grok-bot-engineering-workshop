@@ -247,6 +247,22 @@ try:
                 stepped += steps
         assert (OUT/'slide-04-final.png').exists() and (OUT/'slide-06-final.png').exists() and (OUT/'slide-11-final.png').exists()
         results.append(f'Reveal: every fragment step and final state captured ({stepped} steps, architecture, team flow and loop included) PASS')
+        # Ready live-demo panels must fit the fixed stage without clipped content.
+        for index in (7, 8, 12, 13, 14, 16, 17):
+            page.evaluate('(i)=>Reveal.slide(i,0,-1)', index)
+            while page.evaluate('Reveal.nextFragment()'):
+                page.wait_for_timeout(100)
+            page.wait_for_timeout(700)
+            clipped = page.locator('section.present .group-conversation, section.present .conversation-charter, section.present .workshop-ui, section.present .design-board').evaluate_all("""els => els.flatMap(el => {
+                const outer = el.getBoundingClientRect();
+                const bad = [...el.querySelectorAll('p, b, strong, small, dt, dd, .workshop-footer, .conversation-footer')].filter(child => {
+                    const box = child.getBoundingClientRect();
+                    return box.width > 0 && box.height > 0 && (box.bottom > outer.bottom + 2 || box.right > outer.right + 2);
+                });
+                return bad.map(child => ({panel: el.className, text: child.textContent, bounds: child.getBoundingClientRect().toJSON(), outer: outer.toJSON()}));
+            })""")
+            assert not clipped, (index, clipped)
+        results.append('Ready illustrations: chat and panel content fits without clipping PASS')
         for link in slide_links:
             page.goto(link, wait_until='networkidle')
             page.wait_for_function('(i)=>Reveal.getIndices().h === i', arg=int(link.rsplit('/',1)[1]))
@@ -355,6 +371,12 @@ try:
         page.wait_for_function('Reveal.isReady() && !Reveal.isScrollView() && Reveal.getIndices().h === 0')
         page.locator('section.present h1').wait_for(state='visible')
         page.screenshot(animations='disabled', path=str(OUT/'slides-mobile.png'))
+        for index in (7, 8, 12, 13, 14, 16, 17, 18):
+            page.evaluate('(i)=>Reveal.slide(i,0,-1)', index)
+            while page.evaluate('Reveal.nextFragment()'):
+                page.wait_for_timeout(100)
+            page.wait_for_timeout(700)
+            page.screenshot(animations='disabled', path=str(OUT/f'live-slide-{index+1:02}-mobile.png'))
         touch = browser.new_context(viewport={'width':390,'height':844}, is_mobile=True, has_touch=True)
         touch.route('**/*', route)
         touch_page = touch.new_page()

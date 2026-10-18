@@ -150,9 +150,10 @@ class SpeakerSite(unittest.TestCase):
         import re
         source = (ROOT/'docs/speaker/slides/index.html').read_text()
         self.assertNotRegex(source, r'(?:src|href)=["\']https?://')
-        self.assertEqual(source.count('class="ph"'),6)
+        self.assertEqual(source.count('class="ph"'),0)
         self.assertIn('mock UI',source)
         self.assertNotIn('criteria 1–10',source)
         self.assertIn('WARN',source)
 
 if __name__=='__main__': unittest.main()
+

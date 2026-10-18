@@ -153,3 +153,200 @@ svg.sketch text { font-family: var(--hand); fill: var(--text); }
 .split.compact .card p { font-size: 32px; }
 .split.compact .ph { height: 620px !important; }
 .split.compact .mergeline.big { font-size: 64px; margin-top: 18px; }
+
+
+/* Shared illustrative chat: one thread, named senders, no live service claims. */
+.group-conversation { height: 640px; flex: 0 0 640px; display:flex; flex-direction:column; overflow:hidden; border:2px solid #30333d; border-radius:26px; background:#111318; }
+.conversation-header { display:flex; align-items:center; gap:22px; padding:20px 28px; border-bottom:1px solid #343640; background:#191c23; }
+.conversation-header strong { display:block; font-size:30px; }
+.conversation-header span { display:block; margin-top:5px; color:#bfc7d5; font-size:22px; }
+.conversation-members { display:flex; padding-left:10px; }
+.conversation-members img, .conversation-members .workshop-mascot { width:45px; height:45px; margin-left:-10px; flex:none; }
+.conversation-layout { display:grid; grid-template-columns:minmax(0,1fr) 370px; min-height:0; flex:1; }
+.reveal .conversation-thread { display:flex; flex-direction:column; list-style:none; padding:22px 28px; margin:0; gap:16px; min-height:0; }
+.conversation-message { display:flex; align-items:flex-start; gap:14px; font-size:26px; line-height:1.3; }
+.conversation-message > img, .conversation-message > .workshop-mascot { width:48px; height:48px; flex:0 0 48px; margin-top:6px; }
+.conversation-message > div { padding:12px 18px; border-radius:4px 18px 18px; background:#252831; max-width:100%; }
+.conversation-message b { display:block; font-size:23px; margin-bottom:5px; }
+.reveal .conversation-message p { margin:0; line-height:1.3; }
+.conversation-message.human { flex-direction:row-reverse; margin-left:70px; }
+.conversation-message.human > div { background:#313a4b; border-radius:18px 4px 18px 18px; }
+.conversation-message.fde b { color:#5ee8a4; }
+.conversation-message.qa b { color:#ff8fcb; }
+.conversation-message.ops b { color:#c4a7ff; }
+.conversation-charter { padding:22px 24px; border-left:1px solid #343640; background:#15181e; }
+.conversation-label { font-size:22px; color:#5ee8a4; font-weight:750; }
+.reveal .conversation-charter p { font-size:22px; line-height:1.45; margin:10px 0 20px; }
+.reveal .conversation-charter h3 { font-size:37px; margin:20px 0 8px; }
+.reveal .conversation-charter .charter-idea { font-size:28px; color:#c9d1df; line-height:1.2; margin-bottom:18px; }
+.reveal .conversation-charter .charter-detail { font-size:20px; }
+.reveal .conversation-charter .charter-done { font-size:19px; color:#c9d1df; margin:0; }
+.conversation-footer { margin-top:auto; display:flex; justify-content:space-between; gap:15px; padding:16px 28px; border-top:1px solid #343640; color:#bfc7d5; font-size:21px; }
+.conversation-footer span:last-child { color:#d2ba8b; }
+.setup-conversation .conversation-message { font-size:24px; }
+.setup-conversation .conversation-thread { gap:12px; padding:18px 24px; }
+.verify-conversation .conversation-thread { gap:14px; }
+.verify-conversation .conversation-message > div { width:auto; }
+.verify-conversation .conversation-message.qa > div { flex:1; }
+.qa-examples { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:14px; }
+.qa-examples > span { border-left:3px solid #687181; padding-left:14px; font-size:22px; }
+.qa-examples strong { display:block; margin-bottom:6px; font-size:22px; }
+.qa-examples .pass { color:#7ce8ac; }
+.qa-examples .fail { color:#ff9a9a; }
+.qa-examples .blocked { color:#c8b7ff; }
+.design-live { display:grid; grid-template-columns: .9fr 1.1fr; align-items:center; gap:64px; height:640px; }
+.design-intro .big-quote { font-size:72px; }
+.design-intro .lead { font-size:38px; margin:24px 0; }
+.design-board { padding:28px 30px; background:#15181e; border:2px solid #343640; border-radius:24px; }
+.design-request, .design-answer, .design-gate { display:flex; gap:20px; }
+.design-step { width:42px; height:42px; flex:0 0 42px; display:grid; place-items:center; border-radius:50%; background:#343b48; color:#fff; font-size:25px; font-weight:800; }
+.design-board b { font-size:28px; }
+.reveal .design-board p { font-size:25px; margin:8px 0 0; }
+.design-answer { margin:24px 0; padding:24px 0; border-block:1px solid #3e4451; }
+.reveal .design-board dl { margin:12px 0 0; }
+.design-board dt { font-size:25px; color:#fbbf24; font-weight:650; }
+.design-board dd { font-size:23px; color:#ced5e1; margin:3px 0 13px; }
+.design-gate .design-step { background:#674d19; }
+.reveal .design-board .design-caption { font-size:20px; color:#b7c0d0; margin-top:22px; }
+/* Ready workshop illustrations. Example UI is explicitly separated from live evidence. */
+.reveal .workshop-ui { box-sizing:border-box; border:2px solid #303744; border-radius:24px; overflow:hidden; background:linear-gradient(150deg,#151a23,#0c0f15 72%); box-shadow:0 24px 60px #0005; color:var(--text); }
+.reveal .workshop-ui * { box-sizing:border-box; }
+.reveal .workshop-ui-top { min-height:57px; padding:16px 24px; background:#1c222d; border-bottom:1px solid #343c4b; display:flex; align-items:center; gap:18px; font-size:23px; font-weight:650; color:#dce3ee; }
+.reveal .workshop-ui-top img { width:42px; height:42px; }
+.reveal .workshop-ui-dots { font-size:15px; letter-spacing:3px; color:#758196; white-space:nowrap; }
+.reveal .workshop-ui-body { padding:24px 28px; }
+.reveal .workshop-eyebrow { font-size:18px; letter-spacing:.04em; font-weight:650; color:#b3becf; margin-bottom:18px; }
+.reveal .workshop-ui h3 { font-size:36px; margin:0 0 14px; }
+.reveal .workshop-ui small { display:block; font-size:22px; line-height:1.3; color:#b6c0d0; }
+.reveal .workshop-meta { font-family:var(--mono); font-size:20px; color:#bac5d6; padding-bottom:18px; border-bottom:1px solid #303744; }
+.reveal .workshop-meta span { color:var(--orange); margin:0 8px; }
+.reveal .workshop-flow-step { display:flex; align-items:center; gap:17px; padding:18px 0; border-bottom:1px solid #29313e; }
+.reveal .workshop-flow-step b { display:block; font-size:27px; margin-bottom:6px; }
+.reveal .workshop-number { display:inline-flex; flex:none; align-items:center; justify-content:center; width:37px; height:37px; border:1px solid #5d6e85; border-radius:12px; color:#dce7f7; font-size:23px; font-weight:750; }
+.reveal .workshop-chip { display:inline-flex; border-radius:7px; border:1px solid currentColor; font-size:17px; line-height:1.25; padding:4px 8px; font-weight:750; vertical-align:middle; white-space:nowrap; }
+.reveal .workshop-chip.good { color:#75e6a1; background:#143725; }
+.reveal .workshop-chip.bad { color:#ff9696; background:#3e1c22; }
+.reveal .workshop-chip.warn { color:#9ac4ff; background:#152c4d; }
+.reveal .workshop-chip.blocked { color:#fbd17d; background:#3b2c15; }
+.reveal .workshop-link-mark { color:#fb923c; float:right; font-size:30px; }
+.reveal .workshop-secret { display:flex; align-items:center; gap:16px; background:#191f2a; padding:15px 16px; border-radius:14px; margin-top:18px; }
+.reveal .workshop-secret img { width:47px; height:47px; }
+.reveal .workshop-secret b { display:block; font-size:24px; margin-bottom:4px; }
+.reveal .workshop-footer { color:#b5c0d2; font-size:20px; line-height:1.35; margin:17px 0 0; }
+.reveal .cloud-pr { height:620px; }
+.reveal .cloud-pr .workshop-flow-step { padding:15px 0; }
+.reveal .cloud-pr .workshop-eyebrow { margin-bottom:12px; }
+.reveal .feedback-ui { height:540px; }
+.reveal .feedback-ui .workshop-ui-body { padding:20px 26px; }
+.reveal .feedback-ui .workshop-eyebrow { margin-bottom:13px; }
+.reveal .feedback-ui h3 { margin-bottom:20px; }
+.reveal .workshop-form-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.reveal .workshop-field-label { display:block; font-size:20px; font-weight:650; color:#c0ccdc; margin-bottom:7px; }
+.reveal .workshop-field-label em { font-size:16px; font-style:normal; color:#f9bf70; margin-left:6px; }
+.reveal .workshop-field { background:#090d14; border:1px solid #455168; border-radius:9px; padding:11px 13px; font-size:23px; color:#f0f5ff; margin-bottom:15px; }
+.reveal .workshop-comment { font-size:22px; min-height:59px; }
+.reveal .workshop-rating-line { display:flex; justify-content:space-between; align-items:center; gap:10px; margin:0 0 18px; }
+.reveal .workshop-rating-line .workshop-field-label { margin:0; }
+.reveal .workshop-rating { display:flex; gap:8px; }
+.reveal .workshop-rating span { display:flex; align-items:center; justify-content:center; width:43px; height:43px; border:1px solid #48566d; border-radius:9px; font-size:22px; }
+.reveal .workshop-rating .selected { background:#fb923c; border-color:#fb923c; color:#161009; font-weight:850; }
+.reveal .workshop-submit { display:flex; justify-content:space-between; background:#d87520; color:white; border:1px solid #fbad67; border-radius:10px; padding:12px 17px; font-weight:750; font-size:24px; }
+.reveal .workshop-chart-legend { display:flex; justify-content:space-between; font-size:20px; color:#b6c0d0; margin:0 0 25px; }
+.reveal .workshop-chart-label { display:flex; align-items:center; justify-content:space-between; font-size:25px; margin-bottom:12px; }
+.reveal .workshop-chart-label span { color:#c0ccdc; font-size:21px; }
+.reveal .workshop-bar-track { height:60px; background:repeating-linear-gradient(90deg,#1b2330 0,#1b2330 calc(20% - 1px),#475367 calc(20% - 1px),#475367 20%); border-radius:8px; overflow:hidden; }
+.reveal .workshop-bar { height:100%; background:linear-gradient(90deg,#a64e19,#fb923c); border-radius:0 8px 8px 0; display:flex; align-items:center; justify-content:flex-end; padding-right:18px; }
+.reveal .workshop-bar b { font-size:34px; color:#fff; }
+.reveal .workshop-chart-axis { display:flex; justify-content:space-between; font-size:17px; color:#b6c0d0; margin:8px 0 21px; }
+.reveal .workshop-sample-math { display:flex; align-items:center; justify-content:space-between; gap:12px; border:1px solid #384353; padding:14px; border-radius:12px; }
+.reveal .workshop-sample-math small { font-size:17px; margin-bottom:5px; }
+.reveal .workshop-sample-math b { display:block; font-size:26px; }
+.reveal .workshop-sample-math b span { font-size:17px; font-weight:500; color:#c1cddd; }
+.reveal .workshop-math-arrow { color:#fb923c; font-size:26px; }
+.reveal .workshop-reload { display:flex; gap:15px; align-items:center; margin-top:18px; }
+.reveal .workshop-reload > span { color:#fb923c; font-size:42px; }
+.reveal .workshop-reload b { font-size:22px; }
+.reveal .workshop-reload small { font-size:18px; }
+.reveal .review-ui { height:620px; }
+.reveal .review-ui .workshop-ui-body { padding:20px 25px; }
+.reveal .review-ui .workshop-eyebrow { margin-bottom:14px; }
+.reveal .workshop-target { padding:13px 15px; background:#282016; border:1px solid #79562d; border-radius:11px; margin-bottom:7px; }
+.reveal .workshop-target b { font-size:24px; }
+.reveal .workshop-target small { font-size:18px; margin-top:4px; }
+.reveal .workshop-review-row { display:flex; align-items:center; gap:16px; padding:17px 0; border-bottom:1px solid #303744; }
+.reveal .workshop-review-row img { width:52px; height:52px; }
+.reveal .workshop-review-row > div { flex:1; }
+.reveal .workshop-review-row b { display:block; font-size:26px; margin-bottom:4px; }
+.reveal .workshop-review-row small { font-size:20px; }
+.reveal .workshop-statuses { display:flex; gap:10px; padding:13px 0 0 68px; }
+.reveal .workshop-decision { display:flex; align-items:center; gap:16px; margin-top:17px; border:1px solid #713339; background:#2b161c; border-radius:13px; padding:14px; }
+.reveal .workshop-decision img { width:55px; height:55px; }
+.reveal .workshop-decision b { display:block; font-size:25px; color:#ffadad; margin-bottom:4px; }
+.reveal .workshop-decision small { font-size:19px; color:#e1c7cd; }
+.reveal .recovery-ui { height:660px; }
+.reveal .recovery-ui .workshop-ui-top { padding:11px 24px; }
+.reveal .recovery-ui .workshop-ui-body { padding:22px 24px; }
+.reveal .workshop-core-gates { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:18px; }
+.reveal .workshop-core-gates span { background:#1c2330; border:1px solid #414e62; border-radius:10px; padding:12px 10px; font-size:21px; color:#bac9dc; text-align:center; }
+.reveal .workshop-core-gates b { font-size:18px; color:#f0f4fb; }
+.reveal .workshop-recovery-branches { display:grid; gap:11px; }
+.reveal .workshop-branch { padding:13px 15px; border-radius:12px; border-left:4px solid; }
+.reveal .workshop-branch.stop { border-color:#fbbf24; background:#2b251a; }
+.reveal .workshop-branch.ready { border-color:#4ade80; background:#162a21; }
+.reveal .workshop-branch b { display:block; font-size:24px; margin:8px 0 4px; }
+.reveal .workshop-branch small { font-size:19px; }
+.reveal .workshop-disabled-draft { padding:14px 15px; border:1px solid #414c61; border-radius:12px; margin-top:18px; }
+.reveal .workshop-disabled-draft > div { display:flex; justify-content:space-between; align-items:center; margin-bottom:7px; }
+.reveal .workshop-disabled-draft b { font-size:24px; }
+.reveal .workshop-disabled-draft small { font-size:19px; line-height:1.4; }
+.reveal .recovery-ui .workshop-footer { font-size:18px; margin-top:14px; }
+/* Compact rhythm keeps all illustrative panels inside the deck content box. */
+.reveal .cloud-pr .workshop-ui-body { padding:22px 26px; }
+.reveal .cloud-pr h3 { font-size:34px; margin-bottom:10px; }
+.reveal .cloud-pr .workshop-eyebrow { margin-bottom:10px; }
+.reveal .cloud-pr .workshop-flow-step { padding:11px 0; }
+.reveal .cloud-pr .workshop-flow-step b { font-size:25px; line-height:1.15; margin-bottom:4px; }
+.reveal .cloud-pr .workshop-flow-step small { font-size:20px; line-height:1.2; }
+.reveal .cloud-pr .workshop-secret { padding:12px; margin-top:14px; }
+.reveal .cloud-pr .workshop-secret small { font-size:20px; }
+.reveal .feedback-ui { height:580px; }
+.reveal .review-ui .workshop-ui-top { min-height:54px; padding:13px 24px; }
+.reveal .review-ui .workshop-ui-body { padding:16px 25px; }
+.reveal .review-ui .workshop-eyebrow { margin-bottom:12px; line-height:1.2; }
+.reveal .review-ui .workshop-target { padding:9px 13px; }
+.reveal .review-ui .workshop-target b { line-height:1.15; }
+.reveal .review-ui .workshop-target small { line-height:1.2; }
+.reveal .review-ui .workshop-review-row { padding:9px 0; }
+.reveal .review-ui .workshop-review-row b { line-height:1.15; }
+.reveal .review-ui .workshop-review-row small { line-height:1.2; }
+.reveal .review-ui .workshop-decision { margin-top:12px; padding:9px 12px; }
+.reveal .review-ui .workshop-decision b { font-size:24px; line-height:1.15; }
+.reveal .review-ui .workshop-decision small { line-height:1.2; }
+.reveal .recovery-ui .workshop-ui-top { min-height:54px; padding:7px 24px; }
+.reveal .recovery-ui .workshop-ui-body { padding:18px 24px; }
+.reveal .recovery-ui .workshop-eyebrow { line-height:1.2; margin-bottom:10px; }
+.reveal .recovery-ui .workshop-core-gates { margin-bottom:14px; }
+.reveal .recovery-ui .workshop-core-gates span { line-height:1.2; padding:10px 8px; }
+.reveal .recovery-ui .workshop-recovery-branches { grid-template-columns:1fr 1fr; gap:12px; }
+.reveal .recovery-ui .workshop-branch { padding:12px; }
+.reveal .recovery-ui .workshop-branch b { line-height:1.15; }
+.reveal .recovery-ui .workshop-branch small { line-height:1.2; }
+.reveal .recovery-ui .workshop-disabled-draft { margin-top:14px; padding:12px; }
+.reveal .recovery-ui .workshop-footer { line-height:1.25; margin-top:12px; }
+
+/* Compact rhythm keeps the full team visible on the fixed presentation stage. */
+.setup-conversation .conversation-message { font-size:22px; }
+.setup-conversation .conversation-message b { font-size:21px; margin-bottom:3px; }
+.setup-conversation .conversation-message > div { padding:10px 16px; }
+.setup-conversation .conversation-thread { gap:8px; padding:14px 24px; }
+.setup-conversation .conversation-charter { padding:16px 24px; }
+.setup-conversation .conversation-charter p { margin:8px 0 12px; font-size:21px; }
+.setup-conversation .conversation-charter h3 { font-size:32px; margin:14px 0 6px; }
+.setup-conversation .conversation-charter .charter-idea { font-size:25px; margin-bottom:12px; }
+.setup-conversation .conversation-charter .charter-detail { font-size:18px; line-height:1.35; }
+.setup-conversation .conversation-charter .charter-done { font-size:18px; line-height:1.35; margin:0; }
+.verify-conversation .conversation-thread { gap:10px; padding:16px 28px; }
+.verify-conversation .conversation-message { font-size:24px; }
+.verify-conversation .conversation-message b { font-size:21px; margin-bottom:3px; }
+.verify-conversation .conversation-message > div { padding:9px 16px; }
+.verify-conversation .qa-examples { margin-top:12px; }

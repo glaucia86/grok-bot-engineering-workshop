@@ -75,7 +75,7 @@ Preparação: [#16](https://github.com/glaucia86/grok-bot-engineering-workshop/i
 
 Comentário opcional (omitido ou em branco vira `""`, no máximo 1000 caracteres após trim; `null` é inválido), nota inteira 1–5, média com uma casa (`4.25` → `4.3`) e agrupamento `Talk A`/`talk a` seguem a spec. FDE e DevOps usam no máximo três skills; o QA tem uma exceção: mantém a `interrogate` do pstack (decisão da Glaucia, porque a `interrogate` faz parte do pstack). Todos os bots aplicam `principle-prove-it-works` como definição de pronto: nenhum bot diz "pronto" sem prova do artefato real. WARN vale só para lacunas de cobertura AC9; falhas continuam FAIL, falta de acesso/isolamento/evidência continua BLOCKED. Os critérios AC1–12 estão mesclados.
 
-O orçamento de 90 minutos é de planejamento, não resultado de ensaio cronometrado. Das 12:10 às 12:22, recuperação primeiro; a rotina só aparece se o núcleo estiver concluído e sobrar tempo. As imagens dos Grok Bots e os screenshots de ensaio continuam pendentes/BLOCKED nos 6 slots de placeholder; a revisão visual humana também continua pendente.
+O orçamento de 90 minutos é de planejamento, não resultado de ensaio cronometrado. Das 12:10 às 12:22, recuperação primeiro; a rotina só aparece se o núcleo estiver concluído e sobrar tempo. Os mascotes originais e a foto da apresentadora estão integrados. Os seis espaços de captura foram substituídos por ilustrações prontas e identificadas como exemplos; não é necessário inserir imagens durante a apresentação. Elas explicam o fluxo, mas não substituem a evidência real da aplicação.
 
 
 ---
@@ -90,8 +90,8 @@ O deck fica em `docs/speaker/slides/index.html`. Ele funciona offline: o reveal.
 4. **Compartilhar.** Na plataforma da Packt, compartilhe só a janela do deck (ou a tela onde ela está). Nunca a tela das notas.
 5. **Navegar e cliques.** Seta para a direita, espaço ou Page Down = próximo **clique**. Nos slides com diagrama (arquitetura, fluxo do time, loop) e nos cartões, cada clique faz **um passo aparecer**: cada notas diz quantos cliques o slide tem. Seta para a esquerda ou Page Up = voltar. **Esc** ou **O** mostra a visão geral de todos os slides. **B** ou **.** escurece a tela (bom para uma pausa). O endereço muda para `#/N`, então dá para pular direto para um slide pela barra de endereço.
 6. **Barra de tempo.** No rodapé do slide há uma barra com 8 segmentos, um por bloco, com a largura proporcional aos minutos. Ela enche conforme o horário planejado do slide e mostra "Brasília · ET". Compare com o relógio real. Se estiver mais de 2 minutos atrasada, use o "Se atrasarX" daquele slide.
-7. **Demonstração ao vivo.** Nos slides marcados "Live", troque de janela com Alt+Tab (Cmd+Tab no Mac) para o Grok Bot ou o GitHub e volte para o deck no fim.
-8. **Prints.** As caixas tracejadas "Your real rehearsal screenshot" são lugares para prints **da sua conta**, tirados no ensaio, sem tokens nem dados pessoais. Para trocar: salve o print em `docs/speaker/slides/assets/shots/` e troque a `<div class="ph">` correspondente por `<img src="assets/shots/nome.png" alt="">`. Os chats desenhados no deck são **mock** (HTML/CSS), não prints reais; os resultados de QA neles são exemplos.
+7. **Demonstração ao vivo e ilustrações prontas.** Nos slides marcados "Live", troque de janela com Alt+Tab (Cmd+Tab no Mac) para o Grok Bot ou o GitHub e volte para o deck no fim. Os slides já incluem chats simulados, revisão de design, fluxo de CI/preview, formulário/dashboard, checklist de merge e recuperação. Não é necessário preparar ou inserir capturas. Os exemplos são ilustrativos; confira os resultados reais na aplicação ao vivo.
+8. **Evidência real.** Abra a aplicação e o PR durante a demonstração. Resultados e dados desenhados nos slides são exemplos, não prova de execução. Capturas de ensaio são opcionais e, se usadas depois, exigem revisão de privacidade.
 9. **Notas e blocos desta página vêm da mesma fonte.** As falas, as perguntas e as transições deste guia e das notas do deck são geradas por `scripts/speaker_content.py`. Para mudar uma frase, edite lá e rode `python scripts/speaker_content.py`.
 
 ---
@@ -395,7 +395,7 @@ If you can't show where a number came from, leave it out. Use the GitHub connect
 
 6. Crie o QA bot e o DevOps colando as instruções da seção 4 do docs/inception.md (aberto numa aba). Confira com este guia: WARN só para cobertura. QA: playwright-best-practices, playwright-cli, create-verification-skill, mais a interrogate do pstack (quatro no total; o QA é a única exceção ao limite de três skills, porque a interrogate faz parte do pstack). A principle-prove-it-works é o passo final de todo bot e não conta no limite. DevOps: deploy-to-vercel, ci-cd-and-automation.
    - ⚠️ **Se falhar:** O QA tem quatro skills de propósito: a interrogate fica. O FDE e o DevOps têm no máximo três. A principle-prove-it-works é o passo final de todos e não conta.
-7. Crie o grupo 'Workshop - Packt Grok Bot' com você e os três bots (como criar grupo: conferir no ensaio). Volte ao deck por volta das 11:11.
+7. Crie o grupo 'Workshop - Packt Grok Bot' com você e os três bots (como criar grupo: conferir no ensaio). Volte ao deck por volta das 11:11. A simulação do chat em grupo está pronta: clique uma vez para as skills do FDE e outra para o lembrete de skills.
    - ✅ **Esperado:** O grupo mostra 4 membros: você e 3 bots.
 
 ### 🗣 SAY IT · fale em inglês
@@ -501,7 +501,7 @@ Os três bots existem e estão num grupo com você. FDE e DevOps têm no máximo
 
 **Slide 9 · Block 2: Design · 11:12–11:20** · 1 clique(s) no slide
 
-1. Abra um chat NOVO com o FDE TypeScript (um chat por tarefa). Cole o prompt de design (abaixo). Clique uma vez no slide para mostrar a lista.
+1. Abra um chat NOVO com o FDE TypeScript (um chat por tarefa). Cole o prompt de design (abaixo). Clique uma vez no slide para mostrar a lista de revisão do design. A ilustração pronta fica na tela enquanto o FDE trabalha; não é preciso inserir prints.
    - ✅ **Esperado:** O bot começa a trabalhar. Enquanto trabalha, leia a lista no slide.
    - ⚠️ **Se falhar:** Se demorar mais de 2 minutos, diga 'Let's give it a few seconds.' e continue explicando a lista.
 
@@ -784,13 +784,13 @@ Before you say CI and preview are ready, apply principle-prove-it-works. Open th
 Script one check (for example, a curl for the preview's HTTP status) and paste the command and output. Verify secrets by presence only, values redacted. Never print or ask for a secret. Never merge.
 ```
 
-4. Abra a página do PR: mostre o check do Actions e o link da preview da Vercel. Coloque seu print real do ensaio na caixa tracejada antes do evento.
+4. Use a ilustração pronta para explicar o PR, a execução do Actions e a preview. Depois abra a página real do PR e confira o check atual e o link da preview. Não é preciso preparar prints; a ilustração não é evidência.
 
 **Slide 15 · Live: send feedback · 11:47–11:55** · 2 clique(s) no slide
 
 5. Abra a preview URL do commit testado (pelo PR ou pelo DevOps). Mostre o dashboard primeiro: o estado vazio só se você usar o dataset de teste isolado. Nunca limpe um banco compartilhado para isso.
    - ⚠️ **Se falhar:** Se a preview não carregar, diga 'This is live, so things can be slow.' Se estiver fora do ar, mostre a aplicação de referência verificada (se acessível) e explique o bloqueio.
-6. Clique no slide uma vez (caixa do formulário), envie um feedback no formulário real (talk 'keynote', seu nome, um comentário curto, nota 5). Clique de novo (caixa do gráfico) e volte ao dashboard.
+6. Clique uma vez para revelar o formulário ilustrado; seus valores são exemplos. Envie um feedback no formulário real (talk 'keynote', seu nome, um comentário curto, nota 5). Clique de novo para revelar o gráfico de exemplo, depois volte ao dashboard real e leia a média e a contagem observadas.
    - ✅ **Esperado:** Na preview do PR do exercício (starter), aparece a barra de média de 'keynote' com uma casa decimal e a contagem; no fallback da aplicação de referência, leia a linha 'keynote' da tabela (média e contagem) e a distribuição 1–5 da talk selecionada.
 7. Recarregue a página uma vez. O dado precisa continuar lá.
    - ⚠️ **Se falhar:** Se o dado ou resultado esperado sumir após o recarregamento, não esconda. Diga: 'QA will mark this as FAIL.' e mostre a causa só se você souber.
