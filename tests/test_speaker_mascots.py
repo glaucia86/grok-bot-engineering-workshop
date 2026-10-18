@@ -19,6 +19,8 @@ class SlideMascots(unittest.TestCase):
             self.assertEqual(len(eyes),2)
             self.assertTrue(all(e.get('transform','').startswith('matrix(') for e in eyes))
             self.assertNotEqual(eyes[0].get('transform'), eyes[1].get('transform'))
+            for eye in eyes:
+                self.assertEqual(eye.get('style'), '--mascot-eye-initial:'+eye.get('transform'))
             self.assertNotIn('<style', ET.tostring(svg, encoding='unicode'))
 
     def test_template_animation_is_namespaced_and_instance_safe(self):
@@ -31,6 +33,7 @@ class SlideMascots(unittest.TestCase):
         self.assertIn('instance-',js)
         self.assertIn("dataset.motion = 'static'", js)
         self.assertNotIn('function blink(', js)
+        self.assertIn('transform: var(--mascot-eye-initial) !important', (DECK/'assets/mascots.css').read_text())
 
     def test_exports_are_current(self):
         import runpy

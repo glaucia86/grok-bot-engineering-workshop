@@ -37,6 +37,7 @@ def exported(ident):
         if cls not in ('oeil0','oeil1'): continue
         matrix = re.search(r'@keyframes '+cls+r'\{0%\{transform:(matrix\([^)]*\))',css).group(1)
         eye.set('transform',matrix)
+        eye.set('style','--mascot-eye-initial:'+matrix)
         eye.set('class',f'mascot-eye mascot-{ident}-{cls}')
         mask.remove(eye); face.append(eye)
     mask.append(face)
