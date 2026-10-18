@@ -38,7 +38,12 @@ try:
                 request_route.abort()
         context.route('**/*', route)
         # Delay font readiness so pointer/visibility events occur before Reveal.initialize.
-        startup = context.new_page()
+        # Playwright's clock is context-wide: isolate its frozen timers from the
+        # real-time navigation/gaze/fullscreen checks below.
+        startup_context = browser.new_context(viewport={'width':1440,'height':900})
+        startup_context.route('**/*', route)
+        startup = startup_context.new_page()
+        startup.on('pageerror', lambda error: errors.append(str(error)))
         startup.add_init_script("""{
           const pending = new Promise(resolve => { window.releaseMascotFonts = resolve; });
           document.fonts.load = () => pending;
@@ -60,7 +65,7 @@ try:
         assert startup.locator('section.present [data-blink="closed"]').count() == 1, startup.evaluate("({ready:Reveal.isReady(),hidden:document.hidden,media:matchMedia(\"(hover: hover) and (pointer: fine)\").matches,states:[...document.querySelectorAll(\"section.present [data-blink]\")].map(e=>e.dataset.blink)})")
         startup.clock.run_for(140)
         assert startup.locator('section.present [data-blink="closed"]').count() == 0
-        startup.close()
+        startup_context.close()
         results.append('Pre-ready pointer/visibility events and independent 140ms blink PASS')
         page = context.new_page()
         page.goto(base, wait_until='networkidle')
