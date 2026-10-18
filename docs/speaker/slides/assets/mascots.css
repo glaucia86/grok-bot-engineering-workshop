@@ -22,3 +22,9 @@
   .mascot-motion, .mascot-face { transform: none !important; }
   .mascot-eye { animation: none !important; transform: var(--mascot-eye-initial) !important; }
 }
+
+.reveal .workshop-ui-top .workshop-mascot { width:42px; height:42px; }
+.reveal .workshop-secret .workshop-mascot { width:47px; height:47px; }
+
+.reveal .workshop-review-row .workshop-mascot { width:52px; height:52px; }
+.reveal .workshop-decision .workshop-mascot { width:55px; height:55px; }
