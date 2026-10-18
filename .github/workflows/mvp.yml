@@ -2,10 +2,6 @@ name: MVP validation
 
 on:
   pull_request:
-    paths:
-      - "mvp/**"
-      - ".github/workflows/mvp.yml"
-      - ".github/workflows/mvp-preview-qa.yml"
   push:
     branches: [main]
     paths:
