@@ -69,3 +69,16 @@ class GuideLanguages(unittest.TestCase):
                 self.assertIsNotNone(section,bot)
                 self.assertEqual(section[1].count('<li>'),count)
                 self.assertEqual(section[1].count('<code>'),count)
+
+    def test_continuous_speech_matches_between_languages(self):
+        import re
+        en = (ROOT/'docs/speaker/tutorial-en.md').read_text()
+        pt = (ROOT/'docs/speaker/tutorial-pt-br.md').read_text()
+        english = re.findall(r'\*\*Say in English:\*\* “([^\n]+)”',en)
+        bilingual = re.findall(r'\*\*Fale em inglês:\*\* “([^\n]+)”\n\n\*\*Tradução:\*\* ([^\n]+)',pt)
+        self.assertEqual(len(english),25)
+        self.assertEqual(english,[line[0] for line in bilingual])
+        for speech,translation in bilingual:
+            self.assertGreaterEqual(len(speech.split()),30)
+            self.assertLessEqual(len(speech.split()),70)
+            self.assertGreater(len(translation.split()),25)
