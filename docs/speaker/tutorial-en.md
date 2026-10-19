@@ -4,7 +4,9 @@
 
 **Packt · November 17, 2026 · 90 minutes · 11:00–12:30 BRT / 09:00–10:30 ET.**
 
-This companion tutorial details each action without changing the existing deck or generated guide. Both versions use identical step numbers. The Portuguese edition includes translations of every spoken line; bot prompts remain English. Read aloud only the lines labeled **Say in English**. Copy each block only to its stated destination; do not read full prompts to the audience.
+This companion tutorial details each action without changing the existing deck or generated guide. Both versions use identical step numbers. The Portuguese edition includes translations of every **Say in English** line; bot prompts remain English. Read aloud the lines labeled **Say in English**, or use the optional **Speaker Notes** as described below. Copy each block only to its stated destination; do not read full prompts to the audience.
+
+**Live presentation:** Optional **Speaker Notes** are folded beside selected live steps. Open a note for conversational lines to say, a quick audience question or a transition; bracketed cues are for you, not for reading aloud. Use these lines in place of the matching introduction or transition in **Say in English**, rather than reading both. Take one brief response when time allows, then continue within the existing time block. These notes are presenter support, not extra participant tasks or bot instructions. Keep this guide off the shared screen; published notes are public.
 
 **Copy safely:** replace every `<FIELD>` in your working copy before sending. Never send unresolved placeholders. `text` blocks are notes, form values or prompts as stated. `sh` blocks go into a Bash terminal, normally one line at a time; paste the protected step 4 block as a whole, as instructed. Choose one alternative rather than sending both. Never paste spoken lines into a terminal. URLs and IDs here are non-secret; credentials never belong in this guide.
 
@@ -283,6 +285,13 @@ How I verify instructions were saved: <observed-action>
 
 ### Step 08 — Open the session and show the base
 
+<details class="speaker-notes" lang="en-US">
+<summary>Speaker Notes · Welcome and connect</summary>
+<p><strong>Say:</strong> “Hi everyone! I’m Glaucia. Thanks for joining me. Today we’ll build a feedback form and a simple results page with a small team of AI bots. Along the way, we’ll practice giving them clear jobs and checking the work they bring back.”</p>
+<p><strong>Ask:</strong> “Have you used an AI coding agent before? A quick yes or no in chat is enough.” [Pause briefly. Acknowledge the mix of experience; continue even if chat is quiet.]</p>
+<p><strong>Transition:</strong> “Let’s start with what’s already prepared. I’ll show you the exercise base, then we’ll meet the bots. The complete reference is separate from the work we’re doing today.”</p>
+</details>
+
 #### Window and micro-actions
 
 1. At 11:00 BRT, start your timer.
@@ -317,6 +326,12 @@ Apply `principle-prove-it-works` at the end of every deliverable from FDE, QA an
 - **Missing proof:** report the remaining gap honestly; this rule grants no new access or permission for remote writes.
 
 ### Step 09 — Create FDE and paste its full instructions
+
+<details class="speaker-notes" lang="en-US">
+<summary>Speaker Notes · Introduce the team</summary>
+<p><strong>Say:</strong> “Think about how you would bring someone new onto your engineering team. They need a clear task, some context and a way to tell whether the work is ready. We’ll give our bots that same clarity.”</p>
+<p><strong>Transition:</strong> “The FDE will build, QA will evaluate the work independently, and DevOps will report the checks and preview status. I’ll keep the final review and merge decision. Let’s set up the builder first.”</p>
+</details>
 
 #### Window and micro-actions
 
@@ -461,6 +476,13 @@ Confirm your role, configured skills, repository access and stop boundaries in f
 
 ### Step 12 — Request design without implementation
 
+<details class="speaker-notes" lang="en-US">
+<summary>Speaker Notes · Make the design review visible</summary>
+<p><strong>Ask:</strong> “Before a bot starts coding, what would you want it to clarify?” [Take one short answer if time allows; otherwise continue with the example.]</p>
+<p><strong>Say:</strong> “For this exercise, I want to see which files will change, how the form and results will use the existing API, and how we’ll check them. Watch for those three things in the response.”</p>
+<p><strong>Transition:</strong> “I’ll send the design request now. We’ll read what comes back before deciding whether to approve it.”</p>
+</details>
+
 #### Window and micro-actions
 
 1. Open a new FDE task through the rehearsed control.
@@ -499,6 +521,12 @@ Return a short design and stop for my approval. Do not merge or run remote write
 
 ### Step 13 — Explicitly approve the design
 
+<details class="speaker-notes" lang="en-US">
+<summary>Speaker Notes · Move from design to building</summary>
+<p><strong>Say:</strong> “This is a useful moment to slow down for a few seconds. Does the proposed change match the exercise, and do the tests cover the behavior we expect? If something is unclear, we can ask for a revision here.”</p>
+<p><strong>Transition:</strong> “Once I’m happy with this specific design, I can approve it. While the FDE works on that scope, we’ll ask QA to prepare its own checks.”</p>
+</details>
+
 #### Window and micro-actions
 
 1. In the FDE response, inspect each file and route.
@@ -532,6 +560,13 @@ Revise the design only: <specific correction>. Do not implement until I explicit
 ## 20–40 min · 11:20–11:40 BRT · 09:20–09:40 ET
 
 ### Step 14 — Prepare independent evaluation
+
+<details class="speaker-notes" lang="en-US">
+<summary>Speaker Notes · Keep the audience involved while the bot works</summary>
+<p><strong>Say:</strong> “While the builder is working, let’s think like users. We need to know what happens when someone submits feedback, sees an error or opens the results page.”</p>
+<p><strong>Ask:</strong> “What would you try first to check this form?” [Accept one brief example. Connect it to the agreed criteria; park new feature ideas for Q&amp;A.]</p>
+<p><strong>Transition:</strong> “QA can prepare those checks now. We’ll look at the actual results only after they run against the appropriate target.”</p>
+</details>
 
 #### Window and micro-actions
 
@@ -567,6 +602,13 @@ Return one row per AC: planned method, target, current available evidence, missi
 **If it fails / recovery:** If QA says everything passed without SHA, target and evidence, request the matrix again. Existing tests do not replace the remote journey.
 
 ### Step 15 — Read the FDE handoff and open the PR
+
+<details class="speaker-notes" lang="en-US">
+<summary>Speaker Notes · Explain the handoff</summary>
+<p><strong>Say:</strong> “A pull request gives us something concrete to review. When it arrives, I’ll check where it’s going, which commit it contains and what was actually tested. Then we can read the change together.”</p>
+<p><strong>If we are waiting:</strong> “The implementation is still in progress. Let’s use this moment to review the expected behavior and the checks we’ve prepared.” [Stay within this block’s budget; do not describe an unfinished PR as ready.]</p>
+<p><strong>Transition:</strong> “Once we have the PR and its commit, DevOps can help us find the matching checks and preview.”</p>
+</details>
 
 #### Window and micro-actions
 
@@ -621,6 +663,14 @@ Return links, evidence and blockers. Never merge.
 
 ### Step 17 — Run QA only after the gate
 
+<details class="speaker-notes" lang="en-US">
+<summary>Speaker Notes · Set up the live demonstration</summary>
+<p><strong>Say:</strong> “We’re moving from reading code to observing the application. Before we do that, we need the correct preview, an isolated test target and permission for the test writes. I’ll check those prerequisites first.”</p>
+<p><strong>If ready:</strong> “We can run the prepared QA checks now. Watch how each result points back to a criterion and this exact commit.”</p>
+<p><strong>If blocked:</strong> “We’re missing a prerequisite, so this part stays BLOCKED. We can discuss the available code and local evidence, but we haven’t demonstrated the remote behavior.”</p>
+<p><strong>Transition:</strong> “After QA’s empty-state check, we can try one manual submission if that write is also authorized.”</p>
+</details>
+
 #### Window and micro-actions
 
 1. First verify step 6 and explicit write authorization.
@@ -657,6 +707,12 @@ Evaluate code and available local evidence only for <PR_URL> at <TESTED_SHA>. Do
 
 ### Step 18 — Submit one synthetic feedback entry manually
 
+<details class="speaker-notes" lang="en-US">
+<summary>Speaker Notes · Give the audience something to watch</summary>
+<p><strong>Before the authorized submission:</strong> “Let’s follow one piece of feedback through the app. I’ll use synthetic details, choose five stars and leave the optional comment blank. Watch the response and what the form does afterward.”</p>
+<p><strong>Transition:</strong> “We’ll check what actually happened before trying again. If it succeeded, the next question is whether the results page shows that saved feedback.”</p>
+</details>
+
 #### Window and micro-actions
 
 1. Run only if manual writes are also authorized, QA has finished the empty-state test and the target is isolated.
@@ -689,6 +745,13 @@ stored comment: ""
 
 ### Step 19 — Check results and reload
 
+<details class="speaker-notes" lang="en-US">
+<summary>Speaker Notes · Connect the form to the result</summary>
+<p><strong>Ask:</strong> “For a new talk with one successful five-star submission, what average and count should we see?” [Pause briefly; then compare with the actual output.]</p>
+<p><strong>Say:</strong> “We expect 5.0 and one response in the dashboard. Let’s compare that with the API and reload. We’ll describe what we observe; a reload check still leaves the separate fresh-instance check to prove.”</p>
+<p><strong>Transition:</strong> “Now we can bring the available evidence back to the pull request and decide what it supports.”</p>
+</details>
+
 #### Window and micro-actions
 
 1. On the same preview, open approved RESULTS_PATH.
@@ -718,6 +781,13 @@ After reload: the same contribution is still visible.
 ## 55–70 min · 11:55–12:10 BRT · 09:55–10:10 ET
 
 ### Step 20 — Review three sources for the same commit
+
+<details class="speaker-notes" lang="en-US">
+<summary>Speaker Notes · Invite the audience into the review</summary>
+<p><strong>Ask:</strong> “If you were reviewing this PR, what would you want to see before making a decision?” [Take one short response, then return to the review card.]</p>
+<p><strong>Say:</strong> “I’m bringing together the diff, independent QA evidence and CI checks for the same commit. Let’s look at any failures or missing proof as carefully as the passes.”</p>
+<p><strong>Transition:</strong> “From here, we can request a focused fix, record a blocker or consider a human merge if every required condition is satisfied.”</p>
+</details>
 
 #### Window and micro-actions
 
@@ -806,6 +876,13 @@ If not merged: <remaining-action-and-owner>
 
 ### Step 23 — Use recovery before any extra
 
+<details class="speaker-notes" lang="en-US">
+<summary>Speaker Notes · Handle delays calmly</summary>
+<p><strong>If work remains:</strong> “We still have work to verify or review. We’ll use this recovery time for that and skip the optional routine. I’ll be clear about what’s finished and what still needs an owner.”</p>
+<p><strong>If showing a reference:</strong> “I’m switching to the identified reference and its available evidence to explain the intended result. This is separate from what our exercise has demonstrated.”</p>
+<p><strong>At minute 82:</strong> “Let’s pause here and record the remaining blockers, owners and next steps. We’re moving into the recap now, with questions starting at 12:26 BRT.” [Stop recovery at 12:22 BRT even if work remains. Only show the disabled routine draft beforehand if the core, tests and review are complete and time remains.]</p>
+</details>
+
 #### Window and micro-actions
 
 1. At minutes 70–82, 12:10–12:22 BRT, check the clock and review card.
@@ -861,6 +938,13 @@ Do not comment, edit files, open PRs, close issues, merge, deploy or change sche
 ## 82–90 min · 12:22–12:30 BRT · 10:22–10:30 ET
 
 ### Step 25 — Recap, answer questions and close
+
+<details class="speaker-notes" lang="en-US">
+<summary>Speaker Notes · Recap and close on time</summary>
+<p><strong>Recap at 12:22 BRT:</strong> “Let’s bring this together: give each bot a clear role, ask for evidence you can inspect, and keep a human responsible for the decision. Here’s where our exercise stands.” [State the actual outcome and any remaining blockers, owners and next steps.]</p>
+<p><strong>Open questions at 12:26 BRT:</strong> “What would you like to revisit about the roles, the checks or the review process?” [Read each question before answering. If unsure, say: “I need to verify that before I answer.”]</p>
+<p><strong>Close at 12:29 BRT:</strong> “Thank you for spending this time with me! I hope you leave with a clearer way to guide coding agents and evaluate their work. You can revisit the guide and the links we’ve checked for sharing. Thanks for your questions, and enjoy the rest of your day!” [Finish by 12:30 BRT; share only access-checked links.]</p>
+</details>
 
 #### Window and micro-actions
 
