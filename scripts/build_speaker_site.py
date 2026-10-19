@@ -92,7 +92,7 @@ def render_tutorial(text, lang, legacy_text=''):
     body = re.sub(r'<table>.*?</table>', lambda m: '<div class="table-scroll" tabindex="0" role="region" aria-label="'+('Workshop table' if en else 'Tabela do workshop')+'">'+m[0]+'</div>', body, flags=re.S)
     title = 'Presenter guide' if en else 'Guia da apresentadora'
     index = 'Guide contents' if en else 'Índice do guia'
-    note = ('Instructions and spoken lines are in English. Read aloud only “Say in English”. Copy blocks go to their stated destination.' if en else 'Instruções em português. Leia em voz alta apenas “Fale em inglês”. A tradução é só para sua leitura. Copie os blocos para o destino indicado.')
+    note = ('Instructions and spoken lines are in English. Read aloud “Say in English” or spoken lines in the optional Speaker Notes. Bracketed cues are for you. Copy blocks go to their stated destination.' if en else 'Instruções em português. Leia em voz alta apenas “Fale em inglês”. A tradução é só para sua leitura. Copie os blocos para o destino indicado.')
     pt_current = '' if en else ' aria-current="page"'
     en_current = ' aria-current="page"' if en else ''
     switch = f'<nav class="language-switch" aria-label="{"Guide language" if en else "Idioma do guia"}"><a href="{"../" if en else "./"}" lang="pt-BR" hreflang="pt-BR"{pt_current}>PT-BR</a><a href="{"./" if en else "en-us/"}" lang="en-US" hreflang="en-US"{en_current}>EN-US</a></nav>'

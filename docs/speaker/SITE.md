@@ -32,6 +32,23 @@ recommended for the Reveal speaker window. Press F for fullscreen, S for
 speaker view, arrows for navigation. Browser pop-up/fullscreen restrictions
 may require the user's action. Keep the guide/notes screen out of screen sharing.
 
+## Optional English Speaker Notes
+
+The published `/guide/en-us/` tutorial is authored in `tutorial-en.md`.
+Selected live steps include native `<details class="speaker-notes">` disclosures,
+closed by default and usable with the keyboard or without JavaScript. Open them
+for natural English introductions, audience questions, demo context, transitions
+and closing lines. Use the relevant lines instead of the matching introduction
+or transition in **Say in English**; bracketed delivery cues are not spoken.
+Keep audience responses brief within the existing 90-minute budget. Notes do not
+add participant tasks, copyable prompts, technical requirements or permissions.
+
+These optional notes belong only to the English tutorial. The bilingual spoken
+lines, Portuguese tutorial, canonical run sheet and Reveal speaker notes retain
+their existing wording and synchronization. Edit the English tutorial directly
+for this layer; do not regenerate it with `speaker_content.py`. Notes are public,
+stay off the shared screen with the rest of the guide, and are hidden in print.
+
 ## Browser verification
 
 CI runs `scripts/check_speaker_browser.py` with pinned Playwright 1.55.0 and its
