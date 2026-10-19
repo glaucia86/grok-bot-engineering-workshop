@@ -69,7 +69,7 @@ def render_guide(text):
 <div class="guide-layout"><nav class="index" aria-label="Índice do guia"><details open><summary>Índice do guia</summary>{md.toc}</details></nav>
 <main id="content" class="guide"><p class="eyebrow">Speaker guide · PT / EN</p><p class="reading-note">Leia as falas em inglês. As instruções e traduções são para sua leitura. Prompts são para copiar, sem ler em voz alta.</p>{body}<p class="end">Fim do guia · <a href="#content">Voltar ao início</a></p></main></div><p role="status" aria-live="polite" class="copy-status"></p>''', '../')
 
-def render_tutorial(text, lang, legacy_text=''):
+def render_tutorial(text, lang, legacy_text='', live=False):
     en = lang == 'en-US'
     prefix = '../../' if en else '../'
     # Navigation is supplied by the site, rather than links to source Markdown.
@@ -95,14 +95,22 @@ def render_tutorial(text, lang, legacy_text=''):
     note = ('Instructions and spoken lines are in English. Read aloud “Say in English” or spoken lines in the optional Speaker Notes. Bracketed cues are for you. Copy blocks go to their stated destination.' if en else 'Instruções em português. Leia em voz alta apenas “Fale em inglês”. A tradução é só para sua leitura. Copie os blocos para o destino indicado.')
     pt_current = '' if en else ' aria-current="page"'
     en_current = ' aria-current="page"' if en else ''
-    switch = f'<nav class="language-switch" aria-label="{"Guide language" if en else "Idioma do guia"}"><a href="{"../" if en else "./"}" lang="pt-BR" hreflang="pt-BR"{pt_current}>PT-BR</a><a href="{"./" if en else "en-us/"}" lang="en-US" hreflang="en-US"{en_current}>EN-US</a></nav>'
+    if live:
+        # The on-stage script is English-only, not a translation of the PT-BR technical guide.
+        switch = '<nav class="language-switch" aria-label="Guide navigation"><a href="../" lang="pt-BR">PT-BR technical guide</a><a href="../en-us/" lang="en-US">EN-US technical appendix</a><span aria-current="page">Live script</span></nav>'
+        extra = ''
+        title = 'Live presenter script'
+        note = 'On-stage English speaking notes. Read Say/Ask aloud; Show and square-bracket notes are private stage directions. Use the technical appendix for full Bot instructions.'
+    else:
+        switch = f'<nav class="language-switch" aria-label="{"Guide language" if en else "Idioma do guia"}"><a href="{"../" if en else "./"}" lang="pt-BR" hreflang="pt-BR"{pt_current}>PT-BR</a><a href="{"./" if en else "en-us/"}" lang="en-US" hreflang="en-US"{en_current}>EN-US</a></nav>'
+        extra = '<a href="../live/">Live script · 10 parts ↗</a>' if en else ''
     legacy = ''
     if not en:
         old = markdown.markdown(legacy_text, extensions=['toc'])
         ids = re.findall(r'<h[1-6] id="([^"]+)"', old)
         legacy = ''.join(f'<p class="legacy-anchor" id="{anchor}">Esta seção está no <a href="run-sheet/#{anchor}">roteiro de apresentação e pronúncia</a>.</p>' for anchor in ids if f'id="{anchor}"' not in body)
         legacy += '<details class="extra-guide"><summary>Roteiro de apresentação e pronúncia</summary><p><a href="run-sheet/">Abrir roteiro por slide, falas e dicas de pronúncia ↗</a></p></details>'
-    return page(title, f'''<header class="topbar"><a href="{prefix}">Workshop</a><a href="{prefix}slides/" target="workshop-slides">{'Open presentation' if en else 'Abrir apresentação'} ↗</a>{switch}{'<a href="../live/">Live script · 10 parts ↗</a>' if en else ''}</header><div class="guide-layout"><nav class="index" aria-label="{index}"><details open><summary>{index}</summary>{md.toc}</details></nav><main id="content" class="guide"><p class="eyebrow">{title} · {lang}</p><p class="reading-note">{note}</p>{legacy}{body}<p class="end"><a href="#content">{'Back to top' if en else 'Voltar ao início'}</a></p></main></div><p role="status" aria-live="polite" class="copy-status"></p>''', prefix, lang)
+    return page(title, f'''<header class="topbar"><a href="{prefix}">Workshop</a><a href="{prefix}slides/" target="workshop-slides">{'Open presentation' if en else 'Abrir apresentação'} ↗</a>{switch}{extra}</header><div class="guide-layout"><nav class="index" aria-label="{index}"><details open><summary>{index}</summary>{md.toc}</details></nav><main id="content" class="guide"><p class="eyebrow">{title} · {lang}</p><p class="reading-note">{note}</p>{legacy}{body}<p class="end"><a href="#content">{'Back to top' if en else 'Voltar ao início'}</a></p></main></div><p role="status" aria-live="polite" class="copy-status"></p>''', prefix, lang)
 
 
 def build(root, output):
@@ -143,11 +151,11 @@ def build(root, output):
     (output/'guide/en-us').mkdir()
     (output/'guide/en-us/index.html').write_text(render_tutorial((speaker/'tutorial-en.md').read_text(encoding='utf-8'), 'en-US'), encoding='utf-8')
     (output/'guide/live').mkdir()
-    (output/'guide/live/index.html').write_text(render_tutorial((speaker/'live-en.md').read_text(encoding='utf-8'), 'en-US'), encoding='utf-8')
+    (output/'guide/live/index.html').write_text(render_tutorial((speaker/'live-en.md').read_text(encoding='utf-8'), 'en-US', live=True), encoding='utf-8')
     for name in ['site.css','site.js']:
         shutil.copyfile(speaker/'site'/name,output/name)
     (output/'.nojekyll').touch()
-    (output/'index.html').write_text(page('Build Your First Engineering Bot', '''<main id="content" class="home"><p class="eyebrow">Packt live workshop · 90 min</p><h1>Build Your First<br><span>Engineering Bot</span><br>with Grok Bot</h1><p class="byline">Glaucia Lemos · 17 Nov 2026<br>11:00–12:30 Brasília · 9:00–10:30 ET</p><div class="choices"><a class="primary" href="slides/" lang="en">Open presentation ↗</a><a href="guide/live/">Live script · English ↗</a><a href="guide/">Guia técnico · PT-BR / EN-US ↗</a></div><div class="team" aria-label="Workshop bot team"><img src="slides/assets/avatars/fde-typescript.svg" alt="FDE TypeScript, green triangle"><img src="slides/assets/avatars/qa-bot.svg" alt="QA bot, pink teardrop"><img src="slides/assets/avatars/devops.svg" alt="DevOps, purple circle"><img src="slides/assets/avatars/engineering-lead.svg" alt="Engineering Lead, red rounded square"></div><p class="hint">Apresentação: <kbd>F</kbd> tela cheia · <kbd>S</kbd> notas da apresentadora.<br>Compartilhe só a janela do deck. O guia e as notas publicados são públicos.</p></main>'''), encoding='utf-8')
+    (output/'index.html').write_text(page('Build Your First Engineering Bot', '''<main id="content" class="home"><p class="eyebrow">Packt live workshop · 90 min</p><h1>Build Your First<br><span>Engineering Bot</span><br>with Grok Bot</h1><p class="byline">Glaucia Lemos · 17 Nov 2026<br>11:00–12:30 Brasília · 9:00–10:30 ET</p><div class="choices"><a class="primary" href="slides/" lang="en">Open presentation ↗</a><a href="guide/live/">Live script · English ↗</a><a href="guide/">Guia da apresentadora · PT-BR / EN-US ↗</a></div><div class="team" aria-label="Workshop bot team"><img src="slides/assets/avatars/fde-typescript.svg" alt="FDE TypeScript, green triangle"><img src="slides/assets/avatars/qa-bot.svg" alt="QA bot, pink teardrop"><img src="slides/assets/avatars/devops.svg" alt="DevOps, purple circle"><img src="slides/assets/avatars/engineering-lead.svg" alt="Engineering Lead, red rounded square"></div><p class="hint">Apresentação: <kbd>F</kbd> tela cheia · <kbd>S</kbd> notas da apresentadora.<br>Compartilhe só a janela do deck. O guia e as notas publicados são públicos.</p></main>'''), encoding='utf-8')
     print(f'Built speaker site: {len(files)} deck files + guide + landing (explicit allowlist)')
 
 if __name__ == '__main__':
