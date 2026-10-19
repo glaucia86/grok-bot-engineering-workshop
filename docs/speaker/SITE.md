@@ -32,6 +32,16 @@ recommended for the Reveal speaker window. Press F for fullscreen, S for
 speaker view, arrows for navigation. Browser pop-up/fullscreen restrictions
 may require the user's action. Keep the guide/notes screen out of screen sharing.
 
+## Ten-part English live script
+
+`docs/speaker/live-en.md` is the short, human-facing on-stage script, with ten
+sections, a 90-minute schedule, natural English dialogue and cues for audience
+interaction, bot creation, pstack, handoffs, verification and closing. It is
+published at `/guide/live/` and linked from the homepage and English
+technical guide. The 25-step `/guide/en-us/` tutorial remains the technical
+appendix with precise prompts and safety gates. Avoid introducing further
+agent roles or complex shared boards solely for the presentation.
+
 ## Optional English Speaker Notes
 
 The published `/guide/en-us/` tutorial is authored in `tutorial-en.md`.
