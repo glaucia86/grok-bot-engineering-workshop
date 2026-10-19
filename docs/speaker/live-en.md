@@ -2,22 +2,22 @@
 
 **Build Your First Engineering Bot with Grok Bot · Packt · November 17, 2026 · 90 minutes · 11:00–12:30 BRT / 09:00–10:30 ET**
 
-**This is your on-stage guide.** Ten chapters, one story, and natural English to speak. Keep it in a private window. The [technical walkthrough](https://github.com/glaucia86/grok-bot-engineering-workshop/blob/main/docs/speaker/tutorial-en.md) is an appendix for exact bot prompts, commands, approved access and troubleshooting—not a second script to read aloud.
+**This is your on-stage guide.** Ten chapters, one story, and natural English to speak. Keep it in a private window. The [English technical appendix](../en-us/) is an appendix for exact bot prompts, commands, approved access and troubleshooting—not a second script to read aloud.
 
 **How to use:** Read text marked **Say** aloud, and **Ask** only when there is time. **Show** and text in square brackets are stage directions; do not say them aloud. Do not read commands, skill instructions or entire bot prompts to the audience.
 
 | Time (BRT) | Part | Focus |
 | --- | --- | --- |
 | 11:00–11:05 | 1 | What is Grok Bot? |
-| 11:05–11:12 | 2 | Why is it different? |
-| 11:12–11:16 | 3 | The future of agentic engineering |
-| 11:16–11:22 | 4 | What we are building |
-| 11:22–11:38 | 5 | Create FDE, QA and DevOps |
-| 11:38–11:45 | 6 | pstack and skills |
-| 11:45–12:14 | 7 | One continuous implementation flow |
-| 12:14–12:21 | 8 | Demonstrate and verify |
-| 12:21–12:25 | 9 | Final thoughts |
-| 12:25–12:30 | 10 | Conclusion and questions |
+| 11:05–11:10 | 2 | Why is it different? |
+| 11:10–11:14 | 3 | The future of agentic engineering |
+| 11:14–11:18 | 4 | What we are building |
+| 11:18–11:30 | 5 | Create FDE, QA and DevOps |
+| 11:30–11:35 | 6 | pstack and skills |
+| 11:35–12:00 | 7 | One continuous implementation flow |
+| 12:00–12:10 | 8 | Demonstrate and verify |
+| 12:10–12:22 | 9 | Recovery first and final thoughts |
+| 12:22–12:30 | 10 | Conclusion and questions |
 
 **Before the audience arrives (outside the 90 minutes):** Have the Grok Bot desktop app signed in, the authorized exercise repository and approved base SHA verified, an exercise-only PR target prepared, and a tested demo preview or clearly labeled fallback. Keep the canonical reference `main` separate from the exercise. Pre-check skill availability, necessary permissions and isolated test data. Have the technical guide nearby for full instructions and failure recovery. Do not show real credentials, force-push, change repository visibility or run destructive database commands.
 
@@ -33,7 +33,7 @@
 
 **Transition:** “So how is this different from asking a coding assistant to implement a feature?”
 
-## 2. Why use Grok Bot? — 7 min
+## 2. Why use Grok Bot? — 5 min
 
 **Show:** The Bots list and, if available, the shared computer view. Do not expose sign-ins or secrets.
 
@@ -57,7 +57,7 @@
 
 **Transition:** “Let’s make that concrete with one small application.”
 
-## 4. What are we building? — 6 min
+## 4. What are we building? — 4 min
 
 **Show:** The prepared feedback app or the existing repository's exercise base. Explain the reference and starter as different artifacts.
 
@@ -69,7 +69,7 @@
 
 **Transition:** “To deliver that small feature, we’ll create three teammates.”
 
-## 5. Live demo: create FDE, QA and DevOps — 16 min
+## 5. Live demo: create FDE, QA and DevOps — 12 min
 
 **Show:** In Grok Bot, use **New → Create new Bot** for each personal Bot; use its profile controls for the name and durable role. User interface labels can vary; use the controls actually visible. These are three collaborating Bots, **not** the separate Team Bot product.
 
@@ -77,19 +77,21 @@
 
 > **Say:** “First is our FDE, our builder. It owns the feedback form and results UI. It should propose a small design before it starts changing code, and it should work on the authorized exercise branch.”
 
-**Role to configure:** “Build the approved feedback UI from the existing API. Propose the files and tests first. Work only in the authorized exercise repository and branch. Never merge. Return a PR and verifiable evidence.”
+**Role overview (say aloud; do not paste as Bot instructions):** “The FDE builds the approved feedback UI and returns an exercise PR with real evidence.”
 
 **Bot 2 — QA (independent reviewer):**
 
 > **Say:** “Next is QA. QA should not simply trust that the builder says the feature works. It checks the user journey and brings back evidence.”
 
-**Role to configure:** “Independently evaluate the approved acceptance criteria. Check valid and invalid inputs, results and empty states. Show evidence linked to the tested commit. Do not modify product code or merge.”
+**Role overview (say aloud; do not paste as Bot instructions):** “QA checks our criteria independently and provides evidence for the tested commit.”
 
 **Bot 3 — DevOps (checks and preview):**
 
 > **Say:** “And our third bot is DevOps. It helps us understand whether the checks passed and whether the preview is available. It reports the facts, but it does not deploy, change permissions or merge without approval.”
 
-**Role to configure:** “Report CI status, the reviewed commit and verified preview links. Separate PASS, FAIL and BLOCKED. Do not expose secrets, change access or merge.”
+**Role overview (say aloud; do not paste as Bot instructions):** “DevOps reports the real CI and preview status without changing access or merging.”
+
+**Mandatory private configuration:** Open the [bundled English technical appendix](../en-us/) and follow **Step 09 (FDE), Step 10 (QA), and Step 11 (DevOps)**. Paste the **complete durable instructions** for each bot, select the **approved skills** (including QA's four-skill exception) and common `principle-prove-it-works` completion rule, then confirm the settings were saved. The short role overviews above are **spoken explanations, never Bot prompts**. Keep every repository/ref/SHA guard, authorization and isolated-preview gate, no-force-push and no-production-write boundary, BLOCKED handling, and human-only merge requirement. Pre-stage the full instructions before the workshop; never replace them with summaries. If any prerequisite cannot be confirmed, stop that operation and report BLOCKED.
 
 **Show:** If time allows, create a group chat from **New** and select the three Bots. The group is for short visible handoffs; keep sensitive approval or login steps in the proper one-to-one flow. Do not wait for lengthy bot replies during this setup block.
 
@@ -97,7 +99,7 @@
 
 **Transition:** “Before we give them work, we need to explain one idea that makes their output more reliable.”
 
-## 6. pstack and reusable skills — 7 min
+## 6. pstack and reusable skills — 5 min
 
 **Show:** One relevant skill from the repository's approved skills, then the `principle-prove-it-works` instructions. Do not install a large new toolchain during the presentation.
 
@@ -111,7 +113,7 @@
 
 **Transition:** “Now let’s use that rule in one real development flow.”
 
-## 7. Demo: one implementation flow — 29 min
+## 7. Demo: one implementation flow — 25 min
 
 **Show:** The exercise task and Bots. One feature, one exercise PR, one review. Use the exact prepared prompts from the technical walkthrough rather than inventing live repository IDs.
 
@@ -145,9 +147,9 @@
 
 **Transition:** “Let’s look at the feature from a user’s point of view.”
 
-## 8. Conclude the demo: show the result — 7 min
+## 8. Conclude the demo: show the result — 10 min
 
-**Show:** Only a verified preview or a clearly identified reference app. If authorized, submit **one synthetic** feedback entry, inspect its response, open results, and reload. Do not repeatedly send writes when the response is uncertain.
+**Show:** Only a verified preview or clearly identified reference app. **First, QA must complete and document the AC8 empty-state check on the authorized, isolated QA target.** Only **after** that verification and separate permission for a manual write, submit **one synthetic** feedback entry, inspect its response, open results, and reload. Do not repeat a write if its response is uncertain. If AC8, isolation or authorization is missing, **do not submit feedback**. Report BLOCKED and, if useful, show a clearly labeled reference app in read-only mode.
 
 > **Say:** “Here is the feedback form. I can choose a talk, give it a rating, and leave the comment blank because it is optional.”
 
@@ -159,26 +161,30 @@
 
 **Transition:** “Before we finish, I want to leave you with one engineering lesson.”
 
-## 9. Final thoughts — 4 min
+## 9. Recovery first and final thoughts — 12 min
 
-**Show:** The three roles again, with a short phrase: **Clear roles → Useful handoffs → Real evidence → Human decision**.
+**Show:** At **12:10 BRT**, stop adding features. **Reserve 12:10–12:22 BRT for recovery first:** incomplete QA, CI evidence, preview checks, or human review take priority. Record each unresolved blocker and owner. If the core is already verified, you may briefly discuss optional ideas, but do not turn on a routine or make unapproved writes. **Stop recovery at 12:22**, even if some work remains.
 
-> **Say:** “Today, we created a small engineering team: one bot to build, one to test, and one to inspect delivery status. We gave them clear responsibilities, shared context, and a rule for verifying their work.”
+> **If checks or review are pending:** “We’re using this time to finish the essential checks and review. If something is still blocked, I’ll show what we verified, who owns the next action, and what proof is still missing.”
 
-> **Say:** “For me, agentic engineering is not about writing more code with less attention. It is about designing a better engineering process where automation and human judgment work together.”
+> **If the core is complete:** “Today, we created a small engineering team: one bot to build, one to test, and one to inspect delivery status. We gave them clear responsibilities, shared context, and a rule for verifying their work.”
 
-**Transition:** “Let’s wrap up with the main takeaway, and then I’d love to hear your questions.”
+> **If time remains:** “For me, agentic engineering is not about writing more code with less attention. It is about designing a better engineering process where automation and human judgment work together.”
 
-## 10. Conclusion and questions — 5 min
+**Transition at 12:22 BRT:** “Let’s wrap up with the main takeaway, and then I’d love to hear your questions.”
+
+## 10. Conclusion and questions — 8 min
+
+**Show:** At **12:22 BRT**, put the three roles on screen: **Clear roles → Useful handoffs → Real evidence → Human decision**. State the real demo outcome, blockers, owners and next steps. Open questions at **12:26 BRT** and finish by **12:30 BRT**.
 
 > **Say:** “If you remember only three things, remember these: give each bot one clear job, make handoffs easy to inspect, and ask for real evidence before you trust a result.”
 
 > **Say:** “We kept the example deliberately small. You can take the same pattern to larger engineering problems, but start with a task you know how to verify.”
 
-> **Ask:** “What would you like to explore next: bot roles, skills, or the review process?” [Take the available questions. If unsure, say: “I want to check that before I give you an answer.”]
+> **Ask at 12:26 BRT:** “What would you like to explore next: bot roles, skills, or the review process?” [Take the available questions. If unsure, say: “I want to check that before I give you an answer.”]
 
 > **Close:** “Thank you so much for joining me today. I hope this gives you a practical starting point for building your own engineering team with Grok Bot. Enjoy the rest of your day!”
 
-**Presenter's note:** If a live step takes longer than planned, cut optional audience questions or extended explanation, **not** verification or the human approval boundary. Preserve the final five minutes for closing and questions.
+**Presenter's note:** If a step runs long, shorten explanations and optional interactions, **not** verification or human approval. Protect 12:10–12:22 BRT for recovery first, recap from 12:22, questions from 12:26, and close by 12:30.
 
 **References (for preparation, not an extra live segment):** [Official Grok Bot getting started](https://docs.x.ai/grok-bot/get-started) · [Create and manage Bots](https://docs.x.ai/grok-bot/bots) · [Message and collaborate](https://docs.x.ai/grok-bot/chat-and-collaboration) · [Skills and routines](https://docs.x.ai/grok-bot/skills-routines-and-automations) · [Grok Bot for Engineering](https://x.ai/bot/guides/grok-bot-for-engineering) · [Akshay Pachaar's engineering-team example](https://x.com/akshay_pachaar/article/2092664985197723937) · [Lingxi Li's engineering fleet](https://x.com/lingxi/article/2094493172516966781).
