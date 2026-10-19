@@ -76,7 +76,7 @@ def render_tutorial(text, lang, legacy_text='', live=False):
     text = re.sub(r'^\[.*?\]\(tutorial-.*?\).*$', '', text, flags=re.M)
     md = markdown.Markdown(extensions=['tables', 'fenced_code', 'toc', 'sane_lists'], extension_configs={'toc': {'toc_depth': '2-3'}})
     body = md.convert(text)
-    body = re.sub(r'href="([^"]+)"', lambda m: 'href="'+source_url(m[1])+'"', body)
+    body = re.sub(r'href="([^"]+)"', lambda m: 'href="'+(m[1] if live and m[1] == '../en-us/' else source_url(m[1]))+'"', body)
     # Stable shared step anchors survive translation and can be shared directly.
     for anchor, number in re.findall(r'<h3 id="([^"]+)">(?:Step|Passo) (\d+) ', body):
         md.toc = md.toc.replace(f'href="#{anchor}"', f'href="#step-{int(number):02}"')
