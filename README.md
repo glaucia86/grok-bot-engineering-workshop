@@ -5,7 +5,7 @@
 
 # Build Your First Engineering Bot Team with Grok Bot
 
-**A hands-on Packt workshop · November 17, 2026 · 9:00–10:30 AM ET (11h–12h30 Brasília) · 90 minutes**
+**A hands-on Packt workshop · November 20, 2026 · 9:00–10:30 AM ET (11h–12h30 Brasília) · 90 minutes**
 
 <p>
 <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />

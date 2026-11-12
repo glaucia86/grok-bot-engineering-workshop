@@ -2,7 +2,7 @@
 
 [Tutorial em português](tutorial-pt-br.md) · [Existing guide and slides](guia-glaucia.md)
 
-**Packt · November 17, 2026 · 90 minutes · 11:00–12:30 BRT / 09:00–10:30 ET.**
+**Packt · November 20, 2026 · 90 minutes · 11:00–12:30 BRT / 09:00–10:30 ET.**
 
 This companion tutorial details each action without changing the existing deck or generated guide. Both versions use identical step numbers. The Portuguese edition includes translations of every **Say in English** line; bot prompts remain English. Read aloud the lines labeled **Say in English**, or use the optional **Speaker Notes** as described below. Copy each block only to its stated destination; do not read full prompts to the audience.
 

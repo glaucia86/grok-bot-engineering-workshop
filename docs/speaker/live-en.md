@@ -1,6 +1,6 @@
 # Live presenter script — English
 
-**Build Your First Engineering Bot with Grok Bot · Packt · November 17, 2026 · 90 minutes · 11:00–12:30 BRT / 09:00–10:30 ET**
+**Build Your First Engineering Bot with Grok Bot · Packt · November 20, 2026 · 90 minutes · 11:00–12:30 BRT / 09:00–10:30 ET**
 
 **This is your on-stage guide.** Ten chapters, one story, and natural English to speak. Keep it in a private window. The [English technical appendix](../en-us/) is an appendix for exact bot prompts, commands, approved access and troubleshooting—not a second script to read aloud.
 

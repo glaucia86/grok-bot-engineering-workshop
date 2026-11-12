@@ -13,6 +13,27 @@ from speaker_content import SL, PROMPTS
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 class SlideLocalizationTest(unittest.TestCase):
+    def test_rescheduled_date_is_consistent_across_published_pages(self):
+        expected = {
+            'index.html': '20 Nov 2026',
+            'slides/index.html': '20 Nov 2026',
+            'slides/pt-br/index.html': '20 nov 2026',
+            'guide/index.html': '20 de novembro de 2026',
+            'guide/en-us/index.html': 'November 20, 2026',
+            'guide/live/index.html': 'November 20, 2026',
+            'guide/run-sheet/index.html': '20/11',
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            output = pathlib.Path(tmp) / 'site'
+            build(ROOT, output)
+            for route, date in expected.items():
+                with self.subTest(route=route):
+                    page = (output / route).read_text()
+                    self.assertIn(date, page)
+                    self.assertNotRegex(page, r'November 17|17 [Nn]ov 2026|17 de novembro|17/11')
+                    if route == 'index.html':
+                        self.assertIn('11:00–12:30', page)
+
     def test_build_publishes_portuguese_from_shared_source(self):
         with tempfile.TemporaryDirectory() as tmp:
             output = pathlib.Path(tmp) / 'site'
@@ -21,7 +42,7 @@ class SlideLocalizationTest(unittest.TestCase):
             self.assertTrue(pt.exists(), 'Portuguese slide route must be generated')
             html = pt.read_text()
             self.assertIn('<html lang="pt-BR">', html)
-            self.assertIn('<title>Crie seu primeiro time de bots de engenharia com Grok Bot · Packt · 17 nov 2026</title>', html)
+            self.assertIn('<title>Crie seu primeiro time de bots de engenharia com Grok Bot · Packt · 20 nov 2026</title>', html)
             self.assertIn('<h1>Crie seu primeiro<br><span class="hl-amber">time de bots de engenharia</span><br>com Grok Bot</h1>', html)
             self.assertTrue('CI verde<br><span class="hl-red">não</span> é aceite.' in html, 'PT grammar must preserve emphasis on não')
             self.assertEqual(html.count('<section '), 22)
