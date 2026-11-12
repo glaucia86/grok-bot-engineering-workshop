@@ -1,6 +1,6 @@
 # Guia da Glaucia: "Build Your First Engineering Bot with Grok Bot"
 
-**Packt · 17/11 · 11:00–12:30 (horário de Brasília) = 9:00–10:30 ET · 90 min**
+**Packt · 20/11 · 11:00–12:30 (horário de Brasília) = 9:00–10:30 ET · 90 min**
 
 Como usar: deixe este guia aberto numa tela e compartilhe a outra. Cada bloco segue o mesmo roteiro: **(1) objetivo e janela de tempo, (2) HANDS-ON passo a passo, (3) SAY IT (fala em inglês, tradução e pronúncia), (4) transição e (5) checkpoint**. Leia em voz alta só o que está em **inglês** entre aspas. A tradução em itálico e a dica de pronúncia (🔊) abaixo são só para você. Os prompts você **copia e cola**, sem ler.
 
@@ -61,7 +61,7 @@ Minuto a minuto. Para cada slide: o que acontece e o que cortar se estiver atras
 | 12:30 | 10:30 | — | Fim | — | — |
 <!-- END GENERATED:runsheet -->
 
-> Nota de fuso: em 17/11 o ET já está no horário de inverno (UTC-5) e Brasília é UTC-3, então ET = Brasília − 2 h.
+> Nota de fuso: em 20/11 o ET já está no horário de inverno (UTC-5) e Brasília é UTC-3, então ET = Brasília − 2 h.
 
 ---
 

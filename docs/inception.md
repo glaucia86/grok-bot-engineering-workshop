@@ -2,7 +2,7 @@
 
 ## 1. Goal
 
-This document frames the work for the live Packt workshop **"Build Your First Engineering Bot with Grok Bot"** (November 17, 9:00–10:30 AM ET). We will turn Talk Feedback into a small but real MVP. Ninety minutes is not much time, and the audience needs to *see* something happen, so every decision below favors a visible result: a form you can submit, a chart that moves, and a preview URL that appears on the pull request.
+This document frames the work for the live Packt workshop **"Build Your First Engineering Bot with Grok Bot"** (November 20, 9:00–10:30 AM ET). We will turn Talk Feedback into a small but real MVP. Ninety minutes is not much time, and the audience needs to *see* something happen, so every decision below favors a visible result: a form you can submit, a chart that moves, and a preview URL that appears on the pull request.
 
 This defines the Next.js MVP reference application and its separate workshop exercise checkpoint, not the existing Fastify API. The acceptance criteria in section 5 apply to that migration; the current workshop exercise keeps its existing contract until the migration is implemented and verified. The 90-minute schedule agrees with both READMEs on main after PR #4.
 

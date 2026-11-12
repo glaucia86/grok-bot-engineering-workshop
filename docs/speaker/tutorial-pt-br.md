@@ -2,7 +2,7 @@
 
 [English tutorial](tutorial-en.md) · [Guia e slides existentes](guia-glaucia.md)
 
-**Packt · 17 de novembro de 2026 · 90 minutos · 11:00–12:30 BRT / 09:00–10:30 ET.**
+**Packt · 20 de novembro de 2026 · 90 minutos · 11:00–12:30 BRT / 09:00–10:30 ET.**
 
 Este tutorial complementar detalha cada ação. Não altera o deck nem o guia gerado existente. As duas versões usam a mesma numeração; a versão PT mantém os prompts em inglês prontos para os bots e traduz todas as falas. Leia em voz alta somente **Fale em inglês**. Copie apenas o bloco indicado para o destino indicado; nunca leia prompts inteiros para a plateia.
 
