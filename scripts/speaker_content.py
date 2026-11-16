@@ -39,31 +39,31 @@ BLOCKS = [
   cut="não leia o design inteiro. Mostre só a lista de arquivos e de testes.",
   check=("The FDE answered with decisions, files to change, and tests. No code was written yet.",
          "O FDE respondeu com decisões, arquivos e testes. Nenhum código foi escrito ainda.")),
- dict(name="Verify", t="11:20–11:40", et="9:20–9:40", slides=(10, 13),
+ dict(name="Verify", t="11:20–11:40", et="9:20–9:40", slides=(10, 14),
   goal=("Aprovar o design específico, deixar o FDE implementar e o QA preparar verificações independentes com os critérios atuais do inception. A execução na preview vem após os pré-requisitos do próximo bloco.",
         "Approve the specific design, let FDE implement, and let QA prepare independent checks against the current inception criteria. Preview execution comes after the gate in the next block."),
   cut="não espere o QA terminar todos os critérios. Mostre 2 ou 3 resultados e siga.",
   check=("FDE supplied available local evidence. QA prepared the AC1–12 plan and named missing preview prerequisites; acceptance remains pending until the gated evaluation.",
          "O FDE apresentou as evidências locais disponíveis. O QA preparou o plano AC1–12 e indicou os pré-requisitos ausentes da preview; o aceite continua pendente até a avaliação autorizada.")),
- dict(name="Background PR", t="11:40–11:55", et="9:40–9:55", slides=(14, 15),
+ dict(name="Background PR", t="11:40–11:55", et="9:40–9:55", slides=(15, 16),
   goal=("Mostrar que o trabalho roda na nuvem e provar o resultado: status do CI, preview e o gráfico mudando com um feedback real.",
         "Show that the work runs in the cloud and prove the result: CI status, preview, and the chart moving with real feedback."),
   cut="pule o pedido de status ao DevOps e abra a preview direto pelo PR.",
   check=("If the gate passed, the authorized synthetic entry appears in the tested preview. Otherwise, the missing prerequisite is reported as BLOCKED.",
          "Se os pré-requisitos foram atendidos, o envio sintético autorizado aparece na preview testada. Caso contrário, o pré-requisito ausente é informado como BLOCKED.")),
- dict(name="Approval", t="11:55–12:10", et="9:55–10:10", slides=(16, 17),
+ dict(name="Approval", t="11:55–12:10", et="9:55–10:10", slides=(17, 18),
   goal=("Ler as três evidências (o que mudou, relatório do QA, CI) e decidir o merge você mesma, no destino de exercício.",
         "Read the three pieces of evidence (what changed, QA report, CI) and make the merge decision yourself, on the exercise target."),
   cut="se vier FAIL, não corrija ao vivo. Mostre o FAIL como exemplo e diga que a correção fica para depois.",
   check=("You explained the actual decision. A merge occurred only if the required criteria and checks passed, warnings were reviewed, and the destination and consequences were authorized. FAIL or BLOCKED was not called acceptance.",
          "Você explicou a decisão real. Só houve merge se os critérios e checks obrigatórios passaram, os avisos foram revisados e o destino e as consequências estavam autorizados. FAIL ou BLOCKED não foram apresentados como aceite.")),
- dict(name="Recovery", t="12:10–12:22", et="10:10–10:22", slides=(18, 18),
+ dict(name="Recovery", t="12:10–12:22", et="10:10–10:22", slides=(19, 19),
   goal=("Recuperar o núcleo: concluir verificação, testes independentes e revisão humana do formulário e dashboard, ou declarar BLOCKED com a evidência que falta. Rotina apenas se tudo estiver concluído e sobrar tempo.",
         "Recover the core: complete verification, independent tests, and human review of the form and dashboard, or declare BLOCKED with the missing evidence. Show the routine only if everything is complete and time remains."),
   cut="a rotina já está omitida; use o tempo para recuperar o núcleo, sem passar de 12:22 BRT; ao entrar no recap, diga os bloqueios em voz alta; as perguntas abrem às 12:26 BRT.",
   check=("Core verification, independent tests, and human review are complete, or each remaining gap is BLOCKED with missing evidence named aloud when recap starts at 12:22 BRT. Recovery did not extend past 12:22; questions opened at 12:26 BRT. The routine appeared only if everything was complete and time remained.",
          "Verificação do núcleo, testes independentes e revisão humana estão concluídos, ou cada lacuna restante está BLOCKED com a evidência ausente dita em voz alta quando o recap começa às 12:22 BRT. A recuperação não passou de 12:22; as perguntas abriram às 12:26 BRT. A rotina apareceu somente se tudo estava concluído e sobrou tempo.")),
- dict(name="Q&A", t="12:22–12:30", et="10:22–10:30", slides=(19, 22),
+ dict(name="Q&A", t="12:22–12:30", et="10:22–10:30", slides=(20, 23),
   goal=("Recapitular em três frases, abrir perguntas e encerrar às 12:30.",
         "Recap in three sentences, take questions, and finish at 12:30."),
   cut="pule a frase sobre economia de uso. Termine pontualmente às 12:30.",
@@ -209,7 +209,17 @@ slide(title="Prove it works", t="11:25–11:27", m=2, clicks=3,
      Q("Why not trust the bot when it says it works?", "A bot can be sure and wrong. Reading the real value costs little. A wrong guess costs much more.", "Por que não confiar quando o bot diz que funciona?", "Um bot pode estar convicto e errado. Ler o valor real custa pouco. Um palpite errado custa muito mais.")],
  nxt=None)
 
-slide(title="Live: QA prepares the checks", t="11:27–11:40", m=13, clicks=3, live=True,
+slide(title="How do I trust my agents more?", t="11:27–11:28", m=1, clicks=0,
+ do=[D("Leave this slide up for about thirty seconds, just before the QA checklist. Trace the five layers from top to bottom and point at the cost arrow. The credit and the talk link are on the slide; do not read the URL aloud.",
+       "Deixe este slide por cerca de trinta segundos, logo antes do checklist do QA. Percorra as cinco camadas de cima para baixo e aponte a seta de custo. O crédito e o link da palestra estão no slide; não leia a URL em voz alta.",
+       ok=("The pyramid, the cost arrow and the Lauren Tan credit are visible.", "A pirâmide, a seta de custo e o crédito a Lauren Tan estão visíveis."))],
+ say=[S("Before the QA bot runs its checklist, here is how I trust an agent more. The pyramid is ordered by cost. The cheap, deterministic layers come first: the codebase, then static analysis. Verification comes next, prose rules after that, and human review last, because it is the most expensive. That is why our bots get skills, tests, and a QA checklist before a human approves.",
+       "Antes de o bot de QA rodar o checklist, é assim que eu passo a confiar mais num agente. A pirâmide está ordenada por custo. As camadas baratas e determinísticas vêm primeiro: a base de código e, depois, a análise estática. A verificação vem em seguida, as regras em prosa depois disso, e a revisão humana por último, porque é a mais cara. Por isso os nossos bots recebem skills, testes e um checklist de QA antes de uma pessoa aprovar.",
+       "pyramid → PÍ-ra-mid; deterministic → di-tèr-mi-NÍS-tic; expensive → iks-PÉN-siv")],
+ cut=("One sentence: cheap checks first, human review last. Then open the QA checklist.", "Uma frase: verificações baratas primeiro, revisão humana por último. Depois abra o checklist do QA."),
+ qa=[], nxt=None)
+
+slide(title="Live: QA prepares the checks", t="11:28–11:40", m=12, clicks=3, live=True,
  do=[D("Open the QA chat and send the planning prompt below. During this block, QA prepares the AC1–12 matrix while FDE implements. Do not run remote writes.", "Abra o chat do QA e envie o prompt de planejamento abaixo. Neste bloco, o QA prepara a matriz AC1–12 enquanto o FDE implementa. Não execute escritas remotas.", prompt=4,
        ok=("QA maps AC1–12 to planned checks, available tooling and missing prerequisites. No preview writes or invented PASS results occur in this planning step.", "O QA relaciona AC1–12 às verificações planejadas, ferramentas disponíveis e pré-requisitos ausentes. Não há escritas na preview nem resultados PASS inventados nesta etapa de planejamento."),
        fail=("If QA says BLOCKED, read why. Missing access, isolation or evidence is a valid answer: explain it. Do not hide it.", "Se o QA disser BLOCKED, leia o motivo. Falta de acesso, isolamento ou evidência é uma resposta válida: explique. Não esconda.")),
@@ -255,7 +265,7 @@ slide(title="Live: send feedback", t="11:47–11:55", m=8, clicks=2, live=True,
 
 slide(title="Block 5: Approval", t="11:55–11:58", m=3, clicks=2,
  do=[D("Click twice: first the green card (work within the approved scope), then the red card (a human decides). The line 'Only I can merge.' sits in the red card.", "Clique duas vezes: primeiro o cartão verde (trabalho dentro do escopo aprovado), depois o cartão vermelho (uma pessoa decide). A frase 'Only I can merge.' fica no cartão vermelho.")],
- say=[S("We now have evidence to review, but the bots do not make the merge decision. They act within the scope we approved. Being easy to undo does not make an action authorized. I am responsible for checking the result and deciding whether we can proceed. In this workshop, only I can merge, and I can also decide that the safest next step is to wait.", "Agora temos evidências para revisar, mas os bots não tomam a decisão de merge. Eles agem dentro do escopo aprovado. Ser fácil de desfazer não torna uma ação autorizada. Eu sou responsável por conferir o resultado e decidir se podemos avançar. Neste workshop, só eu posso fazer o merge, e também posso decidir que o próximo passo mais seguro é esperar.")],
+ say=[S("We now have evidence to review, but the bots do not make the merge decision. They act within the scope we approved. Being easy to undo does not make an action authorized. Human approval is not distrust of the agent. It is the most expensive layer, so it comes last, after the other layers have filtered what they could. I am responsible for checking the result and deciding whether we can proceed. In this workshop, only I can merge, and I can also decide that the safest next step is to wait.", "Agora temos evidências para revisar, mas os bots não tomam a decisão de merge. Eles agem dentro do escopo aprovado. Ser fácil de desfazer não torna uma ação autorizada. A aprovação humana não é desconfiança do agente. É a camada mais cara, então vem por último, depois que as outras camadas filtraram o que puderam. Eu sou responsável por conferir o resultado e decidir se podemos avançar. Neste workshop, só eu posso fazer o merge, e também posso decidir que o próximo passo mais seguro é esperar.")],
  cut=("Read only the two card titles.", "Leia só os títulos dos dois cartões."),
  qa=[Q("Why not let the bot merge when all tests pass?", "A merge changes the real world. Passing tests are evidence, but a person owns the decision.", "Por que o bot não faz o merge quando todos os testes passam?", "O merge muda o mundo real. Testes passando são evidência, mas a decisão é de uma pessoa.")],
  nxt=None)
@@ -291,7 +301,7 @@ slide(title="Block 6: Recovery first", t="12:10–12:22", m=12, clicks=1, live=T
 
 slide(title="Recap", t="12:22–12:23", m=1, clicks=3,
  do=[D("Click three times. Read each card, one at a time, with a pause.", "Clique três vezes. Leia cada cartão, um por vez, com uma pausa.")],
- say=[S("Let us bring this together. Each bot had one clear role, so we knew who was responsible for each part. We asked for evidence, so we could check the claims instead of trusting a success message. And a human kept control of the important decisions. Those three habits apply even when the work ends with a blocker rather than a merge.", "Vamos juntar as ideias. Cada bot tinha um papel claro, então sabíamos quem era responsável por cada parte. Pedimos evidências para conferir as afirmações, em vez de confiar em uma mensagem de sucesso. E uma pessoa manteve o controle das decisões importantes. Esses três hábitos se aplicam mesmo quando o trabalho termina com um bloqueio, em vez de um merge.")],
+ say=[S("Let us bring this together. Each bot had one clear role, so we knew who was responsible for each part. We asked for evidence, so we could check the claims instead of trusting a success message. And a human kept control of the important decisions. Those three habits apply even when the work ends with a blocker rather than a merge. If your inner loop produces slop, automating it just produces more slop. That line is from Lauren Tan's talk, All Code Is Slop (Except Mine).", "Vamos juntar as ideias. Cada bot tinha um papel claro, então sabíamos quem era responsável por cada parte. Pedimos evidências para conferir as afirmações, em vez de confiar em uma mensagem de sucesso. E uma pessoa manteve o controle das decisões importantes. Esses três hábitos se aplicam mesmo quando o trabalho termina com um bloqueio, em vez de um merge. Se o ciclo interno produz slop, automatizá-lo só produz mais slop. Essa frase é da palestra de Lauren Tan, All Code Is Slop (Except Mine).")],
  cut=("Never cut the recap. It takes one minute.", "Nunca corte o recap. Leva um minuto."),
  qa=[], nxt=None)
 
@@ -321,7 +331,7 @@ slide(title="Questions?", t="12:26–12:30", m=4, clicks=0,
  nxt=None)
 
 # ---------- per-slide timing sanity ----------
-assert len(SL) == 22
+assert len(SL) == 23
 
 EMERGENCY = [
  S("Let's give it a few seconds.", "Vamos dar alguns segundos.", "seconds → SÉ-kons"),
@@ -350,7 +360,7 @@ def notes_html(i):
     blk = next(b for b in BLOCKS if b["slides"][0] <= n <= b["slides"][1])
     bi = BLOCKS.index(blk)
     o = []
-    o.append(f'<p style="{ST["head"]}">⏱ {s["t"]} BRT · {s["m"]} min · slide {n}/22 · block {bi} · {E(blk["name"])}' + (' · OPTIONAL SLIDE' if s.get('optional') else '')
+    o.append(f'<p style="{ST["head"]}">⏱ {s["t"]} BRT · {s["m"]} min · slide {n}/{len(SL)} · block {bi} · {E(blk["name"])}' + (' · OPTIONAL SLIDE' if s.get('optional') else '')
              + (f' · {s["clicks"]} click{"s" if s["clicks"]!=1 else ""} on the slide' if s["clicks"] else ' · no clicks on the slide') + '</p>')
     o.append(f'<p style="{ST["sec"]}">🖱 Hands-on · Passo a passo</p><ol style="margin:0 0 0 1.2em;padding:0">')
     for d in s["do"]:
@@ -390,7 +400,7 @@ def patch_deck(text):
             out.append('<aside class="notes">\n' + notes_html(idx) + '\n  </aside>'); idx += 1
         else:
             out.append(p)
-    assert idx == 22, idx
+    assert idx == len(SL), idx
     return "".join(out)
 
 # ---------- rendering: guide ----------
@@ -455,13 +465,14 @@ def guide_blocks():
 def run_sheet():
     rows = ["| Brasília | ET | Slide | O que acontece (cliques e telas) | Tela compartilhada | Se atrasar |", "|---|---|---|---|---|---|"]
     rows.append("| 10:45 | 8:45 | 1 | Abrir deck (F), notas (S), abas prontas: GitHub, Grok Bot, instruções QA/DevOps, preview | Slide 1 | — |")
-    shared = {3:"GitHub", 8:"Grok Bot", 9:"Grok Bot", 10:"Grok Bot → Deck", 13:"Grok Bot", 14:"Grok Bot / GitHub", 15:"Preview", 17:"GitHub", 18:"Formulário / dashboard / evidências; Grok Bot só se opcional"}
+    shared = {3:"GitHub", 8:"Grok Bot", 9:"Grok Bot", 10:"Grok Bot → Deck", 14:"Grok Bot", 15:"Grok Bot / GitHub", 16:"Preview", 18:"GitHub", 19:"Formulário / dashboard / evidências; Grok Bot só se opcional"}
     acts = {1:"Boas-vindas", 2:"Agenda em 8 passos (1 clique)", 3:"Tour do repo: README → `mvp/` → `docs/inception.md` (3 cliques)", 4:"Arquitetura do MVP (5 cliques)",
         5:f"A regra: quem constrói não julga, nenhum bot faz merge ({SL[4]['clicks']} {'clique' if SL[4]['clicks'] == 1 else 'cliques'})", 6:"Fluxo do time (6 cliques)", 7:"Charter: owns · good output · stops (3 cliques)",
         8:"**Ao vivo:** criar FDE TypeScript, depois QA e DevOps, skills, grupo", 9:"**Ao vivo:** prompt de design para o FDE", 10:"Aprovar design (prompt FDE) e **prova do FDE**; \"Green CI is not acceptance\"",
-        11:"Loop PR → verify → approve (5 cliques)", 12:"Regra de todo bot: **prove it works** (3 cliques)", 13:"**Ao vivo:** prompt do QA, **prova do QA**, PASS/FAIL/WARN/BLOCKED", 14:"**Ao vivo:** prompt do DevOps e **prova do DevOps**, status do CI e preview",
-        15:"**Ao vivo:** enviar feedback, ver a barra no dashboard", 16:"Quem decide sou eu: desfaz em 1 min × humano decide", 17:"**Ao vivo:** ler o PR (mudou, QA, CI) e fazer o merge",
-        18:"**Recuperação:** concluir núcleo, testes e revisão humana ou declarar BLOCKED; rotina só se tudo estiver concluído", 19:"Recap: três frases (3 cliques)", 20:"Economizar uso", 21:"**OPCIONAL:** pstack (`/poteto-mode`, `/poteto-help`)", 22:"Perguntas e frase de encerramento (12:29)"}
+        11:"Loop PR → verify → approve (5 cliques)", 12:"Regra de todo bot: **prove it works** (3 cliques)", 13:"Pirâmide de confiança: camadas baratas primeiro, revisão humana por último",
+        14:"**Ao vivo:** prompt do QA, **prova do QA**, PASS/FAIL/WARN/BLOCKED", 15:"**Ao vivo:** prompt do DevOps e **prova do DevOps**, status do CI e preview",
+        16:"**Ao vivo:** enviar feedback, ver a barra no dashboard", 17:"Quem decide sou eu: desfaz em 1 min × humano decide", 18:"**Ao vivo:** ler o PR (mudou, QA, CI) e fazer o merge",
+        19:"**Recuperação:** concluir núcleo, testes e revisão humana ou declarar BLOCKED; rotina só se tudo estiver concluído", 20:"Recap: três frases (3 cliques)", 21:"Economizar uso", 22:"**OPCIONAL:** pstack (`/poteto-mode`, `/poteto-help`)", 23:"Perguntas e frase de encerramento (12:29)"}
     for n, s in enumerate(SL, 1):
         st = s["t"].split("–")[0]; h, m = map(int, st.split(":"))
         rows.append(f'| {st} | {h-2}:{m:02d} | {n} | {acts[n]} | {shared.get(n, "Deck")} | {s["cut"][1]} |')

@@ -16,11 +16,11 @@ Como usar: deixe este guia aberto numa tela e compartilhe a outra. Cada bloco se
 1. [0 · Setup · 11:00–11:05](#0-setup-11001105) · slides 1–5
 2. [1 · Criar os bots · 11:05–11:12](#1-criar-os-bots-11051112) · slides 6–8
 3. [2 · Design · 11:12–11:20](#2-design-11121120) · slide 9
-4. [3 · Verify · 11:20–11:40](#3-verify-11201140) · slides 10–13
-5. [4 · Background PR · 11:40–11:55](#4-background-pr-11401155) · slides 14–15
-6. [5 · Approval · 11:55–12:10](#5-approval-11551210) · slides 16–17
-7. [6 · Recovery · 12:10–12:22](#6-recovery-12101222) · slide 18
-8. [7 · Q&A · 12:22–12:30](#7-qa-12221230) · slides 19–22
+4. [3 · Verify · 11:20–11:40](#3-verify-11201140) · slides 10–14
+5. [4 · Background PR · 11:40–11:55](#4-background-pr-11401155) · slides 15–16
+6. [5 · Approval · 11:55–12:10](#5-approval-11551210) · slides 17–18
+7. [6 · Recovery · 12:10–12:22](#6-recovery-12101222) · slide 19
+8. [7 · Q&A · 12:22–12:30](#7-qa-12221230) · slides 20–23
 
 **Antes do evento:** [Trilha e estado](#trilha-e-estado-da-preparacao) · [Como usar o deck](#como-usar-o-deck) · [Frases de emergência](#frases-de-emergencia) · [Checklist](#checklist-antes-do-evento) · [Charter de todo bot](#charter-de-todo-bot)
 
@@ -48,16 +48,17 @@ Minuto a minuto. Para cada slide: o que acontece e o que cortar se estiver atras
 | 11:20 | 9:20 | 10 | Aprovar design (prompt FDE) e **prova do FDE**; "Green CI is not acceptance" | Grok Bot → Deck | Cole o prompt e vá direto para o próximo slide. |
 | 11:23 | 9:23 | 11 | Loop PR → verify → approve (5 cliques) | Deck | Trinta segundos. Clique rápido e diga só a última frase. |
 | 11:25 | 9:25 | 12 | Regra de todo bot: **prove it works** (3 cliques) | Deck | Diga só a regra e a última frase. Trinta segundos. |
-| 11:27 | 9:27 | 13 | **Ao vivo:** prompt do QA, **prova do QA**, PASS/FAIL/WARN/BLOCKED | Grok Bot | Mostre duas ou três verificações planejadas e os pré-requisitos ausentes. Não apresente o plano como uma avaliação concluída. |
-| 11:40 | 9:40 | 14 | **Ao vivo:** prompt do DevOps e **prova do DevOps**, status do CI e preview | Grok Bot / GitHub | Use links de status já verificados se o tempo estiver curto. Nunca pule os pré-requisitos de alvo, acesso, isolamento ou autorização de escrita. |
-| 11:47 | 9:47 | 15 | **Ao vivo:** enviar feedback, ver a barra no dashboard | Preview | Envie só um feedback. Não peça à plateia. |
-| 11:55 | 9:55 | 16 | Quem decide sou eu: desfaz em 1 min × humano decide | Deck | Leia só os títulos dos dois cartões. |
-| 11:58 | 9:58 | 17 | **Ao vivo:** ler o PR (mudou, QA, CI) e fazer o merge | GitHub | Se vier FAIL, não corrija ao vivo. Mostre como exemplo e siga. |
-| 12:10 | 10:10 | 18 | **Recuperação:** concluir núcleo, testes e revisão humana ou declarar BLOCKED; rotina só se tudo estiver concluído | Formulário / dashboard / evidências; Grok Bot só se opcional | A rotina já está omitida. Use o tempo para recuperar o núcleo, mas nunca passe de 12:22 BRT. Ao entrar no recap, diga os bloqueios em voz alta. As perguntas abrem às 12:26 BRT. |
-| 12:22 | 10:22 | 19 | Recap: três frases (3 cliques) | Deck | Nunca corte o recap. Leva um minuto. |
-| 12:23 | 10:23 | 20 | Economizar uso | Deck | Pule este slide. Termine exatamente às 12:30. |
-| 12:24 | 10:24 | 21 | **OPCIONAL:** pstack (`/poteto-mode`, `/poteto-help`) | Deck | Pule este slide. Vá direto para as perguntas. |
-| 12:26 | 10:26 | 22 | Perguntas e frase de encerramento (12:29) | Deck | Encerre às 12:29 com a frase final, mesmo que haja perguntas. |
+| 11:27 | 9:27 | 13 | Pirâmide de confiança: camadas baratas primeiro, revisão humana por último | Deck | Uma frase: verificações baratas primeiro, revisão humana por último. Depois abra o checklist do QA. |
+| 11:28 | 9:28 | 14 | **Ao vivo:** prompt do QA, **prova do QA**, PASS/FAIL/WARN/BLOCKED | Grok Bot | Mostre duas ou três verificações planejadas e os pré-requisitos ausentes. Não apresente o plano como uma avaliação concluída. |
+| 11:40 | 9:40 | 15 | **Ao vivo:** prompt do DevOps e **prova do DevOps**, status do CI e preview | Grok Bot / GitHub | Use links de status já verificados se o tempo estiver curto. Nunca pule os pré-requisitos de alvo, acesso, isolamento ou autorização de escrita. |
+| 11:47 | 9:47 | 16 | **Ao vivo:** enviar feedback, ver a barra no dashboard | Preview | Envie só um feedback. Não peça à plateia. |
+| 11:55 | 9:55 | 17 | Quem decide sou eu: desfaz em 1 min × humano decide | Deck | Leia só os títulos dos dois cartões. |
+| 11:58 | 9:58 | 18 | **Ao vivo:** ler o PR (mudou, QA, CI) e fazer o merge | GitHub | Se vier FAIL, não corrija ao vivo. Mostre como exemplo e siga. |
+| 12:10 | 10:10 | 19 | **Recuperação:** concluir núcleo, testes e revisão humana ou declarar BLOCKED; rotina só se tudo estiver concluído | Formulário / dashboard / evidências; Grok Bot só se opcional | A rotina já está omitida. Use o tempo para recuperar o núcleo, mas nunca passe de 12:22 BRT. Ao entrar no recap, diga os bloqueios em voz alta. As perguntas abrem às 12:26 BRT. |
+| 12:22 | 10:22 | 20 | Recap: três frases (3 cliques) | Deck | Nunca corte o recap. Leva um minuto. |
+| 12:23 | 10:23 | 21 | Economizar uso | Deck | Pule este slide. Termine exatamente às 12:30. |
+| 12:24 | 10:24 | 22 | **OPCIONAL:** pstack (`/poteto-mode`, `/poteto-help`) | Deck | Pule este slide. Vá direto para as perguntas. |
+| 12:26 | 10:26 | 23 | Perguntas e frase de encerramento (12:29) | Deck | Encerre às 12:29 com a frase final, mesmo que haja perguntas. |
 | 12:30 | 10:30 | — | Fim | — | — |
 <!-- END GENERATED:runsheet -->
 
@@ -493,7 +494,7 @@ O FDE respondeu com decisões, arquivos e testes. Nenhum código foi escrito ain
 
 ### 🎯 Objetivo e janela
 
-**Janela:** 11:20–11:40 (Brasília) = 9:20–9:40 ET · slides 10–13 · **Meta:** Aprovar o design específico, deixar o FDE implementar e o QA preparar verificações independentes com os critérios atuais do inception. A execução na preview vem após os pré-requisitos do próximo bloco.
+**Janela:** 11:20–11:40 (Brasília) = 9:20–9:40 ET · slides 10–14 · **Meta:** Aprovar o design específico, deixar o FDE implementar e o QA preparar verificações independentes com os critérios atuais do inception. A execução na preview vem após os pré-requisitos do próximo bloco.
 
 ✂️ **Se atrasar, corte isto:** não espere o QA terminar todos os critérios. Mostre 2 ou 3 resultados e siga.
 
@@ -541,9 +542,14 @@ Before you say done, apply principle-prove-it-works to the approved local artifa
    - ✅ **Esperado:** Os três cartões estão na tela, com as carinhas dos bots e o crédito ao pstack.
 6. Aponte os exemplos: 'compila', um auto-relato e um print antigo são proxies. Um valor que você lê do app rodando é a coisa real.
 
-**Slide 13 · Live: QA prepares the checks · 11:27–11:40** · 3 clique(s) no slide
+**Slide 13 · How do I trust my agents more? · 11:27–11:28**
 
-7. Abra o chat do QA e envie o prompt de planejamento abaixo. Neste bloco, o QA prepara a matriz AC1–12 enquanto o FDE implementa. Não execute escritas remotas.
+7. Deixe este slide por cerca de trinta segundos, logo antes do checklist do QA. Percorra as cinco camadas de cima para baixo e aponte a seta de custo. O crédito e o link da palestra estão no slide; não leia a URL em voz alta.
+   - ✅ **Esperado:** A pirâmide, a seta de custo e o crédito a Lauren Tan estão visíveis.
+
+**Slide 14 · Live: QA prepares the checks · 11:28–11:40** · 3 clique(s) no slide
+
+8. Abra o chat do QA e envie o prompt de planejamento abaixo. Neste bloco, o QA prepara a matriz AC1–12 enquanto o FDE implementa. Não execute escritas remotas.
    - ✅ **Esperado:** O QA relaciona AC1–12 às verificações planejadas, ferramentas disponíveis e pré-requisitos ausentes. Não há escritas na preview nem resultados PASS inventados nesta etapa de planejamento.
    - ⚠️ **Se falhar:** Se o QA disser BLOCKED, leia o motivo. Falta de acesso, isolamento ou evidência é uma resposta válida: explique. Não esconda.
 
@@ -569,7 +575,7 @@ AC12: verify no committed secrets without printing values; findings redacted.
 Return one row per AC: planned method, target, current available evidence, missing prerequisite. Never infer acceptance from FDE's report.
 ```
 
-8. Peça ao QA que confira o plano com os critérios combinados usando o prompt abaixo. Isto confere o plano, não o aplicativo publicado; ainda não há veredito de aceite.
+9. Peça ao QA que confira o plano com os critérios combinados usando o prompt abaixo. Isto confere o plano, não o aplicativo publicado; ainda não há veredito de aceite.
    - ⚠️ **Se falhar:** Se o QA não conseguir mostrar um resultado, ele deve dizer BLOCKED. Não aceite 'deve passar'.
 
    **Prompt para colar:**
@@ -578,10 +584,10 @@ Return one row per AC: planned method, target, current available evidence, missi
 Review the independent QA plan against current AC1–12. Identify the actual scripts, target, expected evidence and missing prerequisites for each criterion. Do not run remote writes in this planning step. Do not report PASS before execution. Apply principle-prove-it-works to the plan itself: show the criteria-to-check mapping and inspected source paths. Preview execution happens only after the readiness and explicit-write-authorization gate in tutorial step 17.
 ```
 
-9. Clique três vezes neste slide (é um mock ilustrativo, não resultados reais): linha PASS, linha FAIL, linha BLOCKED.
-10. Quando o PR estiver pronto, registre a URL e o SHA da ponta. Mostre o plano do QA e identifique os pré-requisitos ausentes. Deixe a execução na preview para a tarefa autorizada após as verificações do DevOps no próximo bloco.
+10. Clique três vezes neste slide (é um mock ilustrativo, não resultados reais): linha PASS, linha FAIL, linha BLOCKED.
+11. Quando o PR estiver pronto, registre a URL e o SHA da ponta. Mostre o plano do QA e identifique os pré-requisitos ausentes. Deixe a execução na preview para a tarefa autorizada após as verificações do DevOps no próximo bloco.
    - ✅ **Esperado:** O QA indica o alvo planejado e a evidência necessária por critério. Os resultados reais só são registrados após a execução.
-11. Plano B se a demo ao vivo quebrar: mostre a aplicação de referência verificada, se estiver acessível. Se não estiver, explique o bloqueio e mostre só evidência retida. Gravação é opcional e deve ser identificada como pré-gravada.
+12. Plano B se a demo ao vivo quebrar: mostre a aplicação de referência verificada, se estiver acessível. Se não estiver, explique o bloqueio e mostre só evidência retida. Gravação é opcional e deve ser identificada como pré-gravada.
 
 ### 🗣 SAY IT · fale em inglês
 
@@ -623,7 +629,15 @@ Review the independent QA plan against current AC1–12. Identify the actual scr
 
 ✂️ **Se atrasar:** Say only the rule and the last sentence. Thirty seconds. *(Diga só a regra e a última frase. Trinta segundos.)*
 
-*Slide 13 · Live: QA prepares the checks*
+*Slide 13 · How do I trust my agents more?*
+
+> "Before the QA bot runs its checklist, here is how I trust an agent more. The pyramid is ordered by cost. The cheap, deterministic layers come first: the codebase, then static analysis. Verification comes next, prose rules after that, and human review last, because it is the most expensive. That is why our bots get skills, tests, and a QA checklist before a human approves."  
+> *Antes de o bot de QA rodar o checklist, é assim que eu passo a confiar mais num agente. A pirâmide está ordenada por custo. As camadas baratas e determinísticas vêm primeiro: a base de código e, depois, a análise estática. A verificação vem em seguida, as regras em prosa depois disso, e a revisão humana por último, porque é a mais cara. Por isso os nossos bots recebem skills, testes e um checklist de QA antes de uma pessoa aprovar.*  
+> 🔊 pyramid → PÍ-ra-mid; deterministic → di-tèr-mi-NÍS-tic; expensive → iks-PÉN-siv
+
+✂️ **Se atrasar:** One sentence: cheap checks first, human review last. Then open the QA checklist. *(Uma frase: verificações baratas primeiro, revisão humana por último. Depois abra o checklist do QA.)*
+
+*Slide 14 · Live: QA prepares the checks*
 
 > "Now QA prepares the checks while the FDE builds. It starts from the agreed criteria, not from the author’s success message. For each criterion, it names the test, the target, the evidence we need, and any missing tools or access. At this stage, we are reviewing a plan. We will run the preview tests only after DevOps confirms the target and the required access and isolation checks are complete."  
 > *Agora o QA prepara as verificações enquanto o FDE constrói. Ele parte dos critérios combinados, não da mensagem de sucesso do autor. Para cada critério, indica o teste, o alvo, a evidência necessária e as ferramentas ou acessos ausentes. Nesta etapa, estamos revisando um plano. Só executaremos os testes na preview depois que o DevOps confirmar o alvo e as verificações necessárias de acesso e isolamento estiverem concluídas.*
@@ -647,13 +661,13 @@ O FDE apresentou as evidências locais disponíveis. O QA preparou o plano AC1�
 
 ### 🎯 Objetivo e janela
 
-**Janela:** 11:40–11:55 (Brasília) = 9:40–9:55 ET · slides 14–15 · **Meta:** Mostrar que o trabalho roda na nuvem e provar o resultado: status do CI, preview e o gráfico mudando com um feedback real.
+**Janela:** 11:40–11:55 (Brasília) = 9:40–9:55 ET · slides 15–16 · **Meta:** Mostrar que o trabalho roda na nuvem e provar o resultado: status do CI, preview e o gráfico mudando com um feedback real.
 
 ✂️ **Se atrasar, corte isto:** pule o pedido de status ao DevOps e abra a preview direto pelo PR.
 
 ### 🖱 HANDS-ON · passo a passo
 
-**Slide 14 · Background PR · 11:40–11:47** · 1 clique(s) no slide
+**Slide 15 · Background PR · 11:40–11:47** · 1 clique(s) no slide
 
 1. Diga que o trabalho roda na nuvem. Clique uma vez para mostrar o cartão do DevOps (mock).
 2. Cole o prompt do DevOps (abaixo) no chat do DevOps.
@@ -700,7 +714,7 @@ Fresh-instance proof is separate from reload; missing proof remains BLOCKED. No 
 ```
 
 
-**Slide 15 · Live: send feedback · 11:47–11:55** · 2 clique(s) no slide
+**Slide 16 · Live: send feedback · 11:47–11:55** · 2 clique(s) no slide
 
 5. Continue apenas se as escritas manuais estiverem autorizadas, o alvo estiver isolado e o QA tiver concluído a verificação do estado vazio. Abra PREVIEW_URL do TESTED_SHA e FORM_PATH aprovado no cartão do ensaio. Se faltar um pré-requisito, pule a escrita e informe BLOCKED.
    - ⚠️ **Se falhar:** Se a preview não carregar, diga 'This is live, so things can be slow.' Se estiver fora do ar, mostre a aplicação de referência verificada (se acessível) e explique o bloqueio.
@@ -712,7 +726,7 @@ Fresh-instance proof is separate from reload; missing proof remains BLOCKED. No 
 
 ### 🗣 SAY IT · fale em inglês
 
-*Slide 14 · Background PR*
+*Slide 15 · Background PR*
 
 > "The pull request brings the work together. DevOps gives us the real CI and preview links, and we check that they refer to the right commit. Before QA writes test data, we also need an isolated dataset, a reviewed test command, and explicit permission for those writes. If any part is missing, we keep it blocked. If the gate passes, QA can run the agreed checks and report what it actually observes."  
 > *O pull request reúne o trabalho. O DevOps fornece os links reais do CI e da preview, e conferimos se eles apontam para o commit correto. Antes de o QA gravar dados de teste, também precisamos de dados isolados, um comando de teste revisado e permissão explícita para essas escritas. Se faltar alguma parte, mantemos o bloqueio. Se os pré-requisitos forem atendidos, o QA pode executar as verificações combinadas e informar o que realmente observa.*
@@ -724,7 +738,7 @@ Fresh-instance proof is separate from reload; missing proof remains BLOCKED. No 
 
 ✂️ **Se atrasar:** Use already verified status links if time is short. Never skip the target, access, isolation or write-authorization gate. *(Use links de status já verificados se o tempo estiver curto. Nunca pule os pré-requisitos de alvo, acesso, isolamento ou autorização de escrita.)*
 
-*Slide 15 · Live: send feedback*
+*Slide 16 · Live: send feedback*
 
 > "We can try the form ourselves only after manual writes are authorized and QA has finished the empty-state check. I will use one synthetic entry with a unique name, a rating of five, and no comment. Then I open the results and read the average and count. Finally, I reload the page. That checks this reload case; proving persistence in a fresh application instance is a separate test."  
 > *Só podemos testar o formulário manualmente depois que as escritas manuais estiverem autorizadas e o QA tiver concluído a verificação do estado vazio. Vou usar um envio sintético com nome único, nota cinco e nenhum comentário. Depois abro os resultados e leio a média e a contagem. Por fim, recarrego a página. Isso confere este caso de recarregamento; comprovar a persistência em uma nova instância da aplicação é um teste separado.*
@@ -748,17 +762,17 @@ Se os pré-requisitos foram atendidos, o envio sintético autorizado aparece na 
 
 ### 🎯 Objetivo e janela
 
-**Janela:** 11:55–12:10 (Brasília) = 9:55–10:10 ET · slides 16–17 · **Meta:** Ler as três evidências (o que mudou, relatório do QA, CI) e decidir o merge você mesma, no destino de exercício.
+**Janela:** 11:55–12:10 (Brasília) = 9:55–10:10 ET · slides 17–18 · **Meta:** Ler as três evidências (o que mudou, relatório do QA, CI) e decidir o merge você mesma, no destino de exercício.
 
 ✂️ **Se atrasar, corte isto:** se vier FAIL, não corrija ao vivo. Mostre o FAIL como exemplo e diga que a correção fica para depois.
 
 ### 🖱 HANDS-ON · passo a passo
 
-**Slide 16 · Block 5: Approval · 11:55–11:58** · 2 clique(s) no slide
+**Slide 17 · Block 5: Approval · 11:55–11:58** · 2 clique(s) no slide
 
 1. Clique duas vezes: primeiro o cartão verde (trabalho dentro do escopo aprovado), depois o cartão vermelho (uma pessoa decide). A frase 'Only I can merge.' fica no cartão vermelho.
 
-**Slide 17 · Live: read three things, then decide · 11:58–12:10** · 3 clique(s) no slide
+**Slide 18 · Live: read three things, then decide · 11:58–12:10** · 3 clique(s) no slide
 
 2. Abra o pull request no GitHub. Primeiro confirme o destino: o repositório e a branch do exercício aprovados. Nunca a main de referência e nunca o checkpoint congelado.
    - ⚠️ **Se falhar:** Se o destino não estiver claro, pare. Não faça o merge. Diga: 'I will confirm the target first.'
@@ -779,10 +793,10 @@ Fix only this failure on <EXERCISE_BRANCH> for <PR_URL>. Add a regression test, 
 
 ### 🗣 SAY IT · fale em inglês
 
-*Slide 16 · Block 5: Approval*
+*Slide 17 · Block 5: Approval*
 
-> "We now have evidence to review, but the bots do not make the merge decision. They act within the scope we approved. Being easy to undo does not make an action authorized. I am responsible for checking the result and deciding whether we can proceed. In this workshop, only I can merge, and I can also decide that the safest next step is to wait."  
-> *Agora temos evidências para revisar, mas os bots não tomam a decisão de merge. Eles agem dentro do escopo aprovado. Ser fácil de desfazer não torna uma ação autorizada. Eu sou responsável por conferir o resultado e decidir se podemos avançar. Neste workshop, só eu posso fazer o merge, e também posso decidir que o próximo passo mais seguro é esperar.*
+> "We now have evidence to review, but the bots do not make the merge decision. They act within the scope we approved. Being easy to undo does not make an action authorized. Human approval is not distrust of the agent. It is the most expensive layer, so it comes last, after the other layers have filtered what they could. I am responsible for checking the result and deciding whether we can proceed. In this workshop, only I can merge, and I can also decide that the safest next step is to wait."  
+> *Agora temos evidências para revisar, mas os bots não tomam a decisão de merge. Eles agem dentro do escopo aprovado. Ser fácil de desfazer não torna uma ação autorizada. A aprovação humana não é desconfiança do agente. É a camada mais cara, então vem por último, depois que as outras camadas filtraram o que puderam. Eu sou responsável por conferir o resultado e decidir se podemos avançar. Neste workshop, só eu posso fazer o merge, e também posso decidir que o próximo passo mais seguro é esperar.*
 
 **Perguntas prováveis**
 
@@ -791,7 +805,7 @@ Fix only this failure on <EXERCISE_BRANCH> for <PR_URL>. Add a regression test, 
 
 ✂️ **Se atrasar:** Read only the two card titles. *(Leia só os títulos dos dois cartões.)*
 
-*Slide 17 · Live: read three things, then decide*
+*Slide 18 · Live: read three things, then decide*
 
 > "I review three things for the same commit: the change, the independent QA report, and the CI and preview checks. I also confirm the exercise target. If the required checks and criteria pass, I can decide whether to merge. If something fails, I request a focused fix. If evidence is missing, the result stays blocked. Either way, I explain the decision before we move on."  
 > *Reviso três coisas para o mesmo commit: a alteração, o relatório independente do QA e as verificações do CI e da preview. Também confirmo o destino do exercício. Se as verificações e os critérios obrigatórios passarem, posso decidir se farei o merge. Se algo falhar, peço uma correção pontual. Se faltar evidência, o resultado continua bloqueado. Em qualquer caso, explico a decisão antes de seguir.*
@@ -815,13 +829,13 @@ Você explicou a decisão real. Só houve merge se os critérios e checks obriga
 
 ### 🎯 Objetivo e janela
 
-**Janela:** 12:10–12:22 (Brasília) = 10:10–10:22 ET · slides 18 · **Meta:** Recuperar o núcleo: concluir verificação, testes independentes e revisão humana do formulário e dashboard, ou declarar BLOCKED com a evidência que falta. Rotina apenas se tudo estiver concluído e sobrar tempo.
+**Janela:** 12:10–12:22 (Brasília) = 10:10–10:22 ET · slides 19 · **Meta:** Recuperar o núcleo: concluir verificação, testes independentes e revisão humana do formulário e dashboard, ou declarar BLOCKED com a evidência que falta. Rotina apenas se tudo estiver concluído e sobrar tempo.
 
 ✂️ **Se atrasar, corte isto:** a rotina já está omitida; use o tempo para recuperar o núcleo, sem passar de 12:22 BRT; ao entrar no recap, diga os bloqueios em voz alta; as perguntas abrem às 12:26 BRT.
 
 ### 🖱 HANDS-ON · passo a passo
 
-**Slide 18 · Block 6: Recovery first · 12:10–12:22** · 1 clique(s) no slide
+**Slide 19 · Block 6: Recovery first · 12:10–12:22** · 1 clique(s) no slide
 
 1. Confira implementação do núcleo, testes independentes e revisão humana do formulário e dashboard. Use este tempo para concluí-los, ou declare BLOCKED e diga qual evidência falta.
    - ✅ **Esperado:** Núcleo, testes e revisão humana estão concluídos, com evidência.
@@ -851,7 +865,7 @@ Do not comment, edit files, open PRs, close issues, merge, deploy or change sche
 
 ### 🗣 SAY IT · fale em inglês
 
-*Slide 18 · Block 6: Recovery first*
+*Slide 19 · Block 6: Recovery first*
 
 > "This time is for finishing the core work first. If implementation, tests, or human review are still incomplete, we use it to recover or explain the blocker. We skip the routine unless everything is complete and there is time left. Even then, we show only a disabled text draft. At 12:22, we stop recovery and recap what happened. Questions begin at 12:26."  
 > *Este tempo é para concluir primeiro o trabalho principal. Se implementação, testes ou revisão humana ainda estiverem incompletos, vamos usá-lo para recuperar o trabalho ou explicar o bloqueio. Pulamos a rotina, a menos que tudo esteja concluído e sobre tempo. Mesmo assim, mostramos apenas um rascunho de texto desativado. Às 12:22, encerramos a recuperação e recapitulamos o que aconteceu. As perguntas começam às 12:26.*
@@ -875,27 +889,27 @@ Verificação do núcleo, testes independentes e revisão humana estão concluí
 
 ### 🎯 Objetivo e janela
 
-**Janela:** 12:22–12:30 (Brasília) = 10:22–10:30 ET · slides 19–22 · **Meta:** Recapitular em três frases, abrir perguntas e encerrar às 12:30.
+**Janela:** 12:22–12:30 (Brasília) = 10:22–10:30 ET · slides 20–23 · **Meta:** Recapitular em três frases, abrir perguntas e encerrar às 12:30.
 
 ✂️ **Se atrasar, corte isto:** pule a frase sobre economia de uso. Termine pontualmente às 12:30.
 
 ### 🖱 HANDS-ON · passo a passo
 
-**Slide 19 · Recap · 12:22–12:23** · 3 clique(s) no slide
+**Slide 20 · Recap · 12:22–12:23** · 3 clique(s) no slide
 
 1. Clique três vezes. Leia cada cartão, um por vez, com uma pausa.
 
-**Slide 20 · Bonus: reduce usage · 12:23–12:24** · 3 clique(s) no slide
+**Slide 21 · Bonus: reduce usage · 12:23–12:24** · 3 clique(s) no slide
 
 2. Clique três vezes. Diga só uma frase e siga.
 
-**Slide 21 · Optional: pstack · 12:24–12:26** · 3 clique(s) no slide
+**Slide 22 · Optional: pstack · 12:24–12:26** · 3 clique(s) no slide
 
 3. Slide OPCIONAL. Use só se estiver no horário. Pule se estiver mais de 2 minutos atrasada.
 4. Clique três vezes: o crédito, /poteto-mode, /poteto-help. NÃO rode /setup-pstack ao vivo: ele grava um arquivo de regras do Cursor. Mostre os três links só como texto.
    - ⚠️ **Se falhar:** Se alguém pedir para ver ao vivo, diga: 'I will share the link, and you can try it after the session.'
 
-**Slide 22 · Questions? · 12:26–12:30**
+**Slide 23 · Questions? · 12:26–12:30**
 
 5. Abra para perguntas. Leia cada pergunta do chat em voz alta antes de responder.
 6. Às 12:29, diga: “Thank you so much! See you next time.” Encerre até 12:30, mesmo que ainda haja perguntas.
@@ -904,21 +918,21 @@ Verificação do núcleo, testes independentes e revisão humana estão concluí
 
 ### 🗣 SAY IT · fale em inglês
 
-*Slide 19 · Recap*
+*Slide 20 · Recap*
 
-> "Let us bring this together. Each bot had one clear role, so we knew who was responsible for each part. We asked for evidence, so we could check the claims instead of trusting a success message. And a human kept control of the important decisions. Those three habits apply even when the work ends with a blocker rather than a merge."  
-> *Vamos juntar as ideias. Cada bot tinha um papel claro, então sabíamos quem era responsável por cada parte. Pedimos evidências para conferir as afirmações, em vez de confiar em uma mensagem de sucesso. E uma pessoa manteve o controle das decisões importantes. Esses três hábitos se aplicam mesmo quando o trabalho termina com um bloqueio, em vez de um merge.*
+> "Let us bring this together. Each bot had one clear role, so we knew who was responsible for each part. We asked for evidence, so we could check the claims instead of trusting a success message. And a human kept control of the important decisions. Those three habits apply even when the work ends with a blocker rather than a merge. If your inner loop produces slop, automating it just produces more slop. That line is from Lauren Tan's talk, All Code Is Slop (Except Mine)."  
+> *Vamos juntar as ideias. Cada bot tinha um papel claro, então sabíamos quem era responsável por cada parte. Pedimos evidências para conferir as afirmações, em vez de confiar em uma mensagem de sucesso. E uma pessoa manteve o controle das decisões importantes. Esses três hábitos se aplicam mesmo quando o trabalho termina com um bloqueio, em vez de um merge. Se o ciclo interno produz slop, automatizá-lo só produz mais slop. Essa frase é da palestra de Lauren Tan, All Code Is Slop (Except Mine).*
 
 ✂️ **Se atrasar:** Never cut the recap. It takes one minute. *(Nunca corte o recap. Leva um minuto.)*
 
-*Slide 20 · Bonus: reduce usage*
+*Slide 21 · Bonus: reduce usage*
 
 > "One practical tip before we close: keep each task focused. Start a new chat for a new task and send one complete prompt with the context and expected result. The stable role belongs in the bot’s instructions. For supported GitHub tasks, use connectors first and the browser when needed. This keeps the workflow easier to follow and avoids unnecessary context."  
 > *Uma dica prática antes de encerrar: mantenha cada tarefa focada. Abra um chat novo para uma tarefa nova e envie um prompt completo com o contexto e o resultado esperado. O papel estável pertence às instruções do bot. Nas tarefas do GitHub compatíveis, use conectores primeiro e o navegador quando necessário. Assim, o fluxo fica mais fácil de acompanhar e evitamos contexto desnecessário.*
 
 ✂️ **Se atrasar:** Skip this slide. Finish exactly at 12:30. *(Pule este slide. Termine exatamente às 12:30.)*
 
-*Slide 21 · Optional: pstack*
+*Slide 22 · Optional: pstack*
 
 > "If we have time, here is the source of the pstack skills used in this workflow. The project was created by Lauren Tan. You can use slash poteto-mode to ask for more rigor, or slash poteto-help when you are not sure which skill fits a task. The links are on the slide. We will leave installation and setup for after the session, so we can keep time for your questions."  
 > *Se tivermos tempo, aqui está a origem das skills do pstack usadas neste fluxo. O projeto foi criado por Lauren Tan. Vocês podem usar barra poteto-mode para pedir mais rigor ou barra poteto-help quando não souberem qual skill combina com uma tarefa. Os links estão no slide. Vamos deixar a instalação e a configuração para depois da sessão, para preservar o tempo das perguntas.*
@@ -930,7 +944,7 @@ Verificação do núcleo, testes independentes e revisão humana estão concluí
 
 ✂️ **Se atrasar:** Skip this slide. Go straight to Questions. *(Pule este slide. Vá direto para as perguntas.)*
 
-*Slide 22 · Questions?*
+*Slide 23 · Questions?*
 
 > "Now we have time for your questions. Please write them in the chat, and I will read each one before I answer. If I need to check a detail, I will say so. The slides and guide are public; access to the private code is handled separately by the instructor."  
 > *Agora temos tempo para as perguntas de vocês. Escrevam no chat, e vou ler cada uma antes de responder. Se eu precisar conferir algum detalhe, vou avisar. Os slides e o guia são públicos; o acesso ao código privado é tratado separadamente pela instrutora.*

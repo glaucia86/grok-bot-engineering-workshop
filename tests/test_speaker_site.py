@@ -28,9 +28,9 @@ class SpeakerSite(unittest.TestCase):
         content = importlib.util.module_from_spec(content_spec)
         content_spec.loader.exec_module(content)
         recovery = content.BLOCKS[6]
-        slide = content.SL[17]
+        slide = content.SL[18]
         self.assertEqual(recovery['name'], 'Recovery')
-        self.assertEqual((recovery['t'], recovery['et'], recovery['slides']), ('12:10–12:22', '10:10–10:22', (18, 18)))
+        self.assertEqual((recovery['t'], recovery['et'], recovery['slides']), ('12:10–12:22', '10:10–10:22', (19, 19)))
         self.assertEqual((slide['title'], slide['m'], slide['clicks']), ('Block 6: Recovery first', 12, 1))
         self.assertIn('OPTIONAL', slide['do'][1]['en'])
         self.assertIn('OPCIONAL', slide['do'][1]['pt'])
@@ -82,7 +82,7 @@ class SpeakerSite(unittest.TestCase):
             self.assertFalse((out/'package.json').exists())
             guide = (out/'guide/run-sheet/index.html').read_text()
             self.assertIn('../../slides/#/0', guide)
-            self.assertIn('../../slides/#/21', guide)
+            self.assertIn('../../slides/#/22', guide)
             self.assertIn('Copiar prompt', guide)
             self.assertIn('lang="en"', guide)
             self.assertIn('11:00', guide)

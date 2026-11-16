@@ -131,6 +131,8 @@
 
 **Part C — Verify independently.**
 
+> **Say:** “Before the QA checklist, here is how I trust an agent more. The pyramid is ordered by cost. Cheap deterministic layers come first: the codebase, then static analysis. Verification is next, prose rules after that, and human review last, because it is the most expensive. That is why these bots get skills, tests, and a QA checklist before a person approves.”
+
 > **Say:** “QA now checks the result independently. DevOps checks the matching CI and preview status. Notice that they have different jobs, but they are looking at evidence for the same change.”
 
 [Run only checks supported by the prepared environment. Remote test-data writes require the approved isolated target and permissions. Keep any missing evidence labeled BLOCKED.]
@@ -140,6 +142,8 @@
 > **Ask:** “Would you merge this PR just because an agent says ‘done’?” [Pause briefly.]
 
 > **Say:** “I want to see the change, the independent test results and the CI status for the same commit. If something is missing, we leave it open and say what needs to be checked.”
+
+> **Say:** “Human approval is not distrust of the agent. It is the most expensive layer, so it comes last, after the other layers have filtered what they could.”
 
 **If a bot is still working:** “While we wait, let’s look at what the next reviewer will need to verify.” [Use the prepared example, clearly label it, and never claim it is a live output.]
 
@@ -178,6 +182,8 @@
 **Show:** At **12:22 BRT**, put the three roles on screen: **Clear roles → Useful handoffs → Real evidence → Human decision**. State the real demo outcome, blockers, owners and next steps. Open questions at **12:26 BRT** and finish by **12:30 BRT**.
 
 > **Say:** “If you remember only three things, remember these: give each bot one clear job, make handoffs easy to inspect, and ask for real evidence before you trust a result.”
+
+> **Say:** “If your inner loop produces slop, automating it just produces more slop. That line is from Lauren Tan’s talk, All Code Is Slop (Except Mine).”
 
 > **Say:** “We kept the example deliberately small. You can take the same pattern to larger engineering problems, but start with a task you know how to verify.”
 

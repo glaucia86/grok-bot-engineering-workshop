@@ -270,3 +270,6 @@ yes	sim
 FAIL → fix only that	FAIL → corrija só isso
 BLOCKED = missing access,	BLOCKED = sem acesso,
 not a pass	não é aprovação
+How do I trust my agents more?	Como confiar mais nos meus agentes?
+The poteto pyramid, five layers from top to bottom as cost grows: codebase (good API design, architecture, refactoring); static analysis (lints, types, compilers, tests, CI); verification (formal, runtime); prose (rules, skills, AGENTS.md); human review.	A pirâmide poteto, cinco camadas de cima para baixo, com o custo crescendo: codebase (bom design de API, arquitetura, refatoração); análise estática (lints, tipos, compiladores, testes, CI); verificação (formal, em tempo de execução); prosa (regras, skills, AGENTS.md); revisão humana.
+The poteto pyramid — Lauren Tan (@poteto), talk 'All Code Is Slop (Except Mine)'	A pirâmide poteto — Lauren Tan (@poteto), palestra 'All Code Is Slop (Except Mine)'

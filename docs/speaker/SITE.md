@@ -3,7 +3,7 @@
 The static site reuses the Reveal.js deck and generates the reading guide from
 `guia-glaucia.md`. Do not maintain a second copy of the talk track. The guide has
 the run sheet, English speech, Portuguese translation/instructions, all ten
-copyable prompts, and links to all 22 slides. Ready illustrations replace all six screenshot slots. Group conversations and
+copyable prompts, and links to all 23 slides. Ready illustrations replace all six screenshot slots. Group conversations and
 example outcomes are explicitly labeled simulations; no live screenshot insertion
 is required. Glaucia’s supplied portrait is embedded in the local avatar SVG.
 
@@ -63,7 +63,7 @@ stay off the shared screen with the rest of the guide, and are hidden in print.
 
 CI runs `scripts/check_speaker_browser.py` with pinned Playwright 1.55.0 and its
 Chromium build. It serves the site under the GitHub project prefix and checks
-all slide hashes, 22 real slide renders, guide widths 390/768, clipboard success
+all slide hashes, 23 real slide renders, guide widths 390/768, clipboard success
 and simulated-rejection selection fallback, F fullscreen, S speaker connection
 with real notes, and loaded-deck navigation with the network disabled. External
 resource requests and JavaScript/HTTP errors fail the check. This is not a promise
@@ -116,7 +116,7 @@ usage within the owner's quota; no paid plan upgrade is authorized here.
 ## Workshop mascots
 
 The cover and closing show the five original workshop characters together.
-Three fixed cameos (slides 3, 16, 20) add variety without random placement.
+Three fixed cameos (slides 3, 17, 21) add variety without random placement.
 `python scripts/sync_speaker_mascots.py` reuses the app's authored paths, eye
 positions and colors in local SVG fallbacks and inline templates; `--check`
 verifies that the exports remain current. No proprietary bundle is copied.
@@ -144,6 +144,6 @@ preservados em inglês. Não edite os arquivos gerados em `_site/slides/pt-br/`.
 
 Verificação: `python -m unittest discover -s tests -p 'test_speaker*.py'`, build,
 e `python scripts/check_speaker_localization.py` com Chromium instalado. O último
-comando captura os 22 slides e cada fragmento em português, testa alternância,
+comando captura os 23 slides e cada fragmento em português, testa alternância,
 links relativos sob prefixo de projeto, notas, modo offline e movimento reduzido.
 As capturas são QA visual do site, não evidência de ensaio nem de aceite do MVP.

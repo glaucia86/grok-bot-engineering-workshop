@@ -597,7 +597,7 @@ Return one row per AC: planned method, target, current available evidence, missi
 
 **Expected result/checkpoint:** Plan has 12 criteria, distinguishes local/preview and assigns missing prerequisites; no invented PASS before execution.
 
-**Say in English:** “QA does not need to wait for a success message to plan its review. I will ask it to work from our twelve acceptance criteria and say what evidence each one needs. This is a plan, not a PASS. When the FDE delivers, we will compare that delivery with these checks.”
+**Say in English:** “The pyramid is ordered by cost: cheap deterministic layers first, then verification, then prose, and human review last. QA does not need a success message to plan its review. I will ask it to map our twelve acceptance criteria to the evidence each one needs. This is a plan, not a PASS.”
 
 **If it fails / recovery:** If QA says everything passed without SHA, target and evidence, request the matrix again. Existing tests do not replace the remote journey.
 
@@ -868,7 +868,7 @@ If not merged: <remaining-action-and-owner>
 
 **Expected result/checkpoint:** GitHub confirms the actual outcome. A merge is not required to teach review; a blocked decision is valid.
 
-**Say in English:** “The bots bring evidence, but the final decision is mine. I will merge personally only if the required checks and criteria pass and any warnings have been reviewed. If something is still blocked, I will leave the pull request open. A clear decision matters more than forcing a successful ending.”
+**Say in English:** “The bots bring evidence, but the final decision is mine. Human approval is not distrust of the agent; it is the most expensive layer, so it comes last after the other layers filtered what they could. I will merge personally only if the required checks pass and warnings are reviewed. If something is still blocked, I will leave the pull request open.”
 
 **If it fails / recovery:** Alternative line: “This is still blocked, so I will not merge.” Never bypass branch protection.
 
@@ -967,7 +967,7 @@ No new recurring task is created by this workshop.
 
 **Expected result/checkpoint:** 90-minute boundary preserved; remaining work has an owner and actual outcome; no invented acceptance.
 
-**Say in English:** “Let us bring the main ideas together: one bot per role, evidence for every claim, and a human for the important decisions. We will record any unfinished work with its owner and next step. Now we have time for questions before we close at 12:30. Thank you for building and checking this with me!”
+**Say in English:** “Let us bring the main ideas together: one bot per role, evidence for every claim, and a human for the important decisions. We will record any unfinished work with its owner and next step. If your inner loop produces slop, automating it just produces more slop. That line is Lauren Tan's. Thank you for building this with me!”
 
 **If it fails / recovery:** If unsure, say: “I need to verify that before I answer.” Do not extend the session to force completion.
 
