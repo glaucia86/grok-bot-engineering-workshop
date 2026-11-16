@@ -74,7 +74,7 @@ try:
             page.goto(base + route)
             page.wait_for_function('window.Reveal && Reveal.isReady()')
             assert page.locator('html').get_attribute('lang') == locale
-            assert page.evaluate('Reveal.getTotalSlides()') == 22
+            assert page.evaluate('Reveal.getTotalSlides()') == 23
             assert page.locator('.workshop-mascot').count() > 30
             assert page.locator('img[src*="avatars/"]').evaluate_all("els=>els.every(e=>e.getAttribute('src').endsWith('/glaucia.svg'))"), 'Unconverted bot images'
             signature = page.evaluate("Reveal.getSlides().map(s=>[s.dataset.clock,[...s.querySelectorAll('.fragment')].map(f=>f.dataset.fragmentIndex)])")
@@ -82,7 +82,7 @@ try:
             if locale == 'en':
                 continue
             page.evaluate('Reveal.configure({transition:"none",autoAnimate:false})')
-            for index in range(22):
+            for index in range(23):
                 page.evaluate('(i)=>Reveal.slide(i,0,-1)', index)
                 page.wait_for_timeout(100)
                 steps = 0
@@ -101,7 +101,7 @@ try:
                 notes = page.locator('section.present aside.notes').text_content()
                 assert ('sem cliques' if not steps else f'{steps} clique(s)') in notes
             assert totals[0] == totals[1], 'Locale changed slide order, clock or fragment structure'
-            report['checks'].append('22 PT slides: every fragment captured, text bounds and note click counts verified')
+            report['checks'].append('23 PT slides: every fragment captured, text bounds and note click counts verified')
         # Repeat language changes and direct links with fragments. No state in storage.
         page.evaluate('Reveal.slide(5,0,2)')
         for locale in ['en','pt-BR','en','pt-BR']:
@@ -133,7 +133,7 @@ try:
         notes.close()
         for width,height in [(1280,720),(390,844)]:
             page.set_viewport_size({'width':width,'height':height})
-            for index in range(22):
+            for index in range(23):
                 page.evaluate('(i)=>Reveal.slide(i,0,999)', index)
                 page.wait_for_timeout(450)
                 overflow = page.evaluate(OVERFLOW)

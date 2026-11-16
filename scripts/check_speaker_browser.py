@@ -131,7 +131,7 @@ def assert_contextual_cues(page, output, base):
     """Observe actual visible decoration, finite lifetime and mode cancellation."""
     # Reveal emits slidechanged then ready when resolving an initial hash.
     # Every directly linked cue slide must still play after initialization.
-    for index, kind in [(7, 'thinking'), (12, 'thinking'), (21, 'wink')]:
+    for index, kind in [(7, 'thinking'), (13, 'thinking'), (22, 'wink')]:
         page.goto('about:blank')
         page.goto(base+f'slides/#/{index}', wait_until='domcontentloaded')
         page.wait_for_function("document.querySelector('.reveal')?.classList.contains('ready')")
@@ -146,7 +146,7 @@ def assert_contextual_cues(page, output, base):
             raise
         page.wait_for_function('!document.querySelector("section.present [data-cue=thinking],section.present [data-cue=wink]")')
     page.evaluate('Reveal.slide(0)')
-    for index, ident in [(7, 'fde'), (12, 'qa')]:
+    for index, ident in [(7, 'fde'), (13, 'qa')]:
         page.evaluate('(i)=>Reveal.slide(i,0,-1)', index)
         cue = page.locator(f'section.present .workshop-mascot[data-mascot="{ident}"][data-mascot-cue="thinking"]')
         cue.wait_for(state='visible')
@@ -159,7 +159,7 @@ def assert_contextual_cues(page, output, base):
         page.screenshot(path=str(output/f'mascots-thinking-slide-{index+1:02}.png'))
         page.wait_for_function("!document.querySelector('section.present [data-cue=thinking]')")
         assert cue.locator('.mascot-thinking').evaluate('(e)=>getComputedStyle(e).display') == 'none'
-    page.evaluate('Reveal.slide(21)')
+    page.evaluate('Reveal.slide(22)')
     wink = page.locator('section.present [data-mascot-cue="wink"]')
     page.wait_for_function("document.querySelector('section.present .mascot-wink')?.getAttribute('transform')?.includes('scale')")
     page.wait_for_timeout(650)
@@ -292,7 +292,7 @@ try:
         page.set_viewport_size({'width':1440,'height':900})
         page.goto(base+'slides/', wait_until='networkidle')
         page.wait_for_function('window.Reveal && Reveal.isReady()')
-        assert page.evaluate('Reveal.getTotalSlides()') == 22
+        assert page.evaluate('Reveal.getTotalSlides()') == 23
         cue_context = browser.new_context(viewport={'width':1440,'height':900}, record_video_dir=str(OUT/'clips'), record_video_size={'width':960,'height':600})
         cue_context.route('**/*', route)
         cue_page = cue_context.new_page()
@@ -305,7 +305,7 @@ try:
         cue_video.save_as(str(OUT/'mascot-cues.webm'))
         results.append('Contextual cues: visible thinking pulses and one wink, finite lifetime, no replay after overview/reduced-motion/print, offscreen cancellation PASS')
         stepped = 0
-        for number in range(22):
+        for number in range(23):
             page.evaluate('(i)=>Reveal.slide(i,0,-1)', number)  # -1 = before the first fragment
             page.wait_for_timeout(400)
             assert page.evaluate('Reveal.getIndices().h') == number
@@ -327,7 +327,7 @@ try:
         assert (OUT/'slide-04-final.png').exists() and (OUT/'slide-06-final.png').exists() and (OUT/'slide-11-final.png').exists()
         results.append(f'Reveal: every fragment step and final state captured ({stepped} steps, architecture, team flow and loop included) PASS')
         # Ready live-demo panels must fit the fixed stage without clipped content.
-        for index in (7, 8, 12, 13, 14, 16, 17):
+        for index in (7, 8, 13, 14, 15, 17, 18):
             page.evaluate('(i)=>Reveal.slide(i,0,-1)', index)
             while page.evaluate('Reveal.nextFragment()'):
                 page.wait_for_timeout(100)
@@ -363,7 +363,7 @@ try:
             assert len(svg['eyes']) == 2 and all(eye['tag'] == 'path' and eye['maskedFace'] for eye in svg['eyes']), svg
             assert all(any(classes[name] == 1 for name in eye['classes']) for eye in svg['eyes']), svg
         assert page.locator('.workshop-mascot[data-blink]').count() == 0
-        for slide_number in [0, 21]:
+        for slide_number in [0, 22]:
             page.evaluate('(i)=>Reveal.slide(i)', slide_number)
             assert page.locator('section.present .workshop-mascot').count() == 5
             current = assert_active_mascots(page)
@@ -394,7 +394,7 @@ try:
         page.evaluate('Reveal.togglePause(false)')
         assert_active_mascots(page)
         # Cameos must never intersect actual content or the progress HUD.
-        for slide_number in [2, 15, 19]:
+        for slide_number in [2, 16, 20]:
             page.evaluate('(i)=>Reveal.slide(i,0,999)', slide_number)
             page.wait_for_timeout(800)
             overlaps = page.evaluate("""()=>{const s=Reveal.getCurrentSlide(), c=s.querySelector('.slide-cameo').getBoundingClientRect();
@@ -408,7 +408,7 @@ try:
         mismatches = page.evaluate("""()=>Reveal.getSlides().map((s,i)=>{const n=new Set([...s.querySelectorAll('.fragment')].map(f=>f.dataset.fragmentIndex)).size;const m=/(\\d+) click/.exec(s.querySelector('aside.notes').textContent);return (m?+m[1]:0)===n?null:`slide ${i+1}: notes ${m?m[1]:0} vs ${n}`}).filter(Boolean)""")
         assert not mismatches, mismatches
         # HUD advances with elapsed time on the last slide and the Q&A bar is full by 12:29.
-        page.evaluate('Reveal.slide(21)')
+        page.evaluate('Reveal.slide(22)')
         qa_bar = "document.querySelectorAll('#hud-segs .seg i')[7].style.width"
         start = page.evaluate(qa_bar)
         assert start != '100%', start
@@ -436,7 +436,7 @@ try:
             page.bring_to_front()
             page.screenshot(animations='disabled', path=str(OUT/'speaker-notes-fallback.png'))
         notes.close()
-        results.append('Reveal: 22 slide renders, hash links, F fullscreen and S notes popup PASS')
+        results.append('Reveal: 23 slide renders, hash links, F fullscreen and S notes popup PASS')
         # Offline is tested with network disabled after all local assets are loaded.
         context.set_offline(True)
         page.keyboard.press('ArrowRight')
@@ -450,7 +450,7 @@ try:
         page.wait_for_function('Reveal.isReady() && !Reveal.isScrollView() && Reveal.getIndices().h === 0')
         page.locator('section.present h1').wait_for(state='visible')
         page.screenshot(animations='disabled', path=str(OUT/'slides-mobile.png'))
-        for index in (7, 8, 12, 13, 14, 16, 17, 18):
+        for index in (7, 8, 13, 14, 15, 17, 18, 19):
             page.evaluate('(i)=>Reveal.slide(i,0,-1)', index)
             while page.evaluate('Reveal.nextFragment()'):
                 page.wait_for_timeout(100)
@@ -468,8 +468,8 @@ try:
         assert touch_page.evaluate("[...document.querySelectorAll('.mascot-motion,.mascot-face')].every(e=>!e.style.transform)")
         assert_static_mascots(touch_page, require_current_rendered=True)
         touch_page.screenshot(animations='disabled', path=str(OUT/'mascots-touch-cover.png'))
-        touch_page.evaluate('Reveal.slide(21)')
-        touch_page.wait_for_function('Reveal.getIndices().h === 21 && !Reveal.isScrollView()')
+        touch_page.evaluate('Reveal.slide(22)')
+        touch_page.wait_for_function('Reveal.getIndices().h === 22 && !Reveal.isScrollView()')
         touch_page.locator('section.present h1').filter(has_text='Questions?').wait_for(state='visible')
         touch_page.wait_for_timeout(800)
         assert touch_page.locator('section.present .workshop-mascot').count() == 5

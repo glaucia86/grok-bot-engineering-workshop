@@ -12,7 +12,7 @@ from speaker_slide_localization import publish_localized_slides
 REPO = 'https://github.com/glaucia86/grok-bot-engineering-workshop'
 SOURCE_REF = 'main'
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-SLIDE_FILES = frozenset(('assets/shots/.gitkeep', 'assets/avatars/grok.svg', 'assets/mascots.js', 'assets/mascot-cues.js', 'vendor/bloub/LICENSE', 'vendor/bloub/NOTICE.md', 'assets/mascots.css', 'vendor/fonts/Inter-Variable.woff2', 'vendor/fonts/OFL-Inter.txt', 'assets/avatars/devops.svg', 'assets/avatars/engineering-lead.svg', 'assets/avatars/fde-typescript.svg', 'assets/avatars/glaucia.svg', 'assets/avatars/qa-bot.svg', 'assets/deck.css', 'assets/diagrams.js', 'assets/sketch.js', 'index.html', 'vendor/fonts/OFL-Virgil.txt', 'vendor/fonts/Virgil.woff2', 'vendor/reveal.js-5.2.1/LICENSE', 'vendor/reveal.js-5.2.1/plugin/notes/notes.js', 'vendor/reveal.js-5.2.1/reset.css', 'vendor/reveal.js-5.2.1/reveal.css', 'vendor/reveal.js-5.2.1/reveal.js', 'vendor/roughjs-4.6.6/LICENSE', 'vendor/roughjs-4.6.6/rough.js'))
+SLIDE_FILES = frozenset(('assets/shots/.gitkeep', 'assets/poteto-pyramid.png', 'assets/avatars/grok.svg', 'assets/mascots.js', 'assets/mascot-cues.js', 'vendor/bloub/LICENSE', 'vendor/bloub/NOTICE.md', 'assets/mascots.css', 'vendor/fonts/Inter-Variable.woff2', 'vendor/fonts/OFL-Inter.txt', 'assets/avatars/devops.svg', 'assets/avatars/engineering-lead.svg', 'assets/avatars/fde-typescript.svg', 'assets/avatars/glaucia.svg', 'assets/avatars/qa-bot.svg', 'assets/deck.css', 'assets/diagrams.js', 'assets/sketch.js', 'index.html', 'vendor/fonts/OFL-Virgil.txt', 'vendor/fonts/Virgil.woff2', 'vendor/reveal.js-5.2.1/LICENSE', 'vendor/reveal.js-5.2.1/plugin/notes/notes.js', 'vendor/reveal.js-5.2.1/reset.css', 'vendor/reveal.js-5.2.1/reveal.css', 'vendor/reveal.js-5.2.1/reveal.js', 'vendor/roughjs-4.6.6/LICENSE', 'vendor/roughjs-4.6.6/rough.js'))
 
 def source_url(link):
     link = html.unescape(link)
@@ -62,7 +62,7 @@ def render_guide(text):
             table = re.sub(r'<td>(\d{1,2})</td>', lambda m: f'<td><a href="../slides/#/{int(m[1])-1}" target="workshop-slides">Slide {m[1]}</a></td>', table)
         return '<div class="table-scroll" tabindex="0" role="region" aria-label="Tabela do workshop">'+table+'</div>'
     body = re.sub(r'<table>.*?</table>', table_links, body, flags=re.S)
-    jumps = {0:0, 1:5, 2:8, 3:9, 4:13, 5:15, 6:17, 7:18}
+    jumps = {0:0, 1:5, 2:8, 3:9, 4:14, 5:16, 6:18, 7:19}
     for block, slide in jumps.items():
         body = re.sub(r'(<h2[^>]*>'+str(block)+r' · .*?</h2>)', r'\1'+f'<a class="slide-link" href="../slides/#/{slide}" target="workshop-slides">Abrir slides do bloco {block} ↗</a>', body)
     return page('Guia da Glaucia · PT / EN', f'''<header class="topbar"><a href="../">Workshop</a><a href="../slides/" target="workshop-slides">Abrir apresentação ↗</a><span>20 nov 2026 · 90 min</span></header>

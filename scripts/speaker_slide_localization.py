@@ -28,6 +28,7 @@ PRESERVED = {
     'github.com/cursor/plugins/tree/main/pstack', 'x.ai/bot/plugin/9717366',
     'GitHub Actions\nVitest · Playwright', 'Drizzle ORM', 'GitHub PR', 'SQL', 'deploy', 'DevOps\nCI + preview',
     'Pull request', 'CI + preview\nActions · Vercel',
+    'https://www.youtube.com/watch?v=O_zcc6Xl12g',
 }
 
 
@@ -100,7 +101,7 @@ def portuguese_notes(index, messages):
     def heading(text):
         return para(text, 'sec')
     clicks = f'{s["clicks"]} clique(s)' if s['clicks'] else 'sem cliques'
-    out = [para(f'⏱ {s["t"]} BRT · {s["m"]} min · slide {n}/22 · bloco {BLOCKS.index(block)} · {translate(block["name"], messages) if block["name"] in messages else block["name"]} · {clicks}' + (' · SLIDE OPCIONAL' if s.get('optional') else ''), 'head'), heading('🖱 Passo a passo'), '<ol>']
+    out = [para(f'⏱ {s["t"]} BRT · {s["m"]} min · slide {n}/{len(SL)} · bloco {BLOCKS.index(block)} · {translate(block["name"], messages) if block["name"] in messages else block["name"]} · {clicks}' + (' · SLIDE OPCIONAL' if s.get('optional') else ''), 'head'), heading('🖱 Passo a passo'), '<ol>']
     for step in s['do']:
         out.append('<li>' + para(step['pt']))
         for key, prefix in [('ok', '✅ '), ('fail', '⚠️ ')]:

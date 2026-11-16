@@ -589,9 +589,9 @@ Return one row per AC: planned method, target, current available evidence, missi
 
 **Resultado/checkpoint:** Plano tem 12 critérios, separa local/preview e atribui responsáveis às lacunas; nenhum PASS inventado antes da execução.
 
-**Fale em inglês:** “QA does not need to wait for a success message to plan its review. I will ask it to work from our twelve acceptance criteria and say what evidence each one needs. This is a plan, not a PASS. When the FDE delivers, we will compare that delivery with these checks.”
+**Fale em inglês:** “The pyramid is ordered by cost: cheap deterministic layers first, then verification, then prose, and human review last. QA does not need a success message to plan its review. I will ask it to map our twelve acceptance criteria to the evidence each one needs. This is a plan, not a PASS.”
 
-**Tradução:** O QA não precisa esperar uma mensagem de sucesso para planejar a revisão. Vou pedir que ele parta dos nossos doze critérios de aceitação e diga qual evidência cada um exige. Isso é um plano, não um PASS. Quando o FDE entregar, vamos comparar a entrega com essas verificações.
+**Tradução:** A pirâmide está ordenada por custo: camadas determinísticas baratas primeiro, depois a verificação, depois a prosa, e a revisão humana por último. O QA não precisa de uma mensagem de sucesso para planejar a revisão. Vou pedir que ele relacione os nossos doze critérios de aceite à evidência que cada um exige. Isto é um plano, não um PASS.
 
 **Se falhar / recuperação:** Se QA disser “tudo passou” sem SHA, alvo e evidência, peça a matriz novamente. Testes existentes não dispensam a jornada remota.
 
@@ -841,9 +841,9 @@ If not merged: <remaining-action-and-owner>
 
 **Resultado/checkpoint:** GitHub confirma o resultado real. Merge não é obrigatório para o workshop ensinar a revisão; decisão bloqueada é válida.
 
-**Fale em inglês:** “The bots bring evidence, but the final decision is mine. I will merge personally only if the required checks and criteria pass and any warnings have been reviewed. If something is still blocked, I will leave the pull request open. A clear decision matters more than forcing a successful ending.”
+**Fale em inglês:** “The bots bring evidence, but the final decision is mine. Human approval is not distrust of the agent; it is the most expensive layer, so it comes last after the other layers filtered what they could. I will merge personally only if the required checks pass and warnings are reviewed. If something is still blocked, I will leave the pull request open.”
 
-**Tradução:** Os bots trazem evidências, mas a decisão final é minha. Só vou fazer o merge pessoalmente se as verificações e os critérios obrigatórios passarem e os avisos tiverem sido avaliados. Se algo continuar bloqueado, vou deixar o pull request aberto. Uma decisão clara importa mais do que forçar um final de sucesso.
+**Tradução:** Os bots trazem evidências, mas a decisão final é minha. A aprovação humana não é desconfiança do agente; é a camada mais cara, então vem por último, depois que as outras camadas filtraram o que puderam. Só vou fazer o merge pessoalmente se as verificações obrigatórias passarem e os avisos forem avaliados. Se algo continuar bloqueado, vou deixar o pull request aberto.
 
 **Se falhar / recuperação:** Alternativa para dizer: “This is still blocked, so I will not merge.” Tradução: “Isto ainda está bloqueado, então não farei o merge.” Não contorne proteção de branch.
 
@@ -933,9 +933,9 @@ No new recurring task is created by this workshop.
 
 **Resultado/checkpoint:** 90 minutos preservados; pendências têm dono e resultado real; nenhuma aceitação inventada.
 
-**Fale em inglês:** “Let us bring the main ideas together: one bot per role, evidence for every claim, and a human for the important decisions. We will record any unfinished work with its owner and next step. Now we have time for questions before we close at 12:30. Thank you for building and checking this with me!”
+**Fale em inglês:** “Let us bring the main ideas together: one bot per role, evidence for every claim, and a human for the important decisions. We will record any unfinished work with its owner and next step. If your inner loop produces slop, automating it just produces more slop. That line is Lauren Tan's. Thank you for building this with me!”
 
-**Tradução:** Vamos reunir as ideias principais: um bot por papel, evidência para cada afirmação e um humano nas decisões importantes. Vamos registrar qualquer trabalho pendente com seu responsável e próximo passo. Agora temos tempo para perguntas antes de encerrar às 12:30. Obrigada por construir e conferir tudo isso comigo!
+**Tradução:** Vamos reunir as ideias principais: um bot por papel, evidência para cada afirmação e um humano nas decisões importantes. Vamos registrar qualquer trabalho pendente com seu responsável e próximo passo. Se o ciclo interno produz slop, automatizá-lo só produz mais slop. Essa frase é de Lauren Tan. Obrigada por construir isto comigo!
 
 **Se falhar / recuperação:** Se não souber responder, diga: “I need to verify that before I answer.” Tradução: “Preciso verificar isso antes de responder.” Não prolongue a sessão para forçar uma conclusão.
 

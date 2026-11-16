@@ -38,7 +38,7 @@ class SlideMascots(unittest.TestCase):
     def test_contextual_cues_are_limited_to_the_two_chats_and_closing(self):
         html = (DECK/'index.html').read_text()
         sections = re.findall(r'<section\b.*?</section>', html, re.S)
-        for index, name, cue in [(7, 'fde-typescript', 'thinking'), (12, 'qa-bot', 'thinking'), (21, 'grok', 'wink')]:
+        for index, name, cue in [(7, 'fde-typescript', 'thinking'), (13, 'qa-bot', 'thinking'), (22, 'grok', 'wink')]:
             visible = sections[index].split('<aside class="notes">')[0]
             self.assertRegex(visible, rf'<img(?=[^>]*src="assets/avatars/{name}\.svg")(?=[^>]*data-mascot-cue="{cue}")[^>]*>')
         self.assertEqual(html.count('data-mascot-cue="thinking"'), 2)
