@@ -46,7 +46,7 @@ PASS / FAIL / WARN / BLOCKED + evidence	PASS / FAIL / WARN / BLOCKED + evidênci
 No merge	Sem merge
 CI link + preview URL	Link do CI + URL de preview
 Never shows a secret	Nunca expõe segredos
-Live · create the FDE from scratch	Ao vivo · crie o FDE do zero
+Create the FDE from scratch	Crie o FDE do zero
 Team, one shared chat. FDE builds, QA verifies, DevOps handles CI. I approve.	Time, um chat compartilhado. FDE constrói, QA verifica, DevOps cuida do CI. Eu aprovo.
 I own: issue → change → branch → PR.	Minha parte: issue → alteração → branch → PR.
 Good output: what, why, how to test.	Boa entrega: o quê, por quê e como testar.
@@ -103,7 +103,7 @@ Not “it compiles”, not a self-report, not an old screenshot.	Não basta comp
 Script it	Crie um script
 A check anyone can re-run. Keep the output visible.	Uma verificação que qualquer pessoa pode repetir. Mostre o resultado.
 pstack · principle-prove-it-works · by Lauren Tan (@poteto), MIT	pstack · principle-prove-it-works · de Lauren Tan (@poteto), MIT
-Live · QA plans checks before preview access	Ao vivo · QA planeja antes de acessar o preview
+QA plans checks before preview access	QA planeja antes de acessar o preview
 QA: prepare the checks against our agreed criteria. Do not run preview tests before the gate is confirmed.	QA: prepare as verificações dos critérios combinados. Só teste o preview após confirmar a liberação.
 Exercise PR ready: change, tests and commit attached. Please review.	PR do exercício pronto: alteração, testes e commit anexados. Por favor, revise.
 CI link + isolated preview attached. Missing access means BLOCKED.	Link do CI + preview isolado anexados. Sem acesso significa BLOCKED.
@@ -133,7 +133,7 @@ Vercel preview	Preview da Vercel
 Open the preview · observe the running app	Abra o preview · observe o app em execução
 Secrets: presence only	Segredos: só a presença
 DATABASE_URL · present (redacted)	DATABASE_URL · presente (oculto)
-Live · send feedback, watch the chart	Ao vivo · envie feedback, veja o gráfico
+Send feedback, watch the chart	Envie feedback, veja o gráfico
 Feedback / new	Feedback / novo
 Illustrative form · use the real preview live	Formulário ilustrativo · use o preview real ao vivo
 How was the talk?	Como foi a palestra?
@@ -167,7 +167,7 @@ branch · commit · draft · test run	branch · commit · rascunho · teste
 Send · spend · publish · delete · merge?	Enviar · gastar · publicar · excluir · merge?
 A human decides.	Uma pessoa decide.
 Only I can merge.	Só eu posso fazer o merge.
-Live · read three things, then decide	Ao vivo · leia três coisas e decida
+Read three things, then decide	Leia três coisas e decida
 1 · What changed	1 · O que mudou
 the FDE's PR description	a descrição do PR do FDE
 2 · QA report	2 · Relatório do QA
@@ -273,3 +273,7 @@ not a pass	não é aprovação
 How do I trust my agents more?	Como confiar mais nos meus agentes?
 The poteto pyramid, five layers from top to bottom as cost grows: codebase (good API design, architecture, refactoring); static analysis (lints, types, compilers, tests, CI); verification (formal, runtime); prose (rules, skills, AGENTS.md); human review.	A pirâmide poteto, cinco camadas de cima para baixo, com o custo crescendo: codebase (bom design de API, arquitetura, refatoração); análise estática (lints, tipos, compiladores, testes, CI); verificação (formal, em tempo de execução); prosa (regras, skills, AGENTS.md); revisão humana.
 The poteto pyramid — Lauren Tan (@poteto), talk 'All Code Is Slop (Except Mine)'	A pirâmide poteto — Lauren Tan (@poteto), palestra 'All Code Is Slop (Except Mine)'
+Live demo → Grok Bot	Demo ao vivo → Grok Bot
+Live demo → Grok Bot + GitHub	Demo ao vivo → Grok Bot + GitHub
+Live demo → Preview	Demo ao vivo → Preview
+Live demo → GitHub	Demo ao vivo → GitHub

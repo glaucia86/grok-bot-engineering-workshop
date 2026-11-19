@@ -349,6 +349,8 @@ A plateia viu o repositório, a arquitetura e a regra principal. O relógio marc
 
 **Slide 8 · Live: create the FDE · 11:07–11:12** · 2 clique(s) no slide
 
+🎬 **DEMO AO VIVO AGORA →** Alt+Tab para o Grok Bot: criar o FDE, depois QA e DevOps. Volte ao deck no fim: Alt+Tab (Cmd+Tab no Mac).
+
 4. Alt+Tab para o Grok Bot. Clique no botão de criar bot (caminho exato: conferir no ensaio). Nome: FDE TypeScript.
    - ✅ **Esperado:** Abre uma página de bot novo e vazia.
    - ⚠️ **Se falhar:** Se não encontrar o controle, mostre o slide ilustrativo e diga: 'Ainda não consigo concluir esta configuração ao vivo.' Use um bot preparado somente se ele realmente existir e sua configuração tiver sido verificada.
@@ -438,6 +440,8 @@ Os três bots existem e estão num grupo com você. FDE e DevOps têm no máximo
 
 **Slide 9 · Block 2: Design · 11:12–11:20** · 1 clique(s) no slide
 
+🎬 **DEMO AO VIVO AGORA →** Alt+Tab para o Grok Bot: chat novo com o FDE, colar o prompt de design. Volte ao deck no fim: Alt+Tab (Cmd+Tab no Mac).
+
 1. Abra um chat NOVO com o FDE TypeScript (um chat por tarefa). Cole o prompt de design (abaixo). Clique uma vez no slide para mostrar a lista de revisão do design. A ilustração pronta fica na tela enquanto o FDE trabalha; não é preciso inserir prints.
    - ✅ **Esperado:** O bot começa a trabalhar. Enquanto trabalha, leia a lista no slide.
    - ⚠️ **Se falhar:** Se demorar mais de 2 minutos, diga 'Let's give it a few seconds.' e continue explicando a lista.
@@ -502,6 +506,8 @@ O FDE respondeu com decisões, arquivos e testes. Nenhum código foi escrito ain
 
 **Slide 10 · Block 3: Verify · 11:20–11:23** · 1 clique(s) no slide
 
+🎬 **DEMO AO VIVO AGORA →** Alt+Tab para o Grok Bot: chat do FDE, aprovar o design e depois colar o prompt de prova. Volte ao deck no fim: Alt+Tab (Cmd+Tab no Mac).
+
 1. Alt+Tab para o chat do FDE. Cole o prompt de aprovação do design (abaixo). Volte ao deck enquanto ele trabalha.
    - ✅ **Esperado:** O FDE confirma que vai usar uma branch nova e que não fará merge.
    - ⚠️ **Se falhar:** Se o FDE perguntar qual repositório ou branch usar, pare e responda com o destino do exercício aprovado pela instrutora. Nunca a main de referência.
@@ -548,6 +554,8 @@ Before you say done, apply principle-prove-it-works to the approved local artifa
    - ✅ **Esperado:** A pirâmide, a seta de custo e o crédito a Lauren Tan estão visíveis.
 
 **Slide 14 · Live: QA prepares the checks · 11:28–11:40** · 3 clique(s) no slide
+
+🎬 **DEMO AO VIVO AGORA →** Alt+Tab para o Grok Bot: chat do QA, colar o prompt do QA. Volte ao deck no fim: Alt+Tab (Cmd+Tab no Mac).
 
 8. Abra o chat do QA e envie o prompt de planejamento abaixo. Neste bloco, o QA prepara a matriz AC1–12 enquanto o FDE implementa. Não execute escritas remotas.
    - ✅ **Esperado:** O QA relaciona AC1–12 às verificações planejadas, ferramentas disponíveis e pré-requisitos ausentes. Não há escritas na preview nem resultados PASS inventados nesta etapa de planejamento.
@@ -669,6 +677,8 @@ O FDE apresentou as evidências locais disponíveis. O QA preparou o plano AC1�
 
 **Slide 15 · Background PR · 11:40–11:47** · 1 clique(s) no slide
 
+🎬 **DEMO AO VIVO AGORA →** Alt+Tab para o Grok Bot: chat do DevOps, depois abrir o PR no GitHub. Volte ao deck no fim: Alt+Tab (Cmd+Tab no Mac).
+
 1. Diga que o trabalho roda na nuvem. Clique uma vez para mostrar o cartão do DevOps (mock).
 2. Cole o prompt do DevOps (abaixo) no chat do DevOps.
    - ✅ **Esperado:** O DevOps dá o link do CI, a preview URL e diz que os segredos estão presentes (redacted).
@@ -715,6 +725,8 @@ Fresh-instance proof is separate from reload; missing proof remains BLOCKED. No 
 
 
 **Slide 16 · Live: send feedback · 11:47–11:55** · 2 clique(s) no slide
+
+🎬 **DEMO AO VIVO AGORA →** Alt+Tab para o navegador: preview do PR, demo do feedback só se o gate passou. Volte ao deck no fim: Alt+Tab (Cmd+Tab no Mac).
 
 5. Continue apenas se as escritas manuais estiverem autorizadas, o alvo estiver isolado e o QA tiver concluído a verificação do estado vazio. Abra PREVIEW_URL do TESTED_SHA e FORM_PATH aprovado no cartão do ensaio. Se faltar um pré-requisito, pule a escrita e informe BLOCKED.
    - ⚠️ **Se falhar:** Se a preview não carregar, diga 'This is live, so things can be slow.' Se estiver fora do ar, mostre a aplicação de referência verificada (se acessível) e explique o bloqueio.
@@ -773,6 +785,8 @@ Se os pré-requisitos foram atendidos, o envio sintético autorizado aparece na 
 1. Clique duas vezes: primeiro o cartão verde (trabalho dentro do escopo aprovado), depois o cartão vermelho (uma pessoa decide). A frase 'Only I can merge.' fica no cartão vermelho.
 
 **Slide 18 · Live: read three things, then decide · 11:58–12:10** · 3 clique(s) no slide
+
+🎬 **DEMO AO VIVO AGORA →** Alt+Tab para o GitHub: confirmar o destino, ler o PR e decidir. Volte ao deck no fim: Alt+Tab (Cmd+Tab no Mac).
 
 2. Abra o pull request no GitHub. Primeiro confirme o destino: o repositório e a branch do exercício aprovados. Nunca a main de referência e nunca o checkpoint congelado.
    - ⚠️ **Se falhar:** Se o destino não estiver claro, pare. Não faça o merge. Diga: 'I will confirm the target first.'

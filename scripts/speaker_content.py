@@ -346,6 +346,18 @@ EMERGENCY = [
 
 # ---------- rendering: deck notes ----------
 E = html.escape
+# Slides where the presenter leaves the deck for a live demo: (English, Portuguese) cue shown on the slide notes and in the guide.
+DEMO = {
+    8: ("Alt+Tab to Grok Bot: create the FDE, then QA and DevOps.", "Alt+Tab para o Grok Bot: criar o FDE, depois QA e DevOps."),
+    9: ("Alt+Tab to Grok Bot: new FDE chat, paste the design prompt.", "Alt+Tab para o Grok Bot: chat novo com o FDE, colar o prompt de design."),
+    10: ("Alt+Tab to Grok Bot: FDE chat, approve the design, then paste the proof prompt.", "Alt+Tab para o Grok Bot: chat do FDE, aprovar o design e depois colar o prompt de prova."),
+    14: ("Alt+Tab to Grok Bot: QA chat, paste the QA prompt.", "Alt+Tab para o Grok Bot: chat do QA, colar o prompt do QA."),
+    15: ("Alt+Tab to Grok Bot: DevOps chat, then open the PR on GitHub.", "Alt+Tab para o Grok Bot: chat do DevOps, depois abrir o PR no GitHub."),
+    16: ("Alt+Tab to the browser: PR preview, feedback demo only if the gate passed.", "Alt+Tab para o navegador: preview do PR, demo do feedback só se o gate passou."),
+    18: ("Alt+Tab to GitHub: confirm the target, read the PR, then decide.", "Alt+Tab para o GitHub: confirmar o destino, ler o PR e decidir."),
+}
+DEMO_BACK = ("Back to the deck when done: Alt+Tab (Cmd+Tab on Mac).", "Volte ao deck no fim: Alt+Tab (Cmd+Tab no Mac).")
+
 ST = dict(
  head="margin:0 0 10px;font-size:1.05em;font-weight:700;color:#111",
  sec="margin:14px 0 4px;font-size:.78em;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#444",
@@ -362,6 +374,11 @@ def notes_html(i):
     o = []
     o.append(f'<p style="{ST["head"]}">⏱ {s["t"]} BRT · {s["m"]} min · slide {n}/{len(SL)} · block {bi} · {E(blk["name"])}' + (' · OPTIONAL SLIDE' if s.get('optional') else '')
              + (f' · {s["clicks"]} click{"s" if s["clicks"]!=1 else ""} on the slide' if s["clicks"] else ' · no clicks on the slide') + '</p>')
+    if n in DEMO:
+        o.append('<div style="' + ST["box"] % ("#dc2626", "#fff0f0") + '">'
+                 f'<p style="{ST["en"]};color:#b91c1c;font-weight:800">🎬 LIVE DEMO NOW · DEMO AO VIVO AGORA</p>'
+                 f'<p style="{ST["en"]}">{E(DEMO[n][0])}</p><p style="{ST["pt"]}">{E(DEMO[n][1])}</p>'
+                 f'<p style="{ST["pt"]}">{E(DEMO_BACK[0])} · {E(DEMO_BACK[1])}</p></div>')
     o.append(f'<p style="{ST["sec"]}">🖱 Hands-on · Passo a passo</p><ol style="margin:0 0 0 1.2em;padding:0">')
     for d in s["do"]:
         o.append(f'<li style="margin-bottom:8px"><span style="{ST["en"]}">{E(d["en"])}</span><br><span style="{ST["pt"]}">{E(d["pt"])}</span>')
@@ -423,6 +440,7 @@ def guide_blocks():
         for n in range(a, z + 1):
             s = SL[n - 1]
             o.append(f'**Slide {n} · {s["title"]} · {s["t"]}**' + (f' · {s["clicks"]} clique(s) no slide' if s["clicks"] else '') + '\n')
+            if n in DEMO: o.append(f'🎬 **DEMO AO VIVO AGORA →** {DEMO[n][1]} {DEMO_BACK[1]}\n')
             for d in s["do"]:
                 o.append(f'{k}. {d["pt"]}')
                 if d["ok"]: o.append(f'   - ✅ **Esperado:** {d["ok"][1]}')

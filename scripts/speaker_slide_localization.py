@@ -10,7 +10,7 @@ from html.parser import HTMLParser
 import json
 from pathlib import Path
 import re
-from speaker_content import SL, BLOCKS, PROMPTS, ST
+from speaker_content import SL, BLOCKS, PROMPTS, ST, DEMO, DEMO_BACK
 
 CATALOG_PATH = Path(__file__).with_name('speaker_slides_pt_br.tsv')
 PRESERVED = {
@@ -102,6 +102,8 @@ def portuguese_notes(index, messages):
         return para(text, 'sec')
     clicks = f'{s["clicks"]} clique(s)' if s['clicks'] else 'sem cliques'
     out = [para(f'⏱ {s["t"]} BRT · {s["m"]} min · slide {n}/{len(SL)} · bloco {BLOCKS.index(block)} · {translate(block["name"], messages) if block["name"] in messages else block["name"]} · {clicks}' + (' · SLIDE OPCIONAL' if s.get('optional') else ''), 'head'), heading('🖱 Passo a passo'), '<ol>']
+    if n in DEMO:
+        out[1:1] = [para('🎬 DEMO AO VIVO AGORA', 'sec'), para(DEMO[n][1]), para(DEMO_BACK[1])]
     for step in s['do']:
         out.append('<li>' + para(step['pt']))
         for key, prefix in [('ok', '✅ '), ('fail', '⚠️ ')]:
