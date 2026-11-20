@@ -732,7 +732,7 @@ Rules: do not write to the database; do not merge.
 5. Abra a preview do pull request (Visit Preview no comentário da Vercel no PR) e vá em /feedback.
    - ⚠️ **Se falhar:** Se a preview não carregar, diga 'This is live, so things can be slow.' Se estiver fora do ar, mostre a aplicação de referência verificada (se acessível) e explique o bloqueio.
 6. Clique uma vez para revelar o formulário ilustrado (exemplo). No formulário real, envie talk 'Packt Live 20 Nov', author 'Workshop Demo', nota 5 e comentário vazio. Clique em enviar uma vez só. Clique de novo para revelar o gráfico de exemplo e depois abra /results na preview.
-   - ✅ **Esperado:** 'Packt Live 20 Nov' mostra média 5.0 e contagem 1. Outras talks também aparecem: a preview usa o banco de demonstração compartilhado.
+   - ✅ **Esperado:** 'Packt Live 20 Nov' mostra a contagem um a mais do que antes (5.0 e 1 no primeiro envio). Outras talks também aparecem: a preview usa o banco de demonstração compartilhado.
 7. Recarregue a página uma vez. O dado precisa continuar lá.
    - ⚠️ **Se falhar:** Se o dado ou resultado esperado sumir após o recarregamento, não esconda. Diga: 'QA will mark this as FAIL.' e mostre a causa só se você souber.
 8. Se der tempo, peça uma nota no chat e envie mais um. Se a preview estiver fora do ar, abra a aplicação de referência (https://grok-bot-workshop-mvp.vercel.app/results) e diga que é a referência preparada, não a prova do nosso PR.
