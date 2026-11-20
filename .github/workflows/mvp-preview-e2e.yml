@@ -50,10 +50,37 @@ jobs:
           PREVIEW_SHA: ${{ github.event.pull_request.head.sha }}
         run: node scripts/resolve-preview-url.mjs
       - run: npx playwright install --with-deps chromium
+      - name: Decide whether this preview is the approved isolated database
+        id: isolated
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ steps.preview.outputs.url }}
+          MVP_PREVIEW_COMMIT: ${{ github.event.pull_request.head.sha }}
+          MVP_PREVIEW_QA_ENABLED: ${{ vars.MVP_PREVIEW_QA_ENABLED }}
+          MVP_PREVIEW_APPROVED_URL: ${{ vars.MVP_PREVIEW_APPROVED_URL }}
+          MVP_PREVIEW_APPROVED_COMMIT: ${{ vars.MVP_PREVIEW_APPROVED_COMMIT }}
+          MVP_PREVIEW_APPROVED_QA_DATABASE_ID: ${{ vars.MVP_PREVIEW_APPROVED_QA_DATABASE_ID }}
+          MVP_PREVIEW_ISOLATED_AUTHORIZED: ${{ vars.MVP_PREVIEW_ISOLATED_AUTHORIZED }}
+        run: node scripts/isolated-db-flag.mjs
       - name: Run preview e2e
         env:
           PLAYWRIGHT_BASE_URL: ${{ steps.preview.outputs.url }}
           MVP_PREVIEW_URL: ${{ steps.preview.outputs.url }}
           MVP_PREVIEW_COMMIT: ${{ github.event.pull_request.head.sha }}
+          E2E_ISOLATED_DB: ${{ steps.isolated.outputs.enabled == 'true' && 'true' || '' }}
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: npm run test:e2e
+      - name: Redact the bypass secret from Playwright artifacts
+        if: always()
+        env:
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: python3 scripts/redact-playwright-artifacts.py
+      - name: Upload Playwright results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: playwright-preview-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            mvp/test-results
+            mvp/playwright-report
+          if-no-files-found: ignore
+          retention-days: 7

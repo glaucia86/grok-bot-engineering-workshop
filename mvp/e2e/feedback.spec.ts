@@ -1,5 +1,5 @@
-import { expect, test, type APIRequestContext, type Page } from "@playwright/test";
-import { blockedPreviewMessage, looksLikeVercelLogin } from "../src/lib/preview-e2e";
+import { expect, test, type APIRequestContext, type Browser, type Page } from "@playwright/test";
+import { blockedPreviewMessage, bypassHeaders, looksLikeVercelLogin } from "../src/lib/preview-e2e";
 
 const SAVED = "Thanks, your feedback was saved.";
 
@@ -20,13 +20,40 @@ async function assertReachable(page: Page): Promise<void> {
 }
 
 async function openHome(page: Page): Promise<void> {
-  await page.goto("/", { waitUntil: "domcontentloaded" });
-  await Promise.race([
-    page.waitForURL(/vercel\.com\/(login|sso)/i, { timeout: 8_000 }).catch(() => undefined),
-    page.getByRole("heading", { name: "Talk feedback" }).waitFor({ timeout: 15_000 }).catch(() => undefined),
-  ]);
-  await assertReachable(page);
-  await expect(page.getByRole("heading", { name: "Talk feedback" })).toBeVisible();
+  // The dashboard GET runs in an effect, so it only starts after hydration.
+  // Waiting for it avoids clicking Send before React attaches onSubmit.
+  const feedbackReady = page.waitForResponse(
+    (response) => {
+      try {
+        return new URL(response.url()).pathname === "/api/feedback" && response.request().method() === "GET";
+      } catch {
+        return false;
+      }
+    },
+    { timeout: 20_000 },
+  );
+  try {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await Promise.race([
+      page.waitForURL(/vercel\.com\/(login|sso)/i, { timeout: 8_000 }).catch(() => undefined),
+      page.getByRole("heading", { name: "Talk feedback" }).waitFor({ timeout: 15_000 }).catch(() => undefined),
+    ]);
+    await assertReachable(page);
+    await expect(page.getByRole("heading", { name: "Talk feedback" })).toBeVisible();
+    await feedbackReady;
+    await expect(page.getByText("Loading ratings...")).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Send feedback" })).toBeEnabled();
+  } catch (error) {
+    feedbackReady.catch(() => undefined);
+    throw error;
+  }
+}
+
+async function freshContext(browser: Browser, baseURL = process.env.PLAYWRIGHT_BASE_URL) {
+  return browser.newContext({
+    baseURL,
+    extraHTTPHeaders: bypassHeaders(process.env.VERCEL_AUTOMATION_BYPASS_SECRET),
+  });
 }
 
 async function readFeedback(request: APIRequestContext): Promise<TalkStat[]> {
@@ -112,8 +139,7 @@ test.describe.serial("preview feedback", () => {
 
   test("still shows the talk after a fresh page load", async ({ page, request }) => {
     expect(persistedTalk).not.toBe("");
-    await page.goto("/", { waitUntil: "domcontentloaded" });
-    await assertReachable(page);
+    await openHome(page);
     await expect(talkRow(page, persistedTalk)).toContainText("4.5 · 2 responses");
     const rows = await readFeedback(request);
     expect(rows.find((row) => row.talkId === persistedTalk)).toEqual({
@@ -121,5 +147,47 @@ test.describe.serial("preview feedback", () => {
       average: 4.5,
       count: 2,
     });
+  });
+
+  test("a new browser context still shows the talk", async ({ browser }) => {
+    expect(persistedTalk).not.toBe("");
+    const context = await freshContext(browser);
+    const page = await context.newPage();
+    try {
+      await openHome(page);
+      await expect(talkRow(page, persistedTalk)).toContainText("4.5 · 2 responses");
+      const rows = await readFeedback(page.request);
+      expect(rows.find((row) => row.talkId === persistedTalk)).toEqual({
+        talkId: persistedTalk,
+        average: 4.5,
+        count: 2,
+      });
+    } finally {
+      await context.close();
+    }
+  });
+
+  test("a fresh deployment instance still shows the talk", async ({ browser }) => {
+    const freshOrigin = process.env.E2E_FRESH_INSTANCE_URL;
+    test.skip(
+      !freshOrigin,
+      "BLOCKED: E2E_FRESH_INSTANCE_URL is unset. PREVIEW_QA.md says a page reload is not a fresh application instance, and no second deployment or restarted server bound to the same database is configured.",
+    );
+    if (!freshOrigin) return;
+    expect(persistedTalk).not.toBe("");
+    const context = await freshContext(browser, freshOrigin);
+    const page = await context.newPage();
+    try {
+      await openHome(page);
+      await expect(talkRow(page, persistedTalk)).toContainText("4.5 · 2 responses");
+      const rows = await readFeedback(page.request);
+      expect(rows.find((row) => row.talkId === persistedTalk)).toEqual({
+        talkId: persistedTalk,
+        average: 4.5,
+        count: 2,
+      });
+    } finally {
+      await context.close();
+    }
   });
 });

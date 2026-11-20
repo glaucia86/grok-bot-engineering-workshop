@@ -58,6 +58,57 @@ export function looksLikeVercelLogin(url: string, title: string, bodySample: str
   return sample.includes("vercel") && sample.includes("authentication required");
 }
 
+const ISOLATED_DATABASE_VARIABLES = [
+  "MVP_PREVIEW_QA_ENABLED",
+  "MVP_PREVIEW_APPROVED_URL",
+  "MVP_PREVIEW_APPROVED_COMMIT",
+  "MVP_PREVIEW_APPROVED_QA_DATABASE_ID",
+  "MVP_PREVIEW_ISOLATED_AUTHORIZED",
+] as const;
+
+export function isolatedDatabaseDecision(env: Record<string, string | undefined>): {
+  enabled: boolean;
+  missing: string[];
+  reason: string;
+} {
+  const missing = ISOLATED_DATABASE_VARIABLES.filter((key) => !env[key]?.trim());
+  if (missing.length > 0) {
+    return {
+      enabled: false,
+      missing: [...missing],
+      reason: `BLOCKED: isolated database is not configured. Missing ${missing.join(", ")}.`,
+    };
+  }
+  if (env.MVP_PREVIEW_QA_ENABLED !== "true" || env.MVP_PREVIEW_ISOLATED_AUTHORIZED !== "true") {
+    return {
+      enabled: false,
+      missing: [],
+      reason: "BLOCKED: isolated preview is not authorized. MVP_PREVIEW_QA_ENABLED and MVP_PREVIEW_ISOLATED_AUTHORIZED must both be true.",
+    };
+  }
+  const base = env.PLAYWRIGHT_BASE_URL?.replace(/\/$/, "");
+  const approved = env.MVP_PREVIEW_APPROVED_URL?.replace(/\/$/, "");
+  if (!base || base !== approved) {
+    return {
+      enabled: false,
+      missing: [],
+      reason: "BLOCKED: PLAYWRIGHT_BASE_URL does not match MVP_PREVIEW_APPROVED_URL.",
+    };
+  }
+  if (env.MVP_PREVIEW_COMMIT !== env.MVP_PREVIEW_APPROVED_COMMIT) {
+    return {
+      enabled: false,
+      missing: [],
+      reason: "BLOCKED: MVP_PREVIEW_COMMIT does not match MVP_PREVIEW_APPROVED_COMMIT.",
+    };
+  }
+  return {
+    enabled: true,
+    missing: [],
+    reason: "Isolated database approved for this preview.",
+  };
+}
+
 export function blockedPreviewMessage(secretConfigured: boolean): string {
   if (secretConfigured) {
     return "BLOCKED: the preview redirected to Vercel login even though VERCEL_AUTOMATION_BYPASS_SECRET is set. The secret value was not logged.";

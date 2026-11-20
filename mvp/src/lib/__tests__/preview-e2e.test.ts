@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   blockedPreviewMessage,
   bypassHeaders,
+  isolatedDatabaseDecision,
   looksLikeVercelLogin,
   requirePlaywrightBaseUrl,
   selectPreviewOrigin,
@@ -32,6 +33,37 @@ describe("selectPreviewOrigin", () => {
   it("returns null when no successful preview URL exists", () => {
     expect(selectPreviewOrigin([])).toBeNull();
     expect(selectPreviewOrigin([{ state: "success", environment: "Preview" }])).toBeNull();
+  });
+});
+
+describe("isolatedDatabaseDecision", () => {
+  const approved = {
+    MVP_PREVIEW_QA_ENABLED: "true",
+    MVP_PREVIEW_APPROVED_URL: "https://preview.example.com",
+    MVP_PREVIEW_APPROVED_COMMIT: "abc123",
+    MVP_PREVIEW_APPROVED_QA_DATABASE_ID: "qa-db",
+    MVP_PREVIEW_ISOLATED_AUTHORIZED: "true",
+    PLAYWRIGHT_BASE_URL: "https://preview.example.com/",
+    MVP_PREVIEW_COMMIT: "abc123",
+  };
+
+  it("stays disabled and names every missing variable", () => {
+    const decision = isolatedDatabaseDecision({});
+    expect(decision.enabled).toBe(false);
+    expect(decision.missing).toEqual([
+      "MVP_PREVIEW_QA_ENABLED",
+      "MVP_PREVIEW_APPROVED_URL",
+      "MVP_PREVIEW_APPROVED_COMMIT",
+      "MVP_PREVIEW_APPROVED_QA_DATABASE_ID",
+      "MVP_PREVIEW_ISOLATED_AUTHORIZED",
+    ]);
+    expect(decision.reason).toMatch(/^BLOCKED:/);
+  });
+
+  it("enables the flag only when the approved isolated preview matches", () => {
+    expect(isolatedDatabaseDecision(approved).enabled).toBe(true);
+    expect(isolatedDatabaseDecision({ ...approved, PLAYWRIGHT_BASE_URL: "https://other.example.com" }).enabled).toBe(false);
+    expect(isolatedDatabaseDecision({ ...approved, MVP_PREVIEW_ISOLATED_AUTHORIZED: "false" }).enabled).toBe(false);
   });
 });
 

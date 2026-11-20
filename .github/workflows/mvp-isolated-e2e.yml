@@ -1,0 +1,94 @@
+name: MVP isolated preview e2e
+
+on:
+  workflow_dispatch:
+    inputs:
+      preview_url:
+        description: Exact immutable preview origin bound to the isolated QA database
+        required: true
+        type: string
+      preview_commit:
+        description: Full deployed Git SHA
+        required: true
+        type: string
+      qa_database_id:
+        description: Non-secret isolated QA database resource ID
+        required: true
+        type: string
+      isolated_authorized:
+        description: Isolation and preview binding verified
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mvp-isolated-e2e
+  cancel-in-progress: false
+
+jobs:
+  isolated:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: mvp
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      MVP_PREVIEW_QA_ENABLED: ${{ vars.MVP_PREVIEW_QA_ENABLED }}
+      MVP_PREVIEW_APPROVED_URL: ${{ vars.MVP_PREVIEW_APPROVED_URL }}
+      MVP_PREVIEW_APPROVED_COMMIT: ${{ vars.MVP_PREVIEW_APPROVED_COMMIT }}
+      MVP_PREVIEW_APPROVED_QA_DATABASE_ID: ${{ vars.MVP_PREVIEW_APPROVED_QA_DATABASE_ID }}
+      MVP_PREVIEW_ISOLATED_AUTHORIZED: ${{ vars.MVP_PREVIEW_ISOLATED_AUTHORIZED }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Require the automation bypass secret
+        env:
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: |
+          if [ -z "$VERCEL_AUTOMATION_BYPASS_SECRET" ]; then
+            echo "::error::BLOCKED: GitHub Actions secret VERCEL_AUTOMATION_BYPASS_SECRET is not set."
+            exit 1
+          fi
+          echo "VERCEL_AUTOMATION_BYPASS_SECRET is configured. Its value was not printed."
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: mvp/package-lock.json
+      - run: npm ci
+      - name: Allow the empty-state check only for the approved isolated database
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ inputs.preview_url }}
+          MVP_PREVIEW_COMMIT: ${{ inputs.preview_commit }}
+          DISPATCH_QA_DATABASE_ID: ${{ inputs.qa_database_id }}
+          DISPATCH_ISOLATED_AUTHORIZED: ${{ inputs.isolated_authorized }}
+        run: node scripts/isolated-db-flag.mjs --strict
+      - run: npx playwright install --with-deps chromium
+      - name: Run isolated preview e2e
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ inputs.preview_url }}
+          MVP_PREVIEW_URL: ${{ inputs.preview_url }}
+          MVP_PREVIEW_COMMIT: ${{ inputs.preview_commit }}
+          E2E_ISOLATED_DB: "true"
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: npm run test:e2e
+      - name: Redact the bypass secret from Playwright artifacts
+        if: always()
+        env:
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: python3 scripts/redact-playwright-artifacts.py
+      - name: Upload Playwright results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: playwright-isolated-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            mvp/test-results
+            mvp/playwright-report
+          if-no-files-found: ignore
+          retention-days: 7
