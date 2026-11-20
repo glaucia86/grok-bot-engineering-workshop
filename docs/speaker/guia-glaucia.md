@@ -450,7 +450,8 @@ Context
 - Repository: glaucia86/grok-bot-engineering-workshop
 - Work branch: exercise/feedback-ui (already exists)
 - Pull request target: exercise-target/2026-11-20
-- Read first: spec.md, docs/inception.md section 5 (AC1–AC12) and the code in mvp/ on the work branch
+- Requirements: spec.md and docs/inception.md section 5 (AC1–AC12) on main
+- Read first: the requirements on main, then the code in mvp/ on the work branch
 - Already done: POST and GET /api/feedback, the Zod schema and the database. Missing: the UI.
 
 Task: design only, no code yet.
@@ -470,8 +471,8 @@ Rules: no code until I approve.
 
 *Slide 9 · Block 2: Design*
 
-> "We are not asking for code yet. The FDE works on its own cloud computer, not on my laptop. It reads the requirements and the code on the exercise branch, exercise/feedback-ui. Then it explains which files will change, how the form and the results will use the API, and which tests will check the work. I review those choices before we spend time building."  
-> *Ainda não estamos pedindo código. O FDE trabalha no computador dele, na nuvem, não no meu notebook. Ele lê os requisitos e o código da branch do exercício, exercise/feedback-ui. Depois explica quais arquivos vão mudar, como o formulário e os resultados vão usar a API e quais testes vão conferir o trabalho. Eu reviso essas escolhas antes de gastarmos tempo construindo.*
+> "We are not asking for code yet. The FDE works on its own cloud computer, not on my laptop. It reads the requirements on main, spec.md and the inception document, and the code on the exercise branch, exercise/feedback-ui. Then it explains which files will change, how the form and the results will use the API, and which tests will check the work. I review those choices before we spend time building."  
+> *Ainda não estamos pedindo código. O FDE trabalha no computador dele, na nuvem, não no meu notebook. Ele lê os requisitos na main, o spec.md e o documento inception, e o código da branch do exercício, exercise/feedback-ui. Depois explica quais arquivos vão mudar, como o formulário e os resultados vão usar a API e quais testes vão conferir o trabalho. Eu reviso essas escolhas antes de gastarmos tempo construindo.*
 
 **Perguntas prováveis**
 
@@ -513,6 +514,7 @@ Context
 - Repository: glaucia86/grok-bot-engineering-workshop
 - Work branch: exercise/feedback-ui (already exists)
 - Pull request target: exercise-target/2026-11-20
+- Requirements: spec.md and docs/inception.md section 5 (AC1–AC12) on main
 
 Task:
 - Work on exercise/feedback-ui; do not create another branch.
@@ -571,9 +573,10 @@ Context
 - Repository: glaucia86/grok-bot-engineering-workshop
 - Work branch: exercise/feedback-ui (already exists)
 - Pull request target: exercise-target/2026-11-20
+- Requirements: spec.md and docs/inception.md section 5 (AC1–AC12) on main
 - The FDE is building the feedback form and the results page on this branch.
 
-Task: prepare your QA plan from AC1–AC12 in docs/inception.md section 5, not from the FDE's description.
+Task: prepare your QA plan from AC1–AC12 in docs/inception.md section 5 on main, not from the FDE's description.
 
 Deliver: one line per criterion: how you will check it (unit test, API call or browser) and what you still need.
 
@@ -717,7 +720,7 @@ Rules: read-only; never print secrets; do not merge.
 ```
 Context: pull request <PR_URL> is ready.
 
-Task: evaluate it against AC1–AC12. Run the tests, read the code and check the API where you can.
+Task: evaluate it against AC1–AC12 in docs/inception.md on main. Run the tests, read the code and check the API where you can.
 
 Deliver: PASS, FAIL, WARN or BLOCKED per criterion, with the evidence.
 
