@@ -24,7 +24,7 @@
 
 Prepare uma **aplicação de referência completa na main** antes do evento, com PRs revisados e merges humanos. No **workshop de 90 minutos**, a turma implementa os exercícios de formulário/dashboard a partir da base API/banco separada e congelada `checkpoint/mvp-base`, em `mvp/`. O aplicativo Fastify da raiz é **prática extra opcional**, não a trilha principal.
 
-Comece por [spec.md](spec.md), [inception](docs/inception.md), [setup do MVP](mvp/README.md) e [índice de exercícios e issues GitHub](docs/issues/README.md). A spec define o contrato técnico; as issues GitHub acompanham a execução, sem repetir o plano em outra spec ou arquivo de slices.
+Comece por [spec.md](spec.md), [inception](docs/inception.md), [setup do MVP](mvp/README.md) e [índice de exercícios e issues GitHub](docs/issues/README.md). A spec define o contrato técnico; as issues GitHub acompanham a execução, sem repetir o plano em outra spec ou arquivo de slices. Os prompts da sessão de 20 de novembro de 2026 estão no [guia de prompts para participantes](docs/attendee/grok-bot-workshop-prompts-guide.md) ([PDF](docs/attendee/grok-bot-workshop-prompts-guide.pdf)), em inglês.
 
 ### Estado antes do workshop
 
